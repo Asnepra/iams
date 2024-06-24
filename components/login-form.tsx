@@ -46,12 +46,16 @@ startTransition(() => {
   axios.post('/api/login', values)
     .then(async (response:any) => {
       const data = response.data;
-      console.log("data --------",data)
+      //console.log("data --------",data)
+      if(data.message==='Login Failed'){
+        setError("Login Failed");
+        return;
+      }
       
         const { token } = data;
       document.cookie = `token=${token}; path=/`
-      console.log("lgoin success", token);
-      router.push('/dashboard')
+      //console.log("lgoin success", token);
+      router.push('/home')
         // Handle successful login
         // Uncomment this section and implement the logic as needed
         // form.reset(); // Optionally reset the form

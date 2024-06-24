@@ -27,47 +27,50 @@ import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
 
 import { useEffect } from "react";
+import axios from "axios";
 
 export default function Dashboard() {
 
   const router = useRouter()
 
   useEffect(() => {
+  
+    
+
+    validateToken()
+  }, [router])
+
+
+  // Validate the token by making an API call
+  const validateToken = async () => {
     const token = Cookies.get('token')
+    //console.log("token", token);
 
     if (!token) {
       router.replace('/') // If no token is found, redirect to login page
       return
     }
 
-    // Validate the token by making an API call
-    const validateToken = async () => {
-      try {
-        const res = await fetch('/api/protected', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+    try {
+      const res = await axios.get('/api/getassets', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
 
-        if (!res.ok) throw new Error('Token validation failed')
-      } catch (error) {
-        console.error(error)
-        router.replace('/') // Redirect to login if token validation fails
+      console.log("token value", res.data);
+
+      //console.log("TOKEN VERIFIED");
+      if(res.data?.message==='Invalid Token'){
+        router.replace('/');
       }
+    } catch (error) {
+      console.error(error)
+      router.replace('/') // Redirect to login if token validation fails
     }
-
-    validateToken()
-  }, [router])
+  }
   return (
-    <div className="flex flex-col bg-muted/40">
-      <header
-        className="flex h-14 items-center gap-4 border-b bg-gradient-to-r from-[#4338CA] to-[#6D28D9] 
-    px-6 text-white dark:bg-gradient-to-r dark:from-[#4338CA] dark:to-[#6D28D9]"
-      >
-        <h1 className="text-lg font-semibold md:text-xl">My Assets</h1>
-      
-      </header>
-
+    <div className="mt-16 h-auto flex flex-col  md:ml-48 bg-muted/40">
       <div className="flex">
         <main className="flex-1 p-4 ">
           <div className="grid gap-2 md:grid-cols-3 lg:grid-cols-6">
@@ -119,6 +122,7 @@ export default function Dashboard() {
                 </p>
               </CardContent>
             </Card>
+            <Button> Logout</Button>
           </div>
           <div className="mt-4 md:mt-6">
             <Card>
