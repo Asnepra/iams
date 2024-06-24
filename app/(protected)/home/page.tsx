@@ -31,44 +31,7 @@ import axios from "axios";
 
 export default function Dashboard() {
 
-  const router = useRouter()
 
-  useEffect(() => {
-  
-    
-
-    validateToken()
-  }, [router])
-
-
-  // Validate the token by making an API call
-  const validateToken = async () => {
-    const token = Cookies.get('token')
-    //console.log("token", token);
-
-    if (!token) {
-      router.replace('/') // If no token is found, redirect to login page
-      return
-    }
-
-    try {
-      const res = await axios.get('/api/getassets', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      console.log("token value", res.data);
-
-      //console.log("TOKEN VERIFIED");
-      if(res.data?.message==='Invalid Token'){
-        router.replace('/');
-      }
-    } catch (error) {
-      console.error(error)
-      router.replace('/') // Redirect to login if token validation fails
-    }
-  }
   return (
     <div className="mt-16 h-auto flex flex-col  md:ml-48 bg-muted/40">
       <div className="flex">
