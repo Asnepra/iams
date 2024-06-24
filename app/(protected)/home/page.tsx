@@ -85,7 +85,7 @@ export default function Dashboard() {
                 </p>
               </CardContent>
             </Card>
-            <Button> Logout</Button>
+            
           </div>
           <div className="mt-4 md:mt-6">
             <Card>

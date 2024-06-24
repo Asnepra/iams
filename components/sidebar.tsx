@@ -26,7 +26,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { ChevronLeft, Home, LineChart, Package, PanelLeft, PlusCircle, Search, Settings, ShoppingCart, Upload, Users2, GitPullRequest, Plus, Package2Icon } from "lucide-react"
+import { ChevronLeft, Home, LineChart, Package, 
+  PanelLeft, PlusCircle, Search, 
+  Settings, ShoppingCart, Upload,
+   Users2, GitPullRequest, Plus,
+    Package2Icon, UploadCloudIcon } from "lucide-react"
 
 interface SidebarProps {
   className?: string;
@@ -43,18 +47,18 @@ const Sidebar = ({ className }: SidebarProps) => {
   const routes = [
     {
       icon: Home,
-      href: "/",
+      href: "/home",
       label: "Home",
-    },
-    {
-      icon: GitPullRequest,
-      href: "/requests",
-      label: "Requests",
     },
     {
       icon: Package,
       href: "/assets",
       label: "Assets",
+    },
+    {
+      icon:UploadCloudIcon,
+      href:"/upload",
+      label:"Add / Upload",
     },
     {
       icon: Users2,
@@ -70,11 +74,11 @@ const Sidebar = ({ className }: SidebarProps) => {
       icon: Settings,
       href: "/settings",
       label: "Settings",
-    },
+    }
   ];
 
   return (
-    <div className={` space-y-4 flex flex-col h-full text-primary bg-secondary ${className}`}>
+    <div className={`space-y-4 flex flex-col h-full text-primary bg-secondary ${className}`}>
       <aside>
         <div className="flex h-[60px] items-center border-b px-6">
             <Link className="flex items-center gap-2 font-semibold " href="#">
@@ -88,8 +92,8 @@ const Sidebar = ({ className }: SidebarProps) => {
             {routes.map((route) => (
               <Tooltip key={route.href}>
                 <TooltipTrigger asChild>
-                  <Link href={route.href} className={`group flex h-9 w-36 shrink-0 items-center px-2
-                   gap-2 rounded-full ${pathname === route.href ? 'bg-primary text-primary-foreground font-semibold' : 'bg-secondary text-muted-foreground'} text-lg  md:h-8 md:w-36 md:text-base`}>
+                  <Link href={route.href} className={`group flex h-9 w-44 shrink-0 items-center px-2
+                   gap-2 rounded-full ${pathname === route.href ? 'bg-primary text-primary-foreground font-semibold' : 'bg-secondary text-muted-foreground'} text-lg  md:h-8 md:w-44 md:text-base`}>
                     <route.icon className="h-5 w-5" />
                     <span className="px-2">{route.label}</span>
                   </Link>
