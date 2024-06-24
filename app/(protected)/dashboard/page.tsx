@@ -22,8 +22,42 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Cookies from 'js-cookie'
+import jwt from 'jsonwebtoken'
+
+import { useEffect } from "react";
 
 export default function Dashboard() {
+
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = Cookies.get('token')
+
+    if (!token) {
+      router.replace('/') // If no token is found, redirect to login page
+      return
+    }
+
+    // Validate the token by making an API call
+    const validateToken = async () => {
+      try {
+        const res = await fetch('/api/protected', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        if (!res.ok) throw new Error('Token validation failed')
+      } catch (error) {
+        console.error(error)
+        router.replace('/') // Redirect to login if token validation fails
+      }
+    }
+
+    validateToken()
+  }, [router])
   return (
     <div className="flex flex-col bg-muted/40">
       <header
@@ -31,11 +65,7 @@ export default function Dashboard() {
     px-6 text-white dark:bg-gradient-to-r dark:from-[#4338CA] dark:to-[#6D28D9]"
       >
         <h1 className="text-lg font-semibold md:text-xl">My Assets</h1>
-        <Link href="/assetRequest">
-          <Button className="hover:bg-white hover:text-black" variant="default">
-            Request Asset
-          </Button>
-        </Link>
+      
       </header>
 
       <div className="flex">

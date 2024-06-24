@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { TooltipProvider } from "@radix-ui/react-tooltip"
+
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
 import {
@@ -83,7 +83,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             </Link>
             
           </div>
-        <TooltipProvider>
+        
           <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
             {routes.map((route) => (
               <Tooltip key={route.href}>
@@ -100,7 +100,7 @@ const Sidebar = ({ className }: SidebarProps) => {
           </nav>
 
           
-        </TooltipProvider>
+        
       </aside>
     </div>
   );

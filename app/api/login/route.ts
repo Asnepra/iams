@@ -111,7 +111,9 @@ export const POST = async (req: Request, res: Response) => {
         userName = user[0].userName; // Assign user name
         userRole = user[0].userRole; // Assign user role
         }
-        const token = jwt.sign({ userId: email, isAdmin:userRole }, process.env.JWT_SECRET, {
+        const { JWT_SECRET } = process.env;
+
+        const token = jwt.sign({ userId: email, isAdmin:userRole }, `${JWT_SECRET}`, {
           expiresIn: '1m',
         })
     
