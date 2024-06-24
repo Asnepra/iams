@@ -51,7 +51,7 @@ startTransition(() => {
         const { token } = data;
       document.cookie = `token=${token}; path=/`
       console.log("lgoin success", token);
-      router.push('/protected')
+      router.push('/dashboard')
         // Handle successful login
         // Uncomment this section and implement the logic as needed
         // form.reset(); // Optionally reset the form
