@@ -44,6 +44,8 @@ export default function Dashboard() {
     // Add more mappings as needed
   };
 
+  const router= useRouter();
+
   useEffect(()=>{
     getData();
   },[])
@@ -65,6 +67,7 @@ export default function Dashboard() {
       setAssets(res.data); // Assuming res.data is an array of assets
       console.log(res.data);
     } catch (error) {
+      router.push("/")
       setError("Something happend, Please reload")
       console.error(error);
     }

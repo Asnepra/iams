@@ -180,7 +180,7 @@ const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufac
     axios.post(`/api/assetmaster`,data,config)
     .then(response => {
       console.log("Success!", response);
-      //window.location.reload();
+      window.location.reload();
     }).catch(error => {console.log(error);});
     //console.log("subutmiited values:", data);
     setError("");
