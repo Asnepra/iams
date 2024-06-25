@@ -29,12 +29,12 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         osMasterId, status,purposeRemarks, guaranteeStatus, assetSerialNumber
      } = formData;
 
-     console.log("Asset Model Id received ------------------ ",assetModelId);
-     console.log("guarantee Id received ------------------ ",guaranteeStatus);
+     //console.log("Asset Model Id received ------------------ ",assetModelId);
+     //console.log("guarantee Id received ------------------ ",guaranteeStatus);
      await sql.query`
-    INSERT INTO dbo.AssetMaster (AssetModelID, POMasterID, LocationID, BelongsToUserID,
+    INSERT INTO dbo.AssetMaster (AssetID,AssetModelID, POMasterID, LocationID, BelongsToUserID,
          HDDCapacityGB, MonitorSizeInch,RAMMB,ProcessorMasterID, OSMasterID, Status, PurposeRemarks, PurchaseDate, WarrantyStatus, AssetSerialNo)
-    VALUES (${assetId}, ${assetModelId}, ${pomasterId}, ${locationId}, ${belongsToUser}, 
+    VALUES (1, ${assetModelId}, ${pomasterId}, ${locationId}, ${belongsToUser}, 
         ${hddCapacity},${monitorSize}, ${ramGBOptions},${processorMasterId}, ${osMasterId}, ${status}, ${purposeRemarks},
         GETDATE(), ${guaranteeStatus}, ${assetSerialNumber})
     `;

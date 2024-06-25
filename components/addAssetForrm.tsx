@@ -75,13 +75,13 @@ const assetSchema = z.object(
   subCategoryMasterId: z.string().min(1, {message: "Required.",}),
     manufacturerId: z.string().min(1, {message: "Required",}),
     locationId: z.string().min(1, {message: "Required.",}),
-    osMasterId: z.string().min(1, {message: "Required.",}),
+    osMasterId: z.string().optional(),
     assetModelId: z.string().min(1, {message: "Required",}),
-    ramGBOptions: z.string().min(1, {message: "Required",}),
-    hddSddOptions: z.string().min(1, {message: "Required",}),
+    ramGBOptions: z.string().optional(),
+    hddSddOptions: z.string().optional(),
     WarrantyStatus: z.boolean().default(false),
-    monitorSizeInInchOptions: z.string().min(1, {message: "Required",}),
-    processorMasterId: z.string().min(1, {message: "Required.",}),
+    monitorSizeInInchOptions: z.string().optional(),
+    processorMasterId: z.string().optional(),
   }
 )
 const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufacturerData,
@@ -145,18 +145,21 @@ const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufac
   }
 
   function onSubmit(values: z.infer<typeof assetSchema>) {
+    if(!values.hddSddOptions){
+      console.log("no ssd")
+    }
     //console.log("sdhb k")
     const data={
       
-      assetModelId:values.assetModelId || "Default_Asset_Id_1234",
+      assetModelId:values.assetModelId || "1234",
       pomasterId:"1",
       locationId:values.locationId ||"EKN Delhi Default Entry",
       belongsToUser:"2",
       hddCapacity:values.hddSddOptions || "-1",
       monitorSize:values.monitorSizeInInchOptions||"-1",
       ramGBOptions:values.ramGBOptions||"-1",
-      processorMasterId:values.processorMasterId||"-1",
-      osMasterId:values.osMasterId ||"-1",
+      processorMasterId:values.processorMasterId||"10000",
+      osMasterId:values.osMasterId ||"10000",
       status:"1",
       purposeRemarks:"Single entry of Asset",
       purchaseDate:"01-01-2024",
@@ -164,11 +167,11 @@ const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufac
       assetSerialNumber:values.assetSerialNumber ||0,
     }
 
-    //console.log("data to send ------------  ",data);
-    axios.post(`http://10.14.84.34:3001/api/assetmaster`,data)
+    console.log("data to send ------------  ",data);
+    axios.post(`/api/assetmaster`,data)
     .then(response => {
       console.log("Success!", response);
-      window.location.reload();
+      //window.location.reload();
     }).catch(error => {console.log(error);});
     //console.log("subutmiited values:", data);
     setError("");
