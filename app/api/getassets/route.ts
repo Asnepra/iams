@@ -100,7 +100,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
 
     
-    console.log("asdasfasf --------------",assetData)
+    //console.log("asdasfasf --------------",assetData)
     const responseData = [];
 
       for (let i = 0; i < assetData.length; i++) {
