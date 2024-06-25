@@ -26,6 +26,7 @@ import { LoginSchema } from "@/schemas";
 
 import { useTransition, useState, useEffect } from "react";
 import { Checkbox } from "./ui/checkbox";
+import Cookies from 'js-cookie'
 interface AssetFormProps{
   categoryData:{
     categoryId: number;
@@ -87,6 +88,7 @@ const assetSchema = z.object(
 const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufacturerData,
   osData, processorData
 }:AssetFormProps) => {
+  const token = Cookies.get('token');
   //console.log("data",categoryData);
   const [isPending, startTransition] = useTransition();
   const [filteredSubCategoryData, setFilteredSubCategoryData] = useState<{ subCategoryMasterId: number; subCategoryName: string }[]>([]);
@@ -166,9 +168,16 @@ const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufac
       guaranteeStatus:values.WarrantyStatus||false,
       assetSerialNumber:values.assetSerialNumber ||0,
     }
+    
+    let config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    }
+    
 
     console.log("data to send ------------  ",data);
-    axios.post(`/api/assetmaster`,data)
+    axios.post(`/api/assetmaster`,data,config)
     .then(response => {
       console.log("Success!", response);
       //window.location.reload();

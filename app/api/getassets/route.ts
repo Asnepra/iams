@@ -144,6 +144,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
         responseData.push(assetResponse);
       }
+      console.log(responseData);
 
     return new NextResponse(JSON.stringify(responseData), { status: 200 });
   }

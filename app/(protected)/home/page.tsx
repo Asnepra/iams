@@ -34,10 +34,19 @@ export default function Dashboard() {
 
 
   const [error, setError] = useState<string | undefined>("");
+  const [assets, setAssets] = useState([]);
+     // Map categories to respective icon components
+  const imageCategoryMap: Record<string, JSX.Element> = {
+    Computer: <ComputerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
+    Laptop: <LaptopIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
+    Printer: <PrinterIcon className="w-4 4 text-gray-500 dark:text-gray-400" />,
+    Server: <ServerIcon className="w-4 4 text-gray-500 dark:text-gray-400" />,
+    // Add more mappings as needed
+  };
 
   useEffect(()=>{
     getData();
-  })
+  },[])
 
 
 
@@ -52,12 +61,16 @@ export default function Dashboard() {
           Authorization: `Bearer ${token}`,
         },
       });
+      
+      setAssets(res.data); // Assuming res.data is an array of assets
       console.log(res.data);
     } catch (error) {
       setError("Something happend, Please reload")
       console.error(error);
     }
   };
+
+  
   
 
   return (
@@ -124,211 +137,29 @@ export default function Dashboard() {
                     <TableHead>Device</TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Location</TableHead>
+                    <TableHead>Asset Model Name</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>Issued</TableHead>
-                    <TableHead>Requested</TableHead>
-                    <TableHead>Actions</TableHead>
+                    
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <img
-                          alt="Laptop"
-                          className="rounded-md"
-                          height="32"
-                          src="/placeholder.svg"
-                          style={{
-                            aspectRatio: "32/32",
-                            objectFit: "cover",
-                          }}
-                          width="32"
-                        />
-                        Laptop 1
-                      </div>
-                    </TableCell>
-                    <TableCell>Laptop</TableCell>
-                    <TableCell>HQ - New York</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">In Use</Badge>
-                    </TableCell>
-                    <TableCell>2023-04-15</TableCell>
-                    <TableCell>2023-04-10</TableCell>
-                    <TableCell>
-                      <Button size="icon" variant="ghost">
-                        <DeleteIcon className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost">
-                        <Trash2Icon className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <img
-                          alt="Desktop"
-                          className="rounded-md"
-                          height="32"
-                          src="/placeholder.svg"
-                          style={{
-                            aspectRatio: "32/32",
-                            objectFit: "cover",
-                          }}
-                          width="32"
-                        />
-                        Desktop 1
-                      </div>
-                    </TableCell>
-                    <TableCell>Desktop</TableCell>
-                    <TableCell>HQ - New York</TableCell>
-                    <TableCell>
-                      <Badge variant="default">In Use</Badge>
-                    </TableCell>
-                    <TableCell>2023-03-20</TableCell>
-                    <TableCell>2023-03-15</TableCell>
-                    <TableCell>
-                      <Button size="icon" variant="ghost">
-                        <DeleteIcon className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost">
-                        <Trash2Icon className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <img
-                          alt="Tablet"
-                          className="rounded-md"
-                          height="32"
-                          src="/placeholder.svg"
-                          style={{
-                            aspectRatio: "32/32",
-                            objectFit: "cover",
-                          }}
-                          width="32"
-                        />
-                        Tablet 1
-                      </div>
-                    </TableCell>
-                    <TableCell>Tablet</TableCell>
-                    <TableCell>Remote - San Francisco</TableCell>
-                    <TableCell>
-                      <Badge variant="default">In Use</Badge>
-                    </TableCell>
-                    <TableCell>2023-05-01</TableCell>
-                    <TableCell>2023-04-28</TableCell>
-                    <TableCell>
-                      <Button size="icon" variant="ghost">
-                        <DeleteIcon className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost">
-                        <Trash2Icon className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <img
-                          alt="Printer"
-                          className="rounded-md"
-                          height="32"
-                          src="/placeholder.svg"
-                          style={{
-                            aspectRatio: "32/32",
-                            objectFit: "cover",
-                          }}
-                          width="32"
-                        />
-                        Printer 1
-                      </div>
-                    </TableCell>
-                    <TableCell>Printer</TableCell>
-                    <TableCell>HQ - New York</TableCell>
-                    <TableCell>
-                      <Badge variant="destructive">Maintenance</Badge>
-                    </TableCell>
-                    <TableCell>2023-02-10</TableCell>
-                    <TableCell>2023-02-05</TableCell>
-                    <TableCell>
-                      <Button size="icon" variant="ghost">
-                        <DeleteIcon className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost">
-                        <Trash2Icon className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <img
-                          alt="Server"
-                          className="rounded-md"
-                          height="32"
-                          src="/placeholder.svg"
-                          style={{
-                            aspectRatio: "32/32",
-                            objectFit: "cover",
-                          }}
-                          width="32"
-                        />
-                        Server 1
-                      </div>
-                    </TableCell>
-                    <TableCell>Server</TableCell>
-                    <TableCell>Data Center - New York</TableCell>
-                    <TableCell>
-                      <Badge variant="default">In Use</Badge>
-                    </TableCell>
-                    <TableCell>2023-01-15</TableCell>
-                    <TableCell>2023-01-10</TableCell>
-                    <TableCell>
-                      <Button size="icon" variant="ghost">
-                        <DeleteIcon className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost">
-                        <Trash2Icon className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        <img
-                          alt="Monitor"
-                          className="rounded-md"
-                          height="32"
-                          src="/placeholder.svg"
-                          style={{
-                            aspectRatio: "32/32",
-                            objectFit: "cover",
-                          }}
-                          width="32"
-                        />
-                        Monitor 1
-                      </div>
-                    </TableCell>
-                    <TableCell>Monitor</TableCell>
-                    <TableCell>Remote - San Francisco</TableCell>
-                    <TableCell>
-                      <Badge variant="destructive">Retired</Badge>
-                    </TableCell>
-                    <TableCell>2022-12-01</TableCell>
-                    <TableCell>2022-11-25</TableCell>
-                    <TableCell>
-                      <Button size="icon" variant="ghost">
-                        <DeleteIcon className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost">
-                        <Trash2Icon className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                  {assets.map((asset:any, index:any) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          {/* Replace with actual image or icon */}
+                          {imageCategoryMap[asset.category]}
+                          {asset.category}
+                        </div>
+                      </TableCell>
+                      <TableCell>{asset.category}</TableCell>
+                      <TableCell>{asset.locationName}</TableCell>
+                      
+                      <TableCell>{asset.assetModalName}</TableCell>
+                      <TableCell>{asset.status}</TableCell>
+                      
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </Card>

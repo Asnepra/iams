@@ -58,7 +58,7 @@ export default function RootLayout({
   
   return (
 
-    <>
+    <div className="bg-secondary">
     {isValidToken ? (
         <div className="relative z-10">
           <Navbar  />
@@ -69,6 +69,6 @@ export default function RootLayout({
         </div>
 
   ):null}
-  </>
+  </div>
   );
 }
