@@ -26,15 +26,42 @@ import { useRouter } from "next/navigation";
 import Cookies from 'js-cookie'
 import jwt from 'jsonwebtoken'
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import FormError from "@/components/form-error";
 
 export default function Dashboard() {
 
 
+  const [error, setError] = useState<string | undefined>("");
+
+  useEffect(()=>{
+    getData();
+  })
+
+
+
+  const getData = async () => {
+    const token = Cookies.get('token');
+
+  
+
+    try {
+      const res = await axios.get('/api/getassets', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
+
   return (
     <div className="mt-16 h-auto flex flex-col  md:ml-48 bg-muted/40">
       <div className="flex">
+      <FormError message={error} />
         <main className="flex-1 p-4 ">
           <div className="grid gap-2 md:grid-cols-3 lg:grid-cols-6">
             <Card>
