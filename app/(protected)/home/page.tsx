@@ -52,8 +52,9 @@ export default function Dashboard() {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(res);
+      console.log(res.data);
     } catch (error) {
+      setError("Something happend, Please reload")
       console.error(error);
     }
   };

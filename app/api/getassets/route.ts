@@ -101,81 +101,49 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
     
     console.log("asdasfasf --------------",assetData)
-    const a = await sql.query`SELECT * FROM AssetModel WHERE AssetModelID = ${assetData[0].assetId}`;
-      const aData= a.recordset.map((record: any) => ({
-        assetName: record.AssetModelName,
-        manufacturerId:record.ManufacturerID,
-        categoryId:record.CategoryID,
-        subcategory:record.SubcategoryID
-       
-      }));
-      //console.log("assetData log ---------------", aData);
+    const responseData = [];
 
-      const b = await sql.query`SELECT * FROM CategoryMaster WHERE CategoryMasterID = ${aData[0].categoryId}`;
-      const bData= b.recordset.map((record: any) => ({
-        categoryName: record.CategoryName,
-       
-      }));
+      for (let i = 0; i < assetData.length; i++) {
+        const asset = assetData[i];
+        //console.log("assetss single ",asset)
 
+        const a = await sql.query`SELECT * FROM AssetModel WHERE AssetModelID = ${asset.assetModelId}`;
+        const aData = a.recordset[0]; // Assuming you expect only one record, adjust if necessary
+        //console.log("adata",aData);
 
-      const c = await sql.query`SELECT * FROM SubcategoryMaster WHERE SubcategoryID = ${aData[0].subcategory}`;
-      const cData= c.recordset.map((record: any) => ({
-        subcategoryName: record.SubcategoryName,
-       
-      }));
+        const b = await sql.query`SELECT * FROM CategoryMaster WHERE CategoryMasterID = ${aData.CategoryID}`;
+        const bData = b.recordset[0]; // Assuming you expect only one record, adjust if necessary
+        //console.log("bdata",bData);
 
+        const c = await sql.query`SELECT * FROM SubcategoryMaster WHERE SubcategoryID = ${aData.SubcategoryID}`;
+        const cData = c.recordset[0]; // Assuming you expect only one record, adjust if necessary
 
-      const d = await sql.query`SELECT * FROM LocationMaster WHERE LocationID = ${assetData[0].locationId}`;
-      const dData= d.recordset.map((record: any) => ({
-        locationName: record.LocationName,
-       
-      }));
-      //console.log("data data",dData);
+        const d = await sql.query`SELECT * FROM LocationMaster WHERE LocationID = ${asset.locationId}`;
+        const dData = d.recordset[0]; // Assuming you expect only one record, adjust if necessary
 
+        const osresult = await sql.query`SELECT * FROM OSMaster WHERE OSMasterID = ${asset.osMasterId}`;
+        const osData = osresult.recordset[0]; // Assuming you expect only one record, adjust if necessary
 
+        const processorresult = await sql.query`SELECT * FROM ProcessorMaster WHERE ProcessorMasterID = ${asset.processorMasterId}`;
+        const processorData = processorresult.recordset[0]; // Assuming you expect only one record, adjust if necessary
 
-      let responseData={
-        serialNumber:assetData[0].assetSerialNo,
-        status:assetData[0].warrantyStatus,
-        assetModalName:aData[0].assetName,
-        category:bData[0].categoryName,
-        subcategory:cData[0].subcategoryName,
-        locationName:dData[0].locationName,
-        belongsToUser:user,
-        hdd:assetData[0].hddCapacityGB,
-        monitor:assetData[0].monitorSizeInch,
-        ram:assetData[0].ramMB,
-        os:assetData[0].osMasterId,
-        processor:assetData[0].processorMasterId
+        const assetResponse = {
+          serialNumber: asset.AssetSerialNo,
+          status: asset.Status,
+          assetModalName: aData.AssetModelName,
+          category: bData.CategoryName,
+          subcategory: cData.SubcategoryName,
+          locationName: dData.LocationName,
+          belongsToUser: user,
+          hdd: asset.HDDCapacityGB,
+          monitor: asset.MonitorSizeInch,
+          ram: asset.RAMMB,
+          os: osData.OSName,
+          processor: processorData.ProcessorName
+        };
+
+        responseData.push(assetResponse);
       }
-    
-  
-    
-
-      const osresult = await sql.query`SELECT * FROM OSMaster WHERE OSMasterID = ${assetData[0].osMasterId}`;
-      const osData= osresult.recordset.map((record: any) => ({
-        osMasterId: record.OSMasterID,
-        osMasterName:record.OSName
-       
-      }));
-      responseData.os=osData[0].osMasterName;
-
-      const processorresult = await sql.query`SELECT * FROM ProcessorMaster WHERE ProcessorMasterID = ${assetData[0].processorMasterId}`;
-      const processorData= processorresult.recordset.map((record: any) => ({
-        processorMasterId: record.ProcessorMasterID,
-        processorName:record.ProcessorName
-       
-      }));
-      responseData.processor=processorData[0].processorName;
-
-      //create data;
-      
-    
-    
-    
-
-    //console.log(countryData);
-    console.log("gvbhjnmkl,;./ --------------", responseData);
 
     return new NextResponse(JSON.stringify(responseData), { status: 200 });
   }
