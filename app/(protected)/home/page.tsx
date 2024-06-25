@@ -52,6 +52,7 @@ export default function Dashboard() {
           Authorization: `Bearer ${token}`,
         },
       });
+      console.log(res);
     } catch (error) {
       console.error(error);
     }

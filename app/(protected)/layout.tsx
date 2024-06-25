@@ -22,12 +22,7 @@ export default function RootLayout({
 }>) {
   const router = useRouter()
   const [isValidToken, setIsValidToken] = useState(false); // Initialize as false
-
-  useEffect(() => {
-    validateToken();
-  }, [router]);
-
-  // Validate the token by making an API call
+// Validate the token by making an API call
   const validateToken = async () => {
     const token = Cookies.get('token');
 
@@ -56,6 +51,11 @@ export default function RootLayout({
       setIsValidToken(false); // Update isValidToken state on error
     }
   };
+  useEffect(() => {
+    validateToken();
+  }, [router, validateToken]);
+
+  
   return (
 
     <>
