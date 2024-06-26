@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 
 import "./globals.css";
+import  { Toaster } from 'react-hot-toast';
+
 
 
 
@@ -18,7 +20,9 @@ export default function RootLayout({
     <html lang="en">
             <body className="bg-secondary">
 
-      {children}</body>
+      {children}
+      <Toaster/>
+      </body>
     </html>
   );
 }

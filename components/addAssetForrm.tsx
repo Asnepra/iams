@@ -27,6 +27,7 @@ import { LoginSchema } from "@/schemas";
 import { useTransition, useState, useEffect } from "react";
 import { Checkbox } from "./ui/checkbox";
 import Cookies from 'js-cookie'
+import toast from "react-hot-toast";
 interface AssetFormProps{
   categoryData:{
     categoryId: number;
@@ -179,8 +180,11 @@ const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufac
     console.log("data to send ------------  ",data);
     axios.post(`/api/assetmaster`,data,config)
     .then(response => {
+      toast.success("Data Added Successfully!")
       console.log("Success!", response);
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000); // 3000 milliseconds = 3 seconds
     }).catch(error => {console.log(error);});
     //console.log("subutmiited values:", data);
     setError("");
