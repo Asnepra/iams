@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 // Define schema using zod for form validation
 const schema = z.object({
-  printerModel: z.string().nonempty(),
+  printerModel: z.string(),
   quantity: z.number().min(1, { message: "Quantity must be at least 1" }),
   reason: z.string().min(10, { message: "Reason must be at least 10 characters long" }),
 });
