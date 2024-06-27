@@ -29,12 +29,14 @@ import jwt from 'jsonwebtoken'
 import { useEffect, useState } from "react";
 import axios from "axios";
 import FormError from "@/components/form-error";
+import toast from "react-hot-toast";
 
 export default function Dashboard() {
 
 
   const [error, setError] = useState<string | undefined>("");
   const [assets, setAssets] = useState([]);
+  const [users,setUsers]= useState([]);
      // Map categories to respective icon components
   const imageCategoryMap: Record<string, JSX.Element> = {
     Computer: <ComputerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
@@ -68,17 +70,41 @@ export default function Dashboard() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+      }).then(response=>{
+        setAssets(response.data);
+        console.log("assets data",response.data);
+      }).catch(error=>{
+        console.log("Error in getting Assets",error);
+        setError("Error in Getting Assets");
+        toast.error("Error in getting Assets")
       });
+    const data={
+        token:token
+    }
       
-      setAssets(res.data); // Assuming res.data is an array of assets
-      console.log(res.data);
+     await axios.post(`/api/users`,data)
+            .then(response => {
+                const userData=response.data.empList;
+            setUsers(userData);
+            console.log("users", userData)
+            })
+            .catch(error => {
+                console.log(error);
+                setError("Error getting Users")
+                toast.error("Error in getting Users");
+            });
+            //console.log("subutmiited values:", data);
+            
+        
+      
+      
       // Calculate counts for each category
       let compCount = 0;
       let printCount = 0;
       let lapCount = 0;
       let servCount = 0;
 
-      res.data.forEach((asset: any) => {
+      assets.forEach((asset: any) => {
         if (asset.category === "Computer") compCount++;
         else if (asset.category === "Printer") printCount++;
         else if (asset.category === "Laptop") lapCount++;
@@ -90,6 +116,7 @@ export default function Dashboard() {
       setPrinterCount(printCount || 0); // Default to 1 if printCount is 0
       setLaptopCount(lapCount || 0); // Default to 1 if lapCount is 0
       setServerCount(servCount || 0); // Default to 1 if servCount is 0
+      
     } catch (error) {
       router.push("/")
       setError("Something happend, Please reload")
@@ -157,32 +184,23 @@ export default function Dashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Device</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Location</TableHead>
+                    <TableHead>Employee Number</TableHead>
+                    <TableHead>Employee Name</TableHead>
+                    <TableHead>Employee Department</TableHead>
                     <TableHead>Asset Model Name</TableHead>
-                    <TableHead>Status</TableHead>
                     
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {assets.map((asset:any, index:any) => (
-                    <TableRow key={index}>
-                      <TableCell className="font-medium">
-                        <div className="flex items-center gap-2">
-                          {/* Replace with actual image or icon */}
-                          {imageCategoryMap[asset.category]}
-                          {asset.category}
-                        </div>
-                      </TableCell>
-                      <TableCell>{asset.category}</TableCell>
-                      <TableCell>{asset.locationName}</TableCell>
-                      
-                      <TableCell>{asset.assetModalName}</TableCell>
-                      <TableCell>{asset.status}</TableCell>
-                      
-                    </TableRow>
-                  ))}
+                {users.map((user, index) => (
+                        <TableRow key={index}>
+                            <TableCell>{user.EmployeeNumber}</TableCell>
+                            <TableCell>{user.EmployeeName}</TableCell>
+                            <TableCell>{user.EmpDepartment}</TableCell>
+                            {/* Assuming `asset.status` is a property of each user */}
+                            {/* <TableCell>{user.status}</TableCell> */}
+                        </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </Card>
