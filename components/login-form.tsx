@@ -81,7 +81,7 @@ startTransition(() => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Employee Number</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="0051xxx"
@@ -108,14 +108,7 @@ startTransition(() => {
                       disabled={isPending}
                     />
                   </FormControl>
-                  <Button
-                    size={"sm"}
-                    variant={"link"}
-                    asChild
-                    className="font-normal px-0"
-                  >
-                    <Link href="/auth/reset">Forgot Password?</Link>
-                  </Button>
+                  
                   <FormMessage />
                 </FormItem>
               )}

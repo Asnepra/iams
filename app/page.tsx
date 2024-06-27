@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
 import LoginForm from "@/components/login-form";
 
 export default function Login() {
@@ -18,22 +19,23 @@ export default function Login() {
             />
           </div>
           <div className="grid gap-2 text-center">
-            <h1 className="text-2xl sm:text-2xl lg:text-4xl font-bold text-[#c4a97e]">
-              Conference Hall Booking
+            <h1 className="text-2xl sm:text-2xl lg:text-4xl font-bold text-[#398ef0]">
+              IT Asset Management
             </h1>
           </div>
           <LoginForm />
-          <div className="mt-4 text-center text-lg text-[#95866f]">
-            Don&apos;t have an account?{" "}
-            <Link href="#" className="underline text-[#c4a97e]">
-              Go Study and clear the exam to join IOCL and then book Room
-            </Link>
-          </div>
+          <Button
+            size={"sm"}
+            variant={"link"} asChild
+                    className="font-normal px-0"
+                  >
+                    <Link target="_blank" href="https://apps.indianoil.in/emppwd/">Forgot Password?</Link>
+                  </Button>
         </div>
       </div>
       <div className="rounded-lg hidden lg:block">
         <Image
-          src="/meeting_room.jpeg"
+          src="/asset.webp"
           alt="Image"
           width="1920"
           height="1080"

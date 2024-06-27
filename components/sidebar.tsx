@@ -30,7 +30,7 @@ import { ChevronLeft, Home, LineChart, Package,
   PanelLeft, PlusCircle, Search, 
   Settings, ShoppingCart, Upload,
    Users2, GitPullRequest, Plus,
-    Package2Icon, UploadCloudIcon } from "lucide-react"
+    Package2Icon, UploadCloudIcon , Printer} from "lucide-react"
 
 interface SidebarProps {
   className?: string;
@@ -54,6 +54,11 @@ const Sidebar = ({ className }: SidebarProps) => {
       icon: Package,
       href: "/assets",
       label: "Assets",
+    },
+    {
+      icon: Printer,
+      href: "/request",
+      label: "Request Catridge",
     },
     {
       icon:UploadCloudIcon,

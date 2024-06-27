@@ -187,7 +187,7 @@ export default function Dashboard() {
                     <TableHead>Employee Number</TableHead>
                     <TableHead>Employee Name</TableHead>
                     <TableHead>Employee Department</TableHead>
-                    <TableHead>Asset Model Name</TableHead>
+                    <TableHead>Grade</TableHead>
                     
                   </TableRow>
                 </TableHeader>
