@@ -6,6 +6,7 @@ import {
   LaptopIcon,
   ServerIcon,
   PrinterIcon,
+  SquareUser
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -31,12 +32,23 @@ import axios from "axios";
 import FormError from "@/components/form-error";
 import toast from "react-hot-toast";
 
+interface User{
+    EmployeeNumber:string;
+    EmployeeName:string;
+    EmpDepartment:string;
+}
+
+interface UserDeptCount{
+    EmpDepartment:string;
+    EmployeeCount:string;
+}
 export default function Dashboard() {
 
 
   const [error, setError] = useState<string | undefined>("");
   const [assets, setAssets] = useState([]);
-  const [users,setUsers]= useState([]);
+  const [users,setUsers]= useState<User[]>([]);
+  const [dept,setDept]=useState<UserDeptCount[]>([]);
      // Map categories to respective icon components
   const imageCategoryMap: Record<string, JSX.Element> = {
     Computer: <ComputerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
@@ -85,8 +97,10 @@ export default function Dashboard() {
      await axios.post(`/api/users`,data)
             .then(response => {
                 const userData=response.data.empList;
+                const empdept=response.data.empResult;
             setUsers(userData);
-            console.log("users", userData)
+            setDept(empdept)
+            console.log("users", response)
             })
             .catch(error => {
                 console.log(error);
@@ -132,51 +146,19 @@ export default function Dashboard() {
       <div className="flex">
       <FormError message={error} />
         <main className="flex-1 p-4 ">
-          <div className="grid gap-2 md:grid-cols-3 lg:grid-cols-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">PCs</CardTitle>
-                <ComputerIcon className="w-10 h-10 text-gray-500 dark:text-gray-400" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-[#4338CA]">{computerCount}</div>
-                
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Printers</CardTitle>
-                <PrinterIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-[#6D28D9]">120</div>
-                
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Laptops</CardTitle>
-                <LaptopIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-[#4338CA]">650</div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Issued: 600 | Requested: 50
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Servers</CardTitle>
-                <ServerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-[#6D28D9]">25</div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Issued: 20 | Requested: 5
-                </p>
-              </CardContent>
-            </Card>
+          <div className="grid gap-2 md:grid-cols-6 lg:grid-cols-8">
+          {dept.map((dept, index) => (
+              <Card key={index} className="p-3">
+                <div className="flex items-center justify-between pb-2">
+                  <div className="text-base font-medium">{dept.EmpDepartment}</div>
+                  <SquareUser className="w-6 h-6 text-gray-500 dark:text-gray-400" />
+                </div>
+                <div className="">Employees &nbsp;
+                <span className="text-lg font-bold text-[#4338CA]">{dept.EmployeeCount}</span>
+                </div>
+              </Card>
+            ))}
+           
             
           </div>
           <div className="mt-4 md:mt-6">

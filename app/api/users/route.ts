@@ -10,7 +10,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
         // Check if token is missing
         const {token} = token1;
-        console.log(token);
+        //console.log(token);
         if (!token) {
             return new NextResponse(
                 JSON.stringify({ message: 'Missing token' }),
@@ -34,8 +34,8 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             
 
             
-            console.log("User ID:", userId);
-            console.log("Is Admin:", isAdmin);
+            //console.log("User ID:", userId);
+            //console.log("Is Admin:", isAdmin);
             if(isAdmin!=='Admin'){
                 return new NextResponse(JSON.stringify("Unauthorized Access"),{status:401});
             }
