@@ -67,13 +67,15 @@ async function empLogin(uid: string, pass: string) {
 async function hasAdminPrivilages(email:string){
     await mssqlconnect();
     //Fetch all the countries data
-    const result = await sql.query`SELECT EmployeeName, UserRole FROM UserMaster WHERE EmployeeNumber=${email}`;
+    const result = await sql.query`SELECT * FROM UserMaster WHERE EmployeeNumber=${email}`;
     // Map the result to a JSON format
     const empData = result.recordset.map((record: any) => ({
         userName:record.EmployeeName,
       userRole: record.UserRole,
+      userEmail:record.EmpMail,
       // Add more fields as needed
     }));
+    //console.log("data from DB", empData);
     return empData;
     
 }
@@ -107,13 +109,17 @@ export const POST = async (req: Request, res: Response) => {
         
         let userName;
         let userRole;
+
+        let mail;
         if (user.length > 0) {
         userName = user[0].userName; // Assign user name
         userRole = user[0].userRole; // Assign user role
+        mail=user[0].userEmail;
+        //console.log("mail", mail);
         }
         const { JWT_SECRET } = process.env;
 
-        const token = jwt.sign({ userId: email, isAdmin:userRole }, `${JWT_SECRET}`, {
+        const token = jwt.sign({ userId: email, isAdmin:userRole, userName:userName,userMail:mail }, `${JWT_SECRET}`, {
           expiresIn: '10m',
         })
     

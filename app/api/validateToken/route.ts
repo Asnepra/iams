@@ -17,7 +17,9 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         let j={
             message:"Failure",
             isAdmin:"False",
-            userId:"Dummy"
+            userId:"Dummy",
+            userName:"Name",
+            mail:"abc@gmail.com"
         }
 
         try {
@@ -35,11 +37,13 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             }
 
             // Ensure decoded contains expected properties
-            const { userId, isAdmin } = decoded;
-            //console.log("data", isAdmin);
+            const { userId, isAdmin, userName, userMail } = decoded;
+            //console.log("data", userMail);
             j.message="Success";
             j.isAdmin=isAdmin;
             j.userId=userId;
+            j.userName=userName;
+            j.mail=userMail;
 
             
                 return new NextResponse(

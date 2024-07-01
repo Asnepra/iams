@@ -12,6 +12,7 @@ import {
   Users2, GitPullRequest, Plus,
   Package2Icon, UploadCloudIcon, Printer
 } from "lucide-react";
+import { Separator } from './ui/separator';
 
 interface SidebarProps {
   className?: string;
@@ -19,7 +20,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ className, isAdmin }: SidebarProps) => {
-  const router = useRouter();
+
   const pathname = usePathname();
 
   const normalRoutes = [
@@ -89,7 +90,8 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
             {routesToRender.map((route) => (
               <Tooltip key={route.href}>
                 <TooltipTrigger asChild>
-                  <Link href={route.href} className={`group flex h-9 w-48 shrink-0 items-center px-2 gap-2 rounded-full ${pathname === route.href ? 'bg-primary text-primary-foreground font-semibold' : 'bg-secondary text-muted-foreground'} text-lg  md:h-8 md:w-48 md:text-base`}>
+                  <Link href={route.href} className={`group flex h-9 w-48 shrink-0 items-center px-2 gap-2 rounded-full 
+                    ${pathname === route.href ? 'bg-primary text-primary-foreground font-semibold' : 'bg-secondary text-muted-foreground'} text-lg  md:h-8 md:w-48 md:text-base`}>
                     <route.icon className="h-5 w-5" />
                     <span className="px-2">{route.label}</span>
                   </Link>
@@ -100,6 +102,7 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
           </nav>
         </TooltipProvider>
       </aside>
+      <Separator orientation='vertical'/>
     </div>
   );
 };
