@@ -23,7 +23,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`);
 
             // Check token expiration
-            if (decoded.exp < Math.floor(Date.now() / 1000)) {
+            if (typeof decoded.exp === 'number' && decoded.exp < Math.floor(Date.now() / 1000)) {
                 return new NextResponse(
                     JSON.stringify({ message: 'Token expired' }),
                     { status: 401 }

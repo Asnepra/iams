@@ -1,50 +1,41 @@
-"use client";
-import React from 'react'
-import Image from "next/image"
-import Link from "next/link"
-import { useRouter, usePathname } from "next/navigation"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { TooltipProvider } from "@radix-ui/react-tooltip"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-
+// "use client"
+import React from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter, usePathname } from "next/navigation";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { ChevronLeft, Home, LineChart, Package, 
-  PanelLeft, PlusCircle, Search, 
+  ChevronLeft, Home, LineChart, Package,
+  PanelLeft, PlusCircle, Search,
   Settings, ShoppingCart, Upload,
-   Users2, GitPullRequest, Plus,
-    Package2Icon, UploadCloudIcon , Printer} from "lucide-react"
+  Users2, GitPullRequest, Plus,
+  Package2Icon, UploadCloudIcon, Printer
+} from "lucide-react";
 
 interface SidebarProps {
   className?: string;
+  isAdmin: boolean; // Accept isAdmin as a prop
 }
 
-const Sidebar = ({ className }: SidebarProps) => {
+const Sidebar = ({ className, isAdmin }: SidebarProps) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const onNavigate = (url: string) => {
-    return router.push(url);
-  };
+  const normalRoutes = [
+    {
+      icon: Home,
+      href: "/home",
+      label: "Home",
+    },
+    {
+      icon: Printer,
+      href: "/request",
+      label: "Request Cartridge",
+    }
+  ];
 
-  const routes = [
+  const adminRoutes = [
     {
       icon: Home,
       href: "/home",
@@ -58,12 +49,12 @@ const Sidebar = ({ className }: SidebarProps) => {
     {
       icon: Printer,
       href: "/request",
-      label: "Request Catridge",
+      label: "Request Cartridge",
     },
     {
-      icon:UploadCloudIcon,
-      href:"/upload",
-      label:"Add / Upload",
+      icon: UploadCloudIcon,
+      href: "/upload",
+      label: "Add / Upload",
     },
     {
       icon: Users2,
@@ -82,23 +73,23 @@ const Sidebar = ({ className }: SidebarProps) => {
     }
   ];
 
+  const routesToRender = isAdmin ? adminRoutes : normalRoutes;
+
   return (
     <div className={`space-y-4 flex flex-col h-full text-primary bg-secondary ${className}`}>
       <aside>
         <div className="flex h-[60px] items-center border-b px-6">
-            <Link className="flex items-center gap-2 font-semibold " href="/home">
-              <Package2Icon className="h-6 w-6" />
-              <span className="">IT Assets</span>
-            </Link>
-            
-          </div>
+          <Link className="flex items-center gap-2 font-semibold" href="/home">
+            <Package2Icon className="h-6 w-6" />
+            <span className="">IT Assets</span>
+          </Link>
+        </div>
         <TooltipProvider>
           <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-            {routes.map((route) => (
+            {routesToRender.map((route) => (
               <Tooltip key={route.href}>
                 <TooltipTrigger asChild>
-                  <Link href={route.href} className={`group flex h-9 w-48 shrink-0 items-center px-2
-                   gap-2 rounded-full ${pathname === route.href ? 'bg-primary text-primary-foreground font-semibold' : 'bg-secondary text-muted-foreground'} text-lg  md:h-8 md:w-48 md:text-base`}>
+                  <Link href={route.href} className={`group flex h-9 w-48 shrink-0 items-center px-2 gap-2 rounded-full ${pathname === route.href ? 'bg-primary text-primary-foreground font-semibold' : 'bg-secondary text-muted-foreground'} text-lg  md:h-8 md:w-48 md:text-base`}>
                     <route.icon className="h-5 w-5" />
                     <span className="px-2">{route.label}</span>
                   </Link>
@@ -107,8 +98,6 @@ const Sidebar = ({ className }: SidebarProps) => {
               </Tooltip>
             ))}
           </nav>
-
-          
         </TooltipProvider>
       </aside>
     </div>

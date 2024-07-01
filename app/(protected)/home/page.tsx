@@ -8,8 +8,7 @@ import {
   PrinterIcon,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -63,12 +62,19 @@ export default function Dashboard() {
   
 
     try {
+      const body={
+        token:token
+      }
       
-      const res = await axios.get('/api/getassets', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await axios.post('/api/getassets',body)
+      const data=res.data;
+      // if(data.message==='Success'){
+        
+      // }
+      // else{
+      //   router.push("/");
+      // }
+      console.log("data response",data);
       
       setAssets(res.data); // Assuming res.data is an array of assets
       console.log(res.data);

@@ -1,12 +1,12 @@
 import mssqlconnect from "@/lib/mssqlconnect";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import { headers } from "next/headers";
 
 const sql = require('mssql')
 
 
-export const GET = async (req: NextRequest, res: NextResponse) => {
+export const POST = async (req: NextRequest, res: NextResponse) => {
   
   try {
     // // Set CORS headers
@@ -21,59 +21,56 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
 
     
 
-    //const headersInstance = headers()
-    const authHeader = req.headers.get('authorization')
-    //console.log("auth header", authHeader);
+    // //const headersInstance = headers()
+    // const authHeader = req.headers.get('authorization')
+    // //console.log("auth header", authHeader);
 
-    const token = authHeader?.split(' ')[1] 
+    // const token = authHeader?.split(' ')[1] 
     //console.log("token 0----- ", token)
+    const token1 = await req.json(); // Assuming the token is sent in the request body
+        
+
+        // Check if token is missing
+        const {token} = token1;
+        //console.log("token ------------", token);
 
     
     // Check if token is undefined or null
     if (!token) {
         return NextResponse.json(
         { message: 'Missing token' },
-        { status: 200 }
+        { status: 400 }
         );
     }
-    let verified=false;
-    let j={
-      message:'Token verified',
-      status:401
-    }
     let user=null;
-    let admin;
+    try {
+      // Verify JWT token
+      const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`) as JwtPayload;
+      //console.log("decoded token", decoded);
 
-    const decode=jwt.verify(token, `${process.env.JWT_SECRET}`, (err:any, decoded:any) => {
-        if (err) {
-          // Token verification failed
-          j.message="Invalid Token";
-          j.status=401;
-          return NextResponse.json(
-            j
+      // Check token expiration
+      if (typeof decoded.exp === 'number' && decoded.exp < Math.floor(Date.now() / 1000)) {
+          return new NextResponse(
+              JSON.stringify({ message: 'Token expired' }),
+              { status: 401 }
           );
-        }
-      
-        // Check expiration
-        if (decoded.exp < Math.floor(Date.now() / 1000)) {
-          j.message="Invalid Token";
-            j.status=400;
-          return NextResponse.json(
-            j
-          );
-        }
+      }
 
-        const { userId, isAdmin } = decoded;
-        //console.log(userId, isAdmin)
-        user=userId;
-        admin = isAdmin;
+      // Ensure decoded contains expected properties
+      const { userId, isAdmin } = decoded;
 
-      
-        // Token is valid
-        // Proceed with your logic using `decoded` data
-        
-        //console.log("token abckend verified");
-      }); 
+      //set user
+      user=userId;
+      console.log("user",user);
+       
+     
+  } catch (error) {
+      console.error("Error:", error);
+      return new NextResponse(
+          JSON.stringify({ message: 'Invalid token or database error' }),
+          { status: 500 }
+      );
+  }
     await mssqlconnect();
     //Fetch all the countries data
     if(user!==null){

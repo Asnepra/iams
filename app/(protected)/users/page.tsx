@@ -9,8 +9,7 @@ import {
   SquareUser
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -68,77 +67,66 @@ export default function Dashboard() {
   useEffect(()=>{
     getData();
   },[])
+    // Calculate counts for each category
+    let compCount = 0;
+    let printCount = 0;
+    let lapCount = 0;
+    let servCount = 0;
+
+    
 
 
 
-  const getData = async () => {
+// Function to fetch data
+const getData = async () => {
     const token = Cookies.get('token');
 
-  
-
     try {
-      
-      const res = await axios.get('/api/getassets', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then(response=>{
-        setAssets(response.data);
-        console.log("assets data",response.data);
-      }).catch(error=>{
-        console.log("Error in getting Assets",error);
-        setError("Error in Getting Assets");
-        toast.error("Error in getting Assets")
-      });
-    const data={
-        token:token
-    }
-      
-     await axios.post(`/api/users`,data)
-            .then(response => {
-                const userData=response.data.empList;
-                const empdept=response.data.empResult;
-            setUsers(userData);
-            setDept(empdept)
-            console.log("users", response)
-            })
-            .catch(error => {
-                console.log(error);
-                setError("Error getting Users")
-                toast.error("Error in getting Users");
-            });
-            //console.log("subutmiited values:", data);
-            
-        
-      
-      
-      // Calculate counts for each category
-      let compCount = 0;
-      let printCount = 0;
-      let lapCount = 0;
-      let servCount = 0;
 
-      assets.forEach((asset: any) => {
-        if (asset.category === "Computer") compCount++;
-        else if (asset.category === "Printer") printCount++;
-        else if (asset.category === "Laptop") lapCount++;
-        else if (asset.category === "Server") servCount++;
-      });
 
-      // Set counts
-      setComputerCount(compCount || 1); // Default to 1 if compCount is 0
-      setPrinterCount(printCount || 0); // Default to 1 if printCount is 0
-      setLaptopCount(lapCount || 0); // Default to 1 if lapCount is 0
-      setServerCount(servCount || 0); // Default to 1 if servCount is 0
-      
+      // Fetch user data
+      const responseUsers = await axios.post('/api/users', { token });
+      // Set users and department counts state based on API response
+      setUsers(responseUsers.data.empList);
+      setDept(responseUsers.data.empResult);
     } catch (error) {
-      router.push("/")
-      setError("Something happend, Please reload")
-      console.error(error);
+      // Handle errors
+      console.error("Error fetching data:", error);
+      router.push("/");
+      setError("Something happened. Please reload.");
+      toast.error("Error fetching data.");
     }
   };
 
-  
+  // Calculate counts for each category
+  useEffect(() => {
+
+
+    assets.forEach((asset: any) => {
+      switch (asset.category) {
+        case "Computer":
+          compCount++;
+          break;
+        case "Printer":
+          printCount++;
+          break;
+        case "Laptop":
+          lapCount++;
+          break;
+        case "Server":
+          servCount++;
+          break;
+        default:
+          break;
+      }
+    });
+
+    // Set counts
+    setComputerCount(compCount || 1); // Default to 1 if compCount is 0
+    setPrinterCount(printCount || 0); // Default to 0 if printCount is 0
+    setLaptopCount(lapCount || 0); // Default to 0 if lapCount is 0
+    setServerCount(servCount || 0); // Default to 0 if servCount is 0
+  }, [assets]);
   
 
   return (
