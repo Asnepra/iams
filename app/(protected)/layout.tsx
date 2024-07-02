@@ -54,6 +54,24 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     validateToken();
   }, []);
 
+   // Function to check if the current route is allowed for admin users
+   const checkAdminRouteAccess = () => {
+    if (!isAdmin) {
+    
+      // Define the list of allowed admin routes
+      const allowedAdminRoutes = ['/home',  '/request'];
+      // Check if the current pathname is not in the allowed list
+      if (!allowedAdminRoutes.includes(pathName)) {
+        router.replace('/home'); // Redirect to home page if trying to access unauthorized route
+      }
+    }
+  };
+
+  // Execute checkAdminRouteAccess whenever pathname or isAdmin changes
+  useEffect(() => {
+    checkAdminRouteAccess();
+  }, [pathName, isAdmin]);
+
 
   // Render layout and children if token is valid
   return isValidToken ? (

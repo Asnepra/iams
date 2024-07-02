@@ -92,9 +92,9 @@ const getData = async () => {
     } catch (error) {
       // Handle errors
       console.error("Error fetching data:", error);
-      router.push("/");
-      setError("Something happened. Please reload.");
-      toast.error("Error fetching data.");
+      router.push("/home");
+      //setError("Something happened. Please reload.");
+      //toast.error("Error fetching data.");
     }
   };
 
