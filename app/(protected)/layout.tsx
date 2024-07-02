@@ -19,7 +19,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   // Validate the token and user role
   const validateToken = async () => {
     const token = Cookies.get('token');
-    console.log("token on layout", token);
+    //console.log("token on layout", token);
 
     if (!token) {
       router.replace('/'); // Redirect to login page if no token is found
@@ -41,10 +41,10 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       else{
         router.push("/");
       }
-      console.log("data response",data);
+      //console.log("data response",data);
 
     } catch (error) {
-      console.error(error);
+      //console.error(error);
       router.replace('/');
       setIsValidToken(false); // Update isValidToken state on error
     }
