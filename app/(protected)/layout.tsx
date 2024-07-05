@@ -59,7 +59,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     if (!isAdmin) {
     
       // Define the list of allowed admin routes
-      const allowedAdminRoutes = ['/home',  '/request'];
+      const allowedAdminRoutes = ['/home',  '/request','/complaint'];
       // Check if the current pathname is not in the allowed list
       if (!allowedAdminRoutes.includes(pathName)) {
         router.replace('/home'); // Redirect to home page if trying to access unauthorized route

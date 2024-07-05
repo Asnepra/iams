@@ -96,7 +96,8 @@ export default function Dashboard() {
         setLaptopCount(lapCount);
         setServerCount(servCount);
       } else {
-        throw new Error('Invalid response from server');
+        setError("Inavlid Details from Server");
+        //throw new Error('Invalid response from server');
       }
     } catch (error) {
       console.error('Error fetching assets:', error);
@@ -121,7 +122,7 @@ export default function Dashboard() {
          bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%">
         My Assets
         {userData && (
-          <p className="text-base justify-around items-start text-white/90 dark:text-gray-400 flex gap-4">
+          <p className="text-lg flex justify-between text-white/90 dark:text-gray-400 gap-4">
             <span className="font-bold">Name: &nbsp;{userData.userName}  </span>
             <span className="font-bold">Employee Number:  &nbsp;{userData.userId} </span> 
             <span className="font-bold">Email: &nbsp;{userData.userMail.toLowerCase()} </span>

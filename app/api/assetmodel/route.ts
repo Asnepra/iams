@@ -4,18 +4,31 @@ import { NextRequest, NextResponse } from "next/server";
 const sql = require('mssql')
 
 
-export const GET = async (req: NextRequest, res: NextResponse) => {
+export const POST = async (req: NextRequest, res: NextResponse) => {
   
   try {
     // Set CORS headers
-    const headers = new Headers(req.headers)
-    headers.set(
-      'Access-Control-Allow-Origin', '*');
-      headers.set(
-      'Access-Control-Allow-Methods', 'GET, OPTIONS');
+    // const headers = new Headers(req.headers)
+    // headers.set(
+    //   'Access-Control-Allow-Origin', '*');
+    //   headers.set(
+    //   'Access-Control-Allow-Methods', 'GET, OPTIONS');
     
     // Connect to the MongoDB database
     //await connectMongoDb();
+    // Extract token from request body
+    const { token } = await req.json();
+        
+    // Check if token is missing
+    //console.log(token);
+    if (!token) {
+        return new NextResponse(
+            JSON.stringify({ message: 'Missing token' }),
+            { status: 400 }
+        );
+    }
+
+    
     await mssqlconnect();
     //Fetch all the countries data
     const result = await sql.query`SELECT * FROM AssetModel`;

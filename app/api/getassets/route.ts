@@ -125,6 +125,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         const processorData = processorresult.recordset[0]; // Assuming you expect only one record, adjust if necessary
 
         const assetResponse = {
+          assetId:asset.assetId,
           serialNumber: asset.AssetSerialNo,
           status: asset.Status,
           assetModalName: aData.AssetModelName,

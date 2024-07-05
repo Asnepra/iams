@@ -147,7 +147,7 @@ const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufac
   //if(categoryData.)
   }
 
-  function onSubmit(values: z.infer<typeof assetSchema>) {
+  async function onSubmit(values: z.infer<typeof assetSchema>) {
     if(!values.hddSddOptions){
       console.log("no ssd")
     }
@@ -178,7 +178,7 @@ const AssetForm = ({categoryData,subcategoryData,assetData,locationData, manufac
     
 
     console.log("data to send ------------  ",data);
-    axios.post(`/api/assetmaster`,data,config)
+    await axios.post(`/api/assetmaster`,data,config)
     .then(response => {
       toast.success("Data Added Successfully!")
       console.log("Success!", response);

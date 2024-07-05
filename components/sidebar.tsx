@@ -10,7 +10,8 @@ import {
   PanelLeft, PlusCircle, Search,
   Settings, ShoppingCart, Upload,
   Users2, GitPullRequest, Plus,
-  Package2Icon, UploadCloudIcon, Printer
+  Package2Icon, UploadCloudIcon, Printer,
+  Kanban
 } from "lucide-react";
 import { Separator } from './ui/separator';
 
@@ -33,6 +34,11 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
       icon: Printer,
       href: "/request",
       label: "Request Cartridge",
+    },
+    {
+      icon: Kanban,
+      href: "/complaint",
+      label: "Raise a concern",
     }
   ];
 
@@ -51,6 +57,11 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
       icon: Printer,
       href: "/request",
       label: "Request Cartridge",
+    },
+    {
+      icon: Kanban,
+      href: "/complaint",
+      label: "Raise a concern",
     },
     {
       icon: UploadCloudIcon,

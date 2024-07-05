@@ -17,7 +17,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-export default function Component() {
+export default function AssetRequestForm() {
   return (
     <div className="mt-16 mx-auto max-w-md space-y-6">
       <div className="space-y-2 text-center">

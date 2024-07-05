@@ -14,17 +14,28 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   
   try {
     // Set CORS headers
-    const headers = new Headers(req.headers)
-    headers.set(
-      'Access-Control-Allow-Origin', '*');
-      headers.set(
-      'Access-Control-Allow-Methods', 'POST, OPTIONS');
-      //const headersInstance = headers()
-    const authHeader = req.headers.get('authorization')
-    //console.log("auth header", authHeader);
+    // const headers = new Headers(req.headers)
+    // headers.set(
+    //   'Access-Control-Allow-Origin', '*');
+    //   headers.set(
+    //   'Access-Control-Allow-Methods', 'POST, OPTIONS');
+    //   //const headersInstance = headers()
+    // const authHeader = req.headers.get('authorization')
+    // //console.log("auth header", authHeader);
 
-    const token = authHeader?.split(' ')[1] 
-    //console.log("token 0----- ", token)
+    // const token = authHeader?.split(' ')[1] 
+    // //console.log("token 0----- ", token)
+    // Extract token from request body
+    const { token } = await req.json();
+        
+    // Check if token is missing
+    //console.log(token);
+    if (!token) {
+        return new NextResponse(
+            JSON.stringify({ message: 'Missing token' }),
+            { status: 400 }
+        );
+    }
 
     
     // Check if token is undefined or null
