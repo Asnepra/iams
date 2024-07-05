@@ -32,7 +32,7 @@ const ticketSchema = z.object({
     message: "Please select the priority",
   }),
   ticketDetails: z.string().min(10, {
-    message: "Please enter details of your concern",
+    message: "Please enter details of your concern, atleast 10 characters",
   }),
 });
 
@@ -79,9 +79,9 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
         ticketDetails: values.ticketDetails || "Null"
       };
 
-      const response = await axios.post(`/api/assetmaster`, data);
+      //const response = await axios.post(`/api/assetmaster`, data);
       toast.success("Ticket Raised Successfully!");
-      console.log("Success!", response.data);
+      console.log("Success!", data);
 
       // Optionally, you can reload the page after successful submission
       // setTimeout(() => {
@@ -114,7 +114,7 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
                     <SelectValue placeholder="Select an asset..." />
                     <SelectContent>
                       {assets?.map((asset) => (
-                        <SelectItem key={asset.assetId} value={asset.assetId}>
+                        <SelectItem key={asset.assetId} value={asset.assetModalName}>
                           <div className="flex items-center gap-2">
                             {imageCategoryMap[asset.categoryName]}
                             <span>{asset.assetModalName}</span>
