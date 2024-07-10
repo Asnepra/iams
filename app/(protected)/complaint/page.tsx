@@ -26,7 +26,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ComputerIcon, LaptopIcon, PrinterIcon, ServerIcon, Tally1, Tally2, Tally3, Tally4Icon } from "lucide-react";
+import { CogIcon, CommandIcon, ComputerIcon, Container, ContainerIcon, DiamondIcon, LaptopIcon, PrinterIcon, ServerIcon, Tally1, Tally2, Tally3, Tally4Icon } from "lucide-react";
 import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -85,10 +85,10 @@ interface Priority {
 }
 
 const priorityList: Priority[] = [
-  { priorityId: 1, priorityName: "Low", priorityIcon: <ComputerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />, priorityColor: "bg-blue-400" },
-  { priorityId: 2, priorityName: "Medium", priorityIcon: <LaptopIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />, priorityColor: "bg-yellow-500" },
-  { priorityId: 3, priorityName: "High", priorityIcon: <PrinterIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />, priorityColor: "bg-orange-500" },
-  { priorityId: 4, priorityName: "Urgent", priorityIcon: <ServerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />, priorityColor: "bg-red-500" },
+  { priorityId: 1, priorityName: "Low", priorityIcon: <CommandIcon className="w-4 h-4 text-blue-400 dark:text-gray-400" />, priorityColor: "bg-blue-400" },
+  { priorityId: 2, priorityName: "Medium", priorityIcon: <CogIcon className="w-4 h-4 text-yellow-400 dark:text-gray-400" />, priorityColor: "bg-yellow-500" },
+  { priorityId: 3, priorityName: "High", priorityIcon: <ContainerIcon className="w-4 h-4 text-orange-400 dark:text-gray-400" />, priorityColor: "bg-orange-500" },
+  { priorityId: 4, priorityName: "Urgent", priorityIcon: <DiamondIcon className="w-4 h-4 text-red-500 dark:text-gray-400" />, priorityColor: "bg-red-500" },
 ];
 
 export default function ComplaintPage() {

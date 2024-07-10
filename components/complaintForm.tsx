@@ -69,20 +69,36 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
     },
   });
 
+  const findIdFromAssetName = (assetName: string): string => {
+    const foundAsset = assets.find(asset => asset.assetModalName === assetName);
+    return foundAsset ? foundAsset.assetId : '';
+  };
+
   const onSubmit = async (values: TicketFormData) => {
     setIsPending(true);
     try {
+      const assetIds = findIdFromAssetName(values.assetId); // Find assetId from asset name
       const data = {
         token: token,
-        assetId: values.assetId, // Correctly submit assetId from form values
+        assetId: assetIds, // Correctly submit assetId from form values
         ticketPriority: values.ticketPriority || "Low",
         ticketDetails: values.ticketDetails || "Null"
       };
 
       //const response = await axios.post(`/api/assetmaster`, data);
-      toast.success("Ticket Raised Successfully!");
+      
       console.log("Success!", data);
 
+    //   await axios.post(`/api/raiseticket`,data)
+    //  .then(response => {
+    //   toast.success("Ticket Raised Successfully!");
+    //   console.log("Success!", response);
+    //   setTimeout(() => {
+    //     window.location.reload();
+    //   }, 3000); // 3000 milliseconds = 3 seconds
+    // }).catch(error=>{
+    //   console.log("Error ", error)
+    // })
       // Optionally, you can reload the page after successful submission
       // setTimeout(() => {
       //   window.location.reload();
@@ -144,9 +160,9 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
                     <SelectContent>
                       {priorityList.map((priority) => (
                         <SelectItem key={priority.priorityId} value={priority.priorityName}>
-                          <div className={`flex items-center gap-2 ${priority.priorityColor}`}>
+                          <div className={`flex items-center gap-4 `}>
                             {priority.priorityIcon}
-                            <span className={`text-${priority.priorityColor}`}>{priority.priorityName}</span>
+                            <span>{priority.priorityName}</span>
                           </div>
                         </SelectItem>
                       ))}
