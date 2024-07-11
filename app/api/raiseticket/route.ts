@@ -12,7 +12,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     const { token, assetModalId, ticketPriority, ticketDetails } = await req.json();
         
     // Check if token is missing
-    console.log(token, assetModalId, ticketDetails, ticketPriority);
+    //console.log(token, assetModalId, ticketDetails, ticketPriority);
     if (!token) {
         return new NextResponse(
             JSON.stringify({ message: 'Missing token' }),
@@ -53,7 +53,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             j.userId=userId;
             j.userName=userName;
             j.mail=userMail;
-            console.log("json data", j);
+            //console.log("json data", j);
 
             
             await mssqlconnect();
@@ -79,7 +79,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                         83405,
                         2024,
                         GETDATE(),
-                        1,
+                        -1,
                         NULL,
                         NULL
                     )

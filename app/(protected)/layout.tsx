@@ -75,7 +75,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 
   // Render layout and children if token is valid
   return isValidToken ? (
-    <div className="bg-secondary">
+    <div className="bg-secondary gradient">
       <div className="relative z-10">
         <Navbar />
         <div className="hidden md:flex mt-16 max-w-48 flex-col fixed inset-y-0">
