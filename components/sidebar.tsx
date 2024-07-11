@@ -11,7 +11,9 @@ import {
   Settings, ShoppingCart, Upload,
   Users2, GitPullRequest, Plus,
   Package2Icon, UploadCloudIcon, Printer,
-  Kanban
+  Kanban,
+  HelpCircle,
+  Box
 } from "lucide-react";
 import { Separator } from './ui/separator';
 
@@ -64,6 +66,11 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
       label: "Raise a concern",
     },
     {
+      icon: Box,
+      href: "/admin",
+      label: "Assign ticket",
+    },
+    {
       icon: UploadCloudIcon,
       href: "/upload",
       label: "Add / Upload",
@@ -113,8 +120,7 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
           </nav>
         </TooltipProvider>
       </aside>
-      <Separator orientation='vertical'/>
-    </div>
+      </div>
   );
 };
 

@@ -130,7 +130,7 @@ const getData = async () => {
   
 
   return (
-    <div className="mt-16 h-auto flex flex-col  md:ml-48 bg-muted/40">
+    <div className=" h-auto flex flex-col bg-muted/40">
       <div className="flex">
       <FormError message={error} />
         <main className="flex-1 p-4 ">

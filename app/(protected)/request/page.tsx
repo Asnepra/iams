@@ -96,7 +96,7 @@ export default function Home() {
   ]);
 
   return (
-    <main className="mt-16 h-auto md:ml-48">
+    <main className="h-auto">
       <div className="text-2xl rounded-md px-4 text-white/90 bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%">
         Add Assets
         <p className="text-base text-white/90 dark:text-gray-400">

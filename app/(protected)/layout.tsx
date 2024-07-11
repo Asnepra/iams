@@ -75,14 +75,16 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 
   // Render layout and children if token is valid
   return isValidToken ? (
-    <div className="bg-secondary gradient">
+    <div className="bg-secondary">
       <div className="relative z-10">
         <Navbar />
         <div className="hidden md:flex mt-16 max-w-48 flex-col fixed inset-y-0">
           {/* Pass isAdmin prop based on isValidToken */}
           <Sidebar isAdmin={isAdmin} />
         </div>
+        <div className="mt-16 h-auto flex flex-col md:ml-48 bg-muted/40">
         {children}
+        </div>
       </div>
     </div>
   ) : null;

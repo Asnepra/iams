@@ -115,7 +115,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="mt-16 h-auto flex flex-col md:ml-48 bg-muted/40">
+    <div className="h-auto flex flex-col bg-muted/40">
         
         
          <div className="text-2xl rounded-md px-4 text-white/90 
