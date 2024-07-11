@@ -34,6 +34,7 @@ import ComplaintForm from "@/components/complaintForm";
 
 interface Asset {
     assetId:string;
+    assetModalId:string;
   assetModalName: string;
   categoryName: string;
 }

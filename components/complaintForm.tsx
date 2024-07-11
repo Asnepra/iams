@@ -14,6 +14,7 @@ import { Textarea } from "./ui/textarea";
 
 interface Asset {
   assetId: string;
+  assetModalId:string;
   assetModalName: string;
   categoryName: string;
 }
@@ -71,7 +72,7 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
 
   const findIdFromAssetName = (assetName: string): string => {
     const foundAsset = assets.find(asset => asset.assetModalName === assetName);
-    return foundAsset ? foundAsset.assetId : '';
+    return foundAsset ? foundAsset.assetModalId : '';
   };
 
   const onSubmit = async (values: TicketFormData) => {

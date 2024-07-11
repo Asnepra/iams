@@ -126,6 +126,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
         const assetResponse = {
           assetId:asset.assetId,
+          assetModalId:asset.assetModalId,
           serialNumber: asset.AssetSerialNo,
           status: asset.Status,
           assetModalName: aData.AssetModelName,
