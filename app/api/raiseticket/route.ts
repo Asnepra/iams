@@ -76,7 +76,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                         ${ticketPriority},
                         'Open',
                         ${userId},
-                        83405,
+                        1,
                         2024,
                         GETDATE(),
                         -1,

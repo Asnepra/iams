@@ -82,7 +82,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
           {/* Pass isAdmin prop based on isValidToken */}
           <Sidebar isAdmin={isAdmin} />
         </div>
-        <div className="mt-16 h-auto flex flex-col md:ml-48 bg-muted/40">
+        <div className="mt-16 h-auto flex flex-col md:ml-48 bg-muted/40 mx-2 px-2 border-b">
         {children}
         </div>
       </div>

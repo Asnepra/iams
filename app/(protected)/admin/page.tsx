@@ -4,7 +4,6 @@ import Link from "next/link"
 import {
   File,
   Home,
-  LineChart,
   ListFilter,
   MoreHorizontal,
   Package,
@@ -65,483 +64,481 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { SetStateAction, useState } from "react"
+import { Pagination } from "@/components/ui/pagination"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/charts"
+import { Bar, BarChart, CartesianGrid, Line, LineChart, Pie, PieChart, XAxis } from "recharts"
 
 export default function Admin() {
+    const [tickets, setTickets] = useState([
+        {
+          id: "TKT001",
+          subject: "Website not loading",
+          status: "open",
+          priority: "high",
+          assignee: "John Doe",
+          created: "2023-06-01",
+          updated: "2023-06-02",
+        },
+        {
+          id: "TKT002",
+          subject: "Checkout process not working",
+          status: "open",
+          priority: "medium",
+          assignee: "Jane Smith",
+          created: "2023-06-03",
+          updated: "2023-06-04",
+        },
+        {
+          id: "TKT003",
+          subject: "Unable to log in",
+          status: "resolved",
+          priority: "high",
+          assignee: "John Doe",
+          created: "2023-06-05",
+          updated: "2023-06-07",
+        },
+        {
+          id: "TKT004",
+          subject: "Slow page load times",
+          status: "closed",
+          priority: "low",
+          assignee: "Jane Smith",
+          created: "2023-06-08",
+          updated: "2023-06-10",
+        },
+        {
+          id: "TKT005",
+          subject: "Broken image on homepage",
+          status: "open",
+          priority: "medium",
+          assignee: "John Doe",
+          created: "2023-06-11",
+          updated: "2023-06-12",
+        },
+        {
+          id: "TKT006",
+          subject: "Incorrect product pricing",
+          status: "resolved",
+          priority: "high",
+          assignee: "Jane Smith",
+          created: "2023-06-13",
+          updated: "2023-06-15",
+        },
+        {
+          id: "TKT007",
+          subject: "Unable to place order",
+          status: "closed",
+          priority: "low",
+          assignee: "John Doe",
+          created: "2023-06-16",
+          updated: "2023-06-18",
+        },
+        {
+          id: "TKT008",
+          subject: "Broken search functionality",
+          status: "open",
+          priority: "high",
+          assignee: "Jane Smith",
+          created: "2023-06-19",
+          updated: "2023-06-20",
+        },
+      ])
+      const [filteredTickets, setFilteredTickets] = useState(tickets)
+      const [currentPage, setCurrentPage] = useState(1)
+      const [ticketsPerPage] = useState(10)
+      const [filterStatus, setFilterStatus] = useState("all")
+      const handleFilterStatus = (status: SetStateAction<string>) => {
+        setFilterStatus(status)
+        if (status === "all") {
+          setFilteredTickets(tickets)
+        } else {
+          setFilteredTickets(tickets.filter((ticket) => ticket.status === status))
+        }
+        setCurrentPage(1)
+      }
+      const indexOfLastTicket = currentPage * ticketsPerPage
+      const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage
+      const currentTickets = filteredTickets.slice(indexOfFirstTicket, indexOfLastTicket)
+      const totalPages = Math.ceil(filteredTickets.length / ticketsPerPage)
+      const handlePageChange = (pageNumber: SetStateAction<number>) => {
+        setCurrentPage(pageNumber)
+      }
+      const [escalationData, setEscalationData] = useState([
+        { date: "2023-06-01", escalations: 2 },
+        { date: "2023-06-02", escalations: 1 },
+        { date: "2023-06-03", escalations: 3 },
+        { date: "2023-06-04", escalations: 1 },
+        { date: "2023-06-05", escalations: 2 },
+        { date: "2023-06-06", escalations: 1 },
+        { date: "2023-06-07", escalations: 2 },
+      ])
+      const [ticketCounts, setTicketCounts] = useState({
+        open: 3,
+        resolved: 2,
+        closed: 2,
+      })
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      
-      <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="icon" variant="outline" className="sm:hidden">
-                <PanelLeft className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="sm:max-w-xs">
-              <nav className="grid gap-6 text-lg font-medium">
-                <Link
-                  href="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Home className="h-5 w-5" />
-                  Dashboard
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </Link>
-              </nav>
-            </SheetContent>
-          </Sheet>
-          <Breadcrumb className="hidden md:flex">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="#">Dashboard</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="#">Products</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>All Products</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[336px]"
-            />
-          </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="overflow-hidden rounded-full"
-              >
-                <Image
-                  src="/placeholder-user.jpg"
-                  width={36}
-                  height={36}
-                  alt="Avatar"
-                  className="overflow-hidden rounded-full"
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </header>
-        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
-          <Tabs defaultValue="all">
-            <div className="flex items-center">
-              <TabsList>
-                <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="active">Active</TabsTrigger>
-                <TabsTrigger value="draft">Draft</TabsTrigger>
-                <TabsTrigger value="archived" className="hidden sm:flex">
-                  Archived
-                </TabsTrigger>
-              </TabsList>
-              <div className="ml-auto flex items-center gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-8 gap-1">
-                      <ListFilter className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                        Filter
-                      </span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem checked>
-                      Active
-                    </DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>
-                      Archived
-                    </DropdownMenuCheckboxItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button size="sm" variant="outline" className="h-8 gap-1">
-                  <File className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Export
-                  </span>
-                </Button>
-                <Button size="sm" className="h-8 gap-1">
-                  <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-                    Add Product
-                  </span>
-                </Button>
+    
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card>
+            <div className="col-span-1 md:col-span-2 lg:col-span-3">
+          <CardHeader>
+            <CardTitle>Ticket Overview</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-blue-100 p-4 rounded-lg">
+                  <h2 className="text-lg font-bold">Overview</h2>
+                  <p className="text-2xl">1,552</p>
+                </div>
+                <div className="bg-pink-100 p-4 rounded-lg">
+                  <h2 className="text-lg font-bold">Campaigns</h2>
+                  <p className="text-2xl">1,552</p>
+                </div>
+                <div className="bg-yellow-100 p-4 rounded-lg">
+                  <h2 className="text-lg font-bold">Ad Group</h2>
+                  <p className="text-2xl">1,552</p>
+                </div>
+                <div className="bg-green-100 p-4 rounded-lg">
+                  <h2 className="text-lg font-bold">Keywords</h2>
+                  <p className="text-2xl">1,552</p>
+                </div>
               </div>
-            </div>
-            <TabsContent value="all">
-              <Card x-chunk="dashboard-06-chunk-0">
-                <CardHeader>
-                  <CardTitle>Products</CardTitle>
-                  <CardDescription>
-                    Manage your products and view their sales performance.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="hidden w-[100px] sm:table-cell">
-                          <span className="sr-only">Image</span>
-                        </TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Price
-                        </TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Total Sales
-                        </TableHead>
-                        <TableHead className="hidden md:table-cell">
-                          Created at
-                        </TableHead>
-                        <TableHead>
-                          <span className="sr-only">Actions</span>
-                        </TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="hidden sm:table-cell">
-                          <Image
-                            alt="Product image"
-                            className="aspect-square rounded-md object-cover"
-                            height="64"
-                            src="/placeholder.svg"
-                            width="64"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          Laser Lemonade Machine
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">Draft</Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          $499.99
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          25
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-07-12 10:42 AM
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="hidden sm:table-cell">
-                          <Image
-                            alt="Product image"
-                            className="aspect-square rounded-md object-cover"
-                            height="64"
-                            src="/placeholder.svg"
-                            width="64"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          Hypernova Headphones
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">Active</Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          $129.99
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          100
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-10-18 03:21 PM
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="hidden sm:table-cell">
-                          <Image
-                            alt="Product image"
-                            className="aspect-square rounded-md object-cover"
-                            height="64"
-                            src="/placeholder.svg"
-                            width="64"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          AeroGlow Desk Lamp
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">Active</Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          $39.99
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          50
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-11-29 08:15 AM
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="hidden sm:table-cell">
-                          <Image
-                            alt="Product image"
-                            className="aspect-square rounded-md object-cover"
-                            height="64"
-                            src="/placeholder.svg"
-                            width="64"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          TechTonic Energy Drink
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">Draft</Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          $2.99
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          0
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2023-12-25 11:59 PM
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="hidden sm:table-cell">
-                          <Image
-                            alt="Product image"
-                            className="aspect-square rounded-md object-cover"
-                            height="64"
-                            src="/placeholder.svg"
-                            width="64"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          Gamer Gear Pro Controller
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">Active</Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          $59.99
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          75
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2024-01-01 12:00 AM
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="hidden sm:table-cell">
-                          <Image
-                            alt="Product image"
-                            className="aspect-square rounded-md object-cover"
-                            height="64"
-                            src="/placeholder.svg"
-                            width="64"
-                          />
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          Luminous VR Headset
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">Active</Badge>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          $199.99
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          30
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          2024-02-14 02:14 PM
-                        </TableCell>
-                        <TableCell>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                aria-haspopup="true"
-                                size="icon"
-                                variant="ghost"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                                <span className="sr-only">Toggle menu</span>
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </CardContent>
-                <CardFooter>
-                  <div className="text-xs text-muted-foreground">
-                    Showing <strong>1-10</strong> of <strong>32</strong>{" "}
-                    products
-                  </div>
-                </CardFooter>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </main>
+          </CardContent>
+          </div>
+        </Card>
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>Ticket Escalations</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <LinechartChart className="aspect-[9/4]" />
+          </CardContent>
+        </Card>
+        <Card className="bg-white">
+              <CardHeader>
+                <CardTitle>Top 5 products by spend</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-3xl font-bold">2,985</div>
+                <PiechartChart className="w-full aspect-[4/3]" />
+              </CardContent>
+            </Card>
       </div>
+      <div className="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle>All Tickets</CardTitle>
+            <div className="flex items-center gap-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <FilterIcon className="w-4 h-4" />
+                    <span>Filter by status</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onSelect={() => handleFilterStatus("all")}
+                    className={filterStatus === "all" ? "bg-primary text-primary-foreground" : ""}
+                  >
+                    All
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => handleFilterStatus("open")}
+                    className={filterStatus === "open" ? "bg-primary text-primary-foreground" : ""}
+                  >
+                    Open
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => handleFilterStatus("resolved")}
+                    className={filterStatus === "resolved" ? "bg-primary text-primary-foreground" : ""}
+                  >
+                    Resolved
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={() => handleFilterStatus("closed")}
+                    className={filterStatus === "closed" ? "bg-primary text-primary-foreground" : ""}
+                  >
+                    Closed
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <Button variant="outline" size="sm" className="gap-1">
+                <ListOrderedIcon className="w-4 h-4" />
+                <span>Sort</span>
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="relative w-full overflow-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>ID</TableHead>
+                    <TableHead>Subject</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Priority</TableHead>
+                    <TableHead>Assignee</TableHead>
+                    <TableHead>Created</TableHead>
+                    <TableHead>Updated</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentTickets.map((ticket) => (
+                    <TableRow key={ticket.id}>
+                      <TableCell className="font-medium">
+                        <Link href="#" className="hover:underline" prefetch={false}>
+                          {ticket.id}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{ticket.subject}</TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            ticket.status === "open" ? "default" : ticket.status === "resolved" ? "secondary" : "outline"
+                          }
+                        >
+                          {ticket.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            ticket.priority === "high" ? "destructive" : ticket.priority === "medium" ? "secondary" : "outline"
+                          }
+                        >
+                          {ticket.priority}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{ticket.assignee}</TableCell>
+                      <TableCell>{ticket.created}</TableCell>
+                      <TableCell>{ticket.updated}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
+          </CardFooter>
+        </Card>
+      </div>
+    
+  
+
+
+
+
+
+
+
+     
     </div>
   )
 }
+
+
+
+function FilterIcon(props:any) {
+    return (
+      <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+      </svg>
+    )
+  }
+  
+  
+  function LinechartChart(props:any) {
+    return (
+      <div {...props}>
+        <ChartContainer
+          config={{
+            desktop: {
+              label: "Desktop",
+              color: "hsl(var(--chart-1))",
+            },
+          }}
+        >
+          <LineChart
+            accessibilityLayer
+            data={[
+              { month: "January", desktop: 186 },
+              { month: "February", desktop: 305 },
+              { month: "March", desktop: 237 },
+              { month: "April", desktop: 73 },
+              { month: "May", desktop: 209 },
+              { month: "June", desktop: 214 },
+            ]}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <Line dataKey="desktop" type="natural" stroke="var(--color-desktop)" strokeWidth={2} dot={false} />
+          </LineChart>
+        </ChartContainer>
+      </div>
+    )
+  }
+  
+  
+  function ListOrderedIcon(props:any) {
+    return (
+      <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <line x1="10" x2="21" y1="6" y2="6" />
+        <line x1="10" x2="21" y1="12" y2="12" />
+        <line x1="10" x2="21" y1="18" y2="18" />
+        <path d="M4 6h1v4" />
+        <path d="M4 10h2" />
+        <path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" />
+      </svg>
+    )
+  }
+  
+  
+  function XIcon(props:any) {
+    return (
+      <svg
+        {...props}
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M18 6 6 18" />
+        <path d="m6 6 12 12" />
+      </svg>
+    )
+  }
+
+
+  function BarchartChart(props:any) {
+    return (
+      <div {...props}>
+        <ChartContainer
+          config={{
+            desktop: {
+              label: "Desktop",
+              color: "hsl(var(--chart-1))",
+            },
+          }}
+          className="min-h-[300px]"
+        >
+          <BarChart
+            accessibilityLayer
+            data={[
+              { month: "January", desktop: 186 },
+              { month: "February", desktop: 305 },
+              { month: "March", desktop: 237 },
+              { month: "April", desktop: 73 },
+              { month: "May", desktop: 209 },
+              { month: "June", desktop: 214 },
+            ]}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} />
+          </BarChart>
+        </ChartContainer>
+      </div>
+    )
+  }
+
+  function PiechartChart(props) {
+    return (
+      <div {...props}>
+        <ChartContainer
+          config={{
+            visitors: {
+              label: "Visitors",
+            },
+            chrome: {
+              label: "Chrome",
+              color: "hsl(var(--chart-1))",
+            },
+            safari: {
+              label: "Safari",
+              color: "hsl(var(--chart-2))",
+            },
+            firefox: {
+              label: "Firefox",
+              color: "hsl(var(--chart-3))",
+            },
+            edge: {
+              label: "Edge",
+              color: "hsl(var(--chart-4))",
+            },
+            other: {
+              label: "Other",
+              color: "hsl(var(--chart-5))",
+            },
+          }}
+          className="mx-auto aspect-square max-h-[250px]"
+        >
+          <PieChart>
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <Pie
+              data={[
+                { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
+                { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
+                { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
+                { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
+                { browser: "other", visitors: 90, fill: "var(--color-other)" },
+              ]}
+              dataKey="visitors"
+              nameKey="browser"
+              innerRadius={60}
+            />
+          </PieChart>
+        </ChartContainer>
+      </div>
+    )
+  }
