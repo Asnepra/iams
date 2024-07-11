@@ -72,7 +72,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                     FROM 
                         [IAMS].[dbo].[Tickets] t
                     INNER JOIN 
-                        [IAMS].[dbo].[AssetModel] am ON t.[AssetID] = am.[AssetModelID]
+                        [IAMS].[dbo].[AssetModel] am ON t.[AssetModalId] = am.[AssetModelID]
                     INNER JOIN 
                         [IAMS].[dbo].[CategoryMaster] cm ON am.[CategoryID] = cm.[CategoryMasterID]
                     INNER JOIN 
@@ -100,7 +100,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                 categoryName: record.CategoryName
                 // Add more fields as needed
             }));
-            console.log("result ----------- ticket data", ticketData);
+            //console.log("result ----------- ticket data", ticketData);
 
             // Send JSON response with ticket data
             return new NextResponse(JSON.stringify(ticketData), { status: 200 });

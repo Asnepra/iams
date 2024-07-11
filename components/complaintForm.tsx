@@ -20,13 +20,13 @@ interface Asset {
 }
 
 interface TicketFormData {
-  assetId: string; // Correct type for assetId
+  assetModalId: string; // Correct type for assetId
   ticketPriority: string;
   ticketDetails: string;
 }
 
 const ticketSchema = z.object({
-  assetId: z.string().min(1,{
+  assetModalId: z.string().min(1,{
     message: "Please select a device.",
   }),
   ticketPriority: z.string().min(1,{
@@ -64,7 +64,7 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
   const form = useForm<TicketFormData>({
     resolver: zodResolver(ticketSchema),
     defaultValues: {
-      assetId: "", // Default to 0 or null, assuming assetId is a number
+      assetModalId:"",
       ticketPriority: "",
       ticketDetails: "",
     },
@@ -78,10 +78,10 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
   const onSubmit = async (values: TicketFormData) => {
     setIsPending(true);
     try {
-      const assetIds = findIdFromAssetName(values.assetId); // Find assetId from asset name
+      const assetIds = findIdFromAssetName(values.assetModalId); // Find assetId from asset name
       const data = {
         token: token,
-        assetId: assetIds, // Correctly submit assetId from form values
+        assetModalId: assetIds, // Correctly submit assetId from form values
         ticketPriority: values.ticketPriority || "Low",
         ticketDetails: values.ticketDetails || "Null"
       };
@@ -90,20 +90,20 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
       
       console.log("Success!", data);
 
-    //   await axios.post(`/api/raiseticket`,data)
-    //  .then(response => {
-    //   toast.success("Ticket Raised Successfully!");
-    //   console.log("Success!", response);
-    //   setTimeout(() => {
-    //     window.location.reload();
-    //   }, 3000); // 3000 milliseconds = 3 seconds
-    // }).catch(error=>{
-    //   console.log("Error ", error)
-    // })
-      // Optionally, you can reload the page after successful submission
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 3000);
+      await axios.post(`/api/raiseticket`,data)
+     .then(response => {
+      toast.success("Ticket Raised Successfully!");
+      console.log("Success!", response);
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000); // 3000 milliseconds = 3 seconds
+    }).catch(error=>{
+      console.log("Error ", error)
+    })
+      //Optionally, you can reload the page after successful submission
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Error adding ticket:", error);
       toast.error("Failed to raise ticket. Please try again.");
@@ -119,7 +119,7 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
         <div className="grid grid-cols-2 gap-x-8 gap-y-4">
           <FormField
             control={form.control}
-            name="assetId"
+            name="assetModalId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Select Asset</FormLabel>
@@ -131,7 +131,7 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) =
                     <SelectValue placeholder="Select an asset..." />
                     <SelectContent>
                       {assets?.map((asset) => (
-                        <SelectItem key={asset.assetId} value={asset.assetModalName}>
+                        <SelectItem key={asset.assetModalId} value={asset.assetModalName}>
                           <div className="flex items-center gap-2">
                             {imageCategoryMap[asset.categoryName]}
                             <span>{asset.assetModalName}</span>

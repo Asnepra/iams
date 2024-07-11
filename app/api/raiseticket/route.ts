@@ -9,10 +9,10 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   
   try {
     
-    const { token, assetId, ticketPriority, ticketDetails } = await req.json();
+    const { token, assetModalId, ticketPriority, ticketDetails } = await req.json();
         
     // Check if token is missing
-    console.log(token, assetId, ticketDetails, ticketPriority);
+    console.log(token, assetModalId, ticketDetails, ticketPriority);
     if (!token) {
         return new NextResponse(
             JSON.stringify({ message: 'Missing token' }),
@@ -59,7 +59,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             await mssqlconnect();
             //Fetch all the countries data
             const result = await sql.query`INSERT INTO [IAMS].[dbo].[Tickets] (
-                        [AssetID],
+                        [AssetModalID],
                         [Issue],
                         [Priority],
                         [Status],
@@ -71,7 +71,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                         [ResolvedOn],
                         [ResolutionDetails]
                     ) VALUES (
-                        ${assetId},
+                        ${assetModalId},
                         ${ticketDetails},
                         ${ticketPriority},
                         'Open',
