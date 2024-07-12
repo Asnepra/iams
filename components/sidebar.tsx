@@ -40,7 +40,7 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
     {
       icon: Kanban,
       href: "/complaint",
-      label: "Raise a concern",
+      label: "Raise a complaint",
     }
   ];
 
@@ -63,7 +63,7 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
     {
       icon: Kanban,
       href: "/complaint",
-      label: "Raise a concern",
+      label: "Raise a complaint",
     },
     {
       icon: Box,

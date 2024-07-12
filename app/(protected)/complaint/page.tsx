@@ -44,6 +44,7 @@ interface UserData {
   userName: string;
   isAdmin: string;
   userMail: string;
+  userDepartment:string;
   // Add other fields as needed
 }
 
@@ -157,30 +158,6 @@ export default function ComplaintPage() {
     Server: <ServerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
   };
 
-  const onSubmit = async (values: TicketFormData) => {
-    try {
-      const data = {
-        assetId: values.assetId,
-        ticketPriority: values.ticketPriority,
-        ticketDescription: values.ticketDetails,
-        // Add more fields as needed
-      };
-
-      // Replace with your API endpoint
-      const response = await axios.post(`/api/assetmaster`, data);
-      toast.success("Data Added Successfully!");
-      console.log("Success!", response);
-
-      // Refresh page after 3 seconds
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    } catch (error) {
-      console.error("Error adding asset:", error);
-      toast.error("Failed to add asset. Please try again.");
-    }
-  };
-
   return (
     
       <div className="grid min-h-screen w-full ">
@@ -189,7 +166,7 @@ export default function ComplaintPage() {
             <div className="flex flex-row justify-aroundn space-x-2 gap-2">
               <Card className="w-1/2">
                 <CardHeader>
-                  <CardTitle>Raise a Query</CardTitle>
+                  <CardTitle>Raise a Complaint</CardTitle>
                   <CardDescription>Fill out the form below to register you complain regarding the asset.</CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-4">
@@ -200,8 +177,18 @@ export default function ComplaintPage() {
                         <Input id="name" defaultValue={userData?.userName} disabled />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" defaultValue={userData?.userMail?.toLowerCase()} disabled />
+                        <Label htmlFor="email">Employee Number</Label>
+                        <Input id="email" type="email" defaultValue={userData?.userId} disabled />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Designation</Label>
+                        <Input id="name" defaultValue={userData?.userName} disabled />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Department</Label>
+                        <Input id="email" type="email" defaultValue={userData?.userDepartment} disabled />
                       </div>
                     </div>
                   

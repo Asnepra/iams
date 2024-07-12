@@ -9,24 +9,7 @@ const sql = require('mssql')
 export const POST = async (req: NextRequest, res: NextResponse) => {
   
   try {
-    // // Set CORS headers
-    // const headers = new Headers(req.headers)
-    // headers.set(
-    //   'Access-Control-Allow-Origin', '*');
-    //   headers.set(
-    //   'Access-Control-Allow-Methods', 'GET, OPTIONS');
-    
-    // Connect to the MongoDB database
-    //await connectMongoDb();
 
-    
-
-    // //const headersInstance = headers()
-    // const authHeader = req.headers.get('authorization')
-    // //console.log("auth header", authHeader);
-
-    // const token = authHeader?.split(' ')[1] 
-    //console.log("token 0----- ", token)
     const token1 = await req.json(); // Assuming the token is sent in the request body
         
 
