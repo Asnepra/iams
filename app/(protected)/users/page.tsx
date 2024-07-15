@@ -7,6 +7,7 @@ import { z } from "zod"
 import { columns } from "./_components/columns"
 import { DataTable } from "./_components/data-table"
 import { taskSchema } from "./_components/data/schema"
+import { Card } from "@/components/ui/card"
 
 export const metadata: Metadata = {
   title: "Tasks",
@@ -29,22 +30,6 @@ export default async function TaskPage() {
 
   return (
     <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/tasks-light.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="block dark:hidden"
-        />
-        <Image
-          src="/examples/tasks-dark.png"
-          width={1280}
-          height={998}
-          alt="Playground"
-          className="hidden dark:block"
-        />
-      </div>
       <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
         <div className="flex items-center justify-between space-y-2">
           <div>
@@ -55,7 +40,9 @@ export default async function TaskPage() {
           </div>
           
         </div>
+        <Card className="p-2">
         <DataTable data={tasks} columns={columns} />
+        </Card>
       </div>
     </>
   )
