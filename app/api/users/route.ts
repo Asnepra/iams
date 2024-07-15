@@ -1,6 +1,6 @@
 import mssqlconnect from "@/lib/mssqlconnect";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken';
 const sql = require('mssql')
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
@@ -20,7 +20,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
         try {
             // Verify JWT token
-            const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`);
+            const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`) as JwtPayload;
 
             // Check token expiration
             if (typeof decoded.exp === 'number' && decoded.exp < Math.floor(Date.now() / 1000)) {
@@ -57,15 +57,20 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             //     VALUES (values)
             // `;
 
-            const empResult= await sql.query`SELECT EmpDepartment, COUNT(*) AS EmployeeCount
+            const empResult= await sql.query`SELECT empDepartment, COUNT(*) AS employeeCount
             FROM [IAMS].[dbo].[UserMaster]
             GROUP BY EmpDepartment
             ORDER BY EmpDepartment;`
 
-            const empList= await sql.query`Select [EmployeeNumber]
-            ,[EmployeeName]
-            ,[EmpDepartment]
-        FROM [IAMS].[dbo].[UserMaster]`
+            const empList= await sql.query`SELECT 
+                [EmployeeNumber] AS empNumber,
+                [EmployeeName] AS empName,
+                [EmpDepartment] AS empDepartment,
+                [EmpMail] AS empMail,             
+                [EmpProfilePic] AS empProfilePicture,
+                [UserRole] AS empRole
+                FROM [IAMS].[dbo].[UserMaster]
+                ORDER BY [EmployeeName];`
 
         const response = {
             empResult: empResult.recordset, // Array of departments with employee count
