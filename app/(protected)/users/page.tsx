@@ -1,32 +1,70 @@
-import { promises as fs } from "fs"
-import path from "path"
-import { Metadata } from "next"
-import Image from "next/image"
-import { z } from "zod"
 
-import { columns } from "./_components/columns"
-import { DataTable } from "./_components/data-table"
-import { taskSchema } from "./_components/data/schema"
-import { Card } from "@/components/ui/card"
+"use client"
+import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { Metadata } from 'next';
+import { DataTable } from './_components/data-table';
+import { columns } from './_components/columns';
+import { Card } from '@/components/ui/card';
 
-export const metadata: Metadata = {
-  title: "Tasks",
-  description: "A task and issue tracker build using Tanstack Table.",
+interface Employee {
+  empDepartment: string;
+  empMail: string;
+  empName: string;
+  empNumber: number;
+  empProfilePicture: string;
+  empRole: string;
 }
 
-// Simulate a database read for tasks.
-async function getTasks() {
-  const data = await fs.readFile(
-    path.join(process.cwd(), "app/(protected)/users/_components/data/tasks.json")
-  )
-
-  const tasks = JSON.parse(data.toString())
-
-  return z.array(taskSchema).parse(tasks)
+interface EmpResultItem {
+  empDepartment: string;
+  employeeCount: number;
 }
 
-export default async function TaskPage() {
-  const tasks = await getTasks()
+interface ApiResponse {
+  empList: Employee[];
+  empDepartment: string;
+  empResult: EmpResultItem[];
+}
+
+const UsersPage = () => {
+  const [empList, setEmpList] = useState<Employee[]>([]);
+  const [empDepartment, setEmpDepartment] = useState<string>('');
+  const [empResult, setEmpResult] = useState<EmpResultItem[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get('token');
+      
+      try {
+        const response = await axios.post('/api/users', { token }); // Replace '/api/tasks' with your actual API endpoint
+        //setTasks(response.data.tasks); // Assuming the API returns an object with a 'tasks' property containing the array of tasks
+        console.log("data", response);
+        const data = response.data; // Assuming response.data matches ApiResponse structure
+        setEmpList(data.empList);
+        setEmpDepartment(data.empDepartment);
+        setEmpResult(data.empResult);
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle error, e.g., redirect to home page
+        // router.push('/home');
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array ensures useEffect runs only once after initial render
+
+  // Map empList to match DataTable expected format
+  const mappedEmpList = empList.map(employee => ({
+    id: employee.empNumber.toString(), // Example: Using empNumber as id
+    title: employee.empName,
+    status: employee.empDepartment, // Example: Assuming status is always 'Active'
+    label: 'Employee', // Example: Default label
+    priority: employee.empMail // Example: Default priority
+    // You may add more fields depending on your columns configuration
+  }));
 
   return (
     <>
@@ -38,12 +76,13 @@ export default async function TaskPage() {
               Here&apos;s a list of your tasks for this month!
             </p>
           </div>
-          
         </div>
         <Card className="p-2">
-        <DataTable data={tasks} columns={columns} />
+          <DataTable data={mappedEmpList} columns={columns} />
         </Card>
       </div>
     </>
-  )
-}
+  );
+};
+
+export default UsersPage;
