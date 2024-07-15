@@ -72,6 +72,7 @@ export default function Dashboard() {
     let printCount = 0;
     let lapCount = 0;
     let servCount = 0;
+    const baseUrl="https://xsparsh.indianoil.in/APIManager/empphoto/"
 
     
 
