@@ -26,16 +26,7 @@ export default function Component() {
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
           <div className="flex items-center gap-4">
             <h1 className="font-semibold text-lg md:text-xl">Printer Cartridge Approvals</h1>
-            <div className="ml-auto flex items-center gap-2">
-              <Button variant="outline" size="icon">
-                <ChevronLeftIcon className="h-4 w-4" />
-                <span className="sr-only">Previous</span>
-              </Button>
-              <Button variant="outline" size="icon">
-                <ChevronRightIcon className="h-4 w-4" />
-                <span className="sr-only">Next</span>
-              </Button>
-            </div>
+           
           </div>
             <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-6">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -70,7 +61,90 @@ export default function Component() {
                 <PiechartcustomChart className="w-full h-[200px]" />
               </CardContent>
             </Card>
-              <Card>
+            <div className="grid md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Pending Requests</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold">2</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Approved Requests</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold">4</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Declined Requests</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold">5</div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Total Requests</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-4xl font-bold">
+                  10
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <Card>
+                <div>
+                  <CardHeader className="flex flex-row items-center space-y-0">
+                    <CardTitle>Top Requesters</CardTitle>
+                    <Button variant="secondary" className="ml-auto">
+                      View All
+                    </Button>
+                  </CardHeader>
+                  <CardContent className="text-sm">
+                    <div className="grid gap-4">
+                      <div className="flex items-center gap-4">
+                        <Avatar className="border w-11 h-11">
+                          <AvatarImage src="/placeholder-user.jpg" />
+                          <AvatarFallback>SA</AvatarFallback>
+                        </Avatar>
+                        <div className="grid">
+                          <div className="font-semibold">Sophia Anderson</div>
+                          <div className="text-muted-foreground">5 requests</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <Avatar className="border w-11 h-11">
+                          <AvatarImage src="/placeholder-user.jpg" />
+                          <AvatarFallback>JD</AvatarFallback>
+                        </Avatar>
+                        <div className="grid">
+                          <div className="font-semibold">John Doe</div>
+                          <div className="text-muted-foreground">3 requests</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <Avatar className="border w-11 h-11">
+                          <AvatarImage src="/placeholder-user.jpg" />
+                          <AvatarFallback>JS</AvatarFallback>
+                        </Avatar>
+                        <div className="grid">
+                          <div className="font-semibold">Jane Smith</div>
+                          <div className="text-muted-foreground">2 requests</div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </div>
+              </Card>
+              
+            </div>
+            <div className="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col gap-6">
+            <Card>
                 <CardHeader>
                   <CardTitle>Pending Requests</CardTitle>
                 </CardHeader>
@@ -134,8 +208,6 @@ export default function Component() {
                   </Table>
                 </CardContent>
               </Card>
-            </div>
-            <div className="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col gap-6">
               <Card>
                 <div>
                   <CardHeader className="flex flex-row items-center space-y-0">
@@ -162,50 +234,7 @@ export default function Component() {
                   </CardContent>
                 </div>
               </Card>
-              <Card>
-                <div>
-                  <CardHeader className="flex flex-row items-center space-y-0">
-                    <CardTitle>Top Requesters</CardTitle>
-                    <Button variant="secondary" className="ml-auto">
-                      View All
-                    </Button>
-                  </CardHeader>
-                  <CardContent className="text-sm">
-                    <div className="grid gap-4">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="border w-11 h-11">
-                          <AvatarImage src="/placeholder-user.jpg" />
-                          <AvatarFallback>SA</AvatarFallback>
-                        </Avatar>
-                        <div className="grid">
-                          <div className="font-semibold">Sophia Anderson</div>
-                          <div className="text-muted-foreground">5 requests</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Avatar className="border w-11 h-11">
-                          <AvatarImage src="/placeholder-user.jpg" />
-                          <AvatarFallback>JD</AvatarFallback>
-                        </Avatar>
-                        <div className="grid">
-                          <div className="font-semibold">John Doe</div>
-                          <div className="text-muted-foreground">3 requests</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Avatar className="border w-11 h-11">
-                          <AvatarImage src="/placeholder-user.jpg" />
-                          <AvatarFallback>JS</AvatarFallback>
-                        </Avatar>
-                        <div className="grid">
-                          <div className="font-semibold">Jane Smith</div>
-                          <div className="text-muted-foreground">2 requests</div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </div>
-              </Card>
+              
             </div>
           </div>
         </main>
