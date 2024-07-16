@@ -29,9 +29,3 @@ export const labels = [
     color:"gray"
   }
 ]
-
-// Create a map of gradient colors for each user type
-const gradientColorMap = {
-  Admin: "linear-gradient(to right, #30cfd0, #330867)",
-  Normal: "linear-gradient(to right, #4facfe, #00f2fe)",
-};

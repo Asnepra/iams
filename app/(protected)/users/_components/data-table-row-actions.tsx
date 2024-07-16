@@ -14,7 +14,6 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { labels } from "./data/data";
 import { userSchema } from "./data/schema"; // Assuming userSchema is imported from your schema file
 
 interface DataTableRowActionsProps<TData> {
@@ -27,6 +26,7 @@ export function DataTableRowActions<TData>({
   let user;
   try {
     user = userSchema.parse(row.original);
+    console.log("user", user);
   } catch (error) {
     // Handle schema validation errors, e.g., log or fallback
     console.error("Error parsing user data:", error);
@@ -45,28 +45,20 @@ export function DataTableRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuSub>
-          <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
+          <DropdownMenuSubTrigger>Make Admin</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
             {/* Assuming 'user.empRole' exists in your schema */}
-            <DropdownMenuRadioGroup value={user.empRole}>
+            {/* <DropdownMenuRadioGroup value={user.empRole}>
               {labels.map((label) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}
                 </DropdownMenuRadioItem>
               ))}
-            </DropdownMenuRadioGroup>
+            </DropdownMenuRadioGroup> */}
           </DropdownMenuSubContent>
         </DropdownMenuSub>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
