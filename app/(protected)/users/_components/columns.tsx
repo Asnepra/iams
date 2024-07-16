@@ -21,6 +21,7 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title="Employee Number" />
     ),
     cell: ({ row }) => <div className="w-[80px]">{row.getValue("empNumber")}</div>,
+
   },
   {
     accessorKey: "empProfilePicture",
@@ -45,11 +46,16 @@ export const columns: ColumnDef<User>[] = [
       <DataTableColumnHeader column={column} title="Employee Name" />
     ),
     cell: ({ row }) => (
-      <div className="flex items-center">
-        <span className="max-w-[500px] truncate font-medium">
-          {row.getValue("empName")}
-        </span>
-      </div>
+      <div className="flex items-center ">
+      <FallbackImage
+        src={row.getValue("empProfilePicture") || "/user_profile.jpeg"}
+        alt="Profile"
+        className="h-8 w-8 rounded-full mr-2"
+        width={40}
+        height={40}
+      />
+      {row.getValue("empName")}
+    </div>
     ),
   },
   {

@@ -14,7 +14,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { userSchema } from "./data/schema"; // Assuming userSchema is imported from your schema file
+import { User, userSchema } from "./data/schema"; // Assuming userSchema is imported from your schema file
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -23,7 +23,7 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  let user;
+  let user:User;
   try {
     user = userSchema.parse(row.original);
     console.log("user", user);
