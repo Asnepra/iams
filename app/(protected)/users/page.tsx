@@ -16,11 +16,6 @@ interface EmpResultItem {
   employeeCount: number;
 }
 
-interface ApiResponse {
-  empList: User[];
-  empDepartment: string;
-  empResult: EmpResultItem[];
-}
 
 const UsersPage = () => {
   const [empList, setEmpList] = useState<User[]>([]);
@@ -50,15 +45,6 @@ const UsersPage = () => {
     fetchData();
   }, []); // Empty dependency array ensures useEffect runs only once after initial render
 
-  // Map empList to match DataTable expected format
-  const mappedEmpList = empList.map(employee => ({
-    id: employee.empNumber.toString(), // Example: Using empNumber as id
-    title: employee.empName,
-    status: employee.empDepartment, // Example: Assuming status is always 'Active'
-    label: 'Employee', // Example: Default label
-    priority: employee.empMail // Example: Default priority
-    // You may add more fields depending on your columns configuration
-  }));
 
   return (
     <>

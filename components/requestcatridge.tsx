@@ -203,16 +203,6 @@ const RequestCatridgeForm = ({ assetData, userData }: AssetFormProps) => {
               {...form.register("assetPrinterCatridgeMessage")}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" defaultValue={userData?.userName} disabled />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" defaultValue={userData?.userMail?.toLowerCase()} disabled />
-            </div>
-          </div>
           <Button type="submit" className="w-full">
             Request Cartridge
           </Button>

@@ -6,12 +6,17 @@ import RequestCatridgeForm from "@/components/requestcatridge";
 import FormError from "@/components/form-error";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface UserData {
   userId: string;
   userName: string;
   isAdmin: string;
   userMail: string;
+  userDepartment:string;
   // Add other fields as needed
 }
 
@@ -96,22 +101,57 @@ export default function Home() {
   ]);
 
   return (
-    <main className="h-auto">
-      <div className="text-2xl rounded-md px-4 text-white/90 bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%">
-        Add Assets
-        <p className="text-base text-white/90 dark:text-gray-400">
-          Fill out the form to request a new laptop, printer, or other asset. Or Upload the CSV file
-        </p>
-      </div>
-      <div className="p-4 space-4 flex">
-        <div className="w-1/2 space-y-4">
+    <div className="grid min-h-screen w-full ">
+        <div className="flex flex-col">
+          <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+            <div className="flex flex-row justify-aroundn space-x-2 gap-2">
+              <Card className="w-1/2">
           <div className="h-full p-2 space-y-2 max-w-3xl mx-auto">
             {error && <FormError message={error} />}
+            <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Name : {userData?.userName}</Label>
+                        <Input id="email" type="email" defaultValue={userData?.userName} disabled />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Employee Number</Label>
+                        <Input id="email" type="email" defaultValue={userData?.userId} disabled />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Designation</Label>
+                        <Input id="name" defaultValue={userData?.userName} disabled />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Department</Label>
+                        <Input id="email" type="email" defaultValue={userData?.userDepartment} disabled />
+                      </div>
+                    </div>
             <RequestCatridgeForm assetData={assetData} userData={userData} />
           </div>
+          </Card>
+          <Card className="w-1/2">
+                <CardHeader>
+                  <CardTitle>Catridge Request Timeline</CardTitle>
+                  <CardDescription>Status of your current Request</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {/* Example timeline items */}
+                  </div>
+                </CardContent>
+              </Card>
         </div>
-        <h2 className="text-lg font-medium mb-4">Cartridge Request History</h2>
-        <Table>
+        </main>
+        <div className="flex items-center justify-around m-8">
+            <Card className="w-full">
+              <CardHeader>
+                <CardTitle>Catridge History</CardTitle>
+                <CardDescription>View the status of your previously raised tickets.</CardDescription>
+              </CardHeader>
+              <Separator/>
+        <Table className="items-center">
           <TableHeader>
             <TableRow>
               <TableHead>ID</TableHead>
@@ -137,7 +177,13 @@ export default function Home() {
             ))}
           </TableBody>
         </Table>
-      </div>
-    </main>
+
+        </Card>
+
+        
+    </div>
+    </div>
+    </div>
+    
   );
 }

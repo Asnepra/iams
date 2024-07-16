@@ -78,11 +78,11 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     <div className="">
       <div className="relative z-10">
         <Navbar />
-        <div className="hidden md:flex mt-16 max-w-48 flex-col fixed inset-y-0">
+        <div className="hidden md:flex mt-16 max-w-52 flex-col fixed inset-y-0">
           {/* Pass isAdmin prop based on isValidToken */}
           <Sidebar isAdmin={isAdmin} />
         </div>
-        <div className="mt-16 h-auto flex flex-col md:ml-48 bg-muted/40 mx-2 px-2 border-b">
+        <div className="mt-16 h-auto flex flex-col md:ml-52 bg-muted/40 mx-2 px-2 border-b">
         {children}
         </div>
       </div>
