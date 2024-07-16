@@ -122,7 +122,7 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
                       <span className="px-2">{route.label}</span>
                     </Link>
                   </TooltipTrigger>
-                  <TooltipContent side="right">{route.label}</TooltipContent>
+                  <TooltipContent side="top">{route.label}</TooltipContent>
                 </Tooltip>
                 <Separator />
               </React.Fragment>

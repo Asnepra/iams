@@ -68,40 +68,13 @@ const RequestCatridgeForm = ({ assetData, userData }: AssetFormProps) => {
     },
   });
 
-  const [cartridgeHistory, setCartridgeHistory] = useState([
-    {
-      id: 1,
-      printerModel: "HP LaserJet Pro",
-      quantity: 2,
-      reason: "Printer ran out of ink",
-      requestedAt: "2023-05-15",
-      status: "Fulfilled",
-    },
-    {
-      id: 2,
-      printerModel: "Canon PIXMA",
-      quantity: 1,
-      reason: "Printer cartridge is low",
-      requestedAt: "2023-03-20",
-      status: "Fulfilled",
-    },
-    {
-      id: 3,
-      printerModel: "Epson WorkForce",
-      quantity: 3,
-      reason: "Printer cartridge is empty",
-      requestedAt: "2023-01-10",
-      status: "Pending",
-    },
-    {
-      id: 4,
-      printerModel: "Brother MFC",
-      quantity: 1,
-      reason: "Printer cartridge is low",
-      requestedAt: "2022-11-05",
-      status: "Fulfilled",
-    },
-  ]);
+  const options = [
+    { label: "React", value: "react" },
+    { label: "Vue", value: "vue" },
+    { label: "Svelte", value: "svelte" },
+  ];
+
+  
 
   const onCategoryChange = (value: any) => {
     // Implement your logic for category change
@@ -120,15 +93,7 @@ const RequestCatridgeForm = ({ assetData, userData }: AssetFormProps) => {
       toast.success("Data Added Successfully!");
       console.log("Success!", response);
 
-      // Example: Refreshing history after successful submission
-      setCartridgeHistory([...cartridgeHistory, {
-        id: cartridgeHistory.length + 1,
-        printerModel: assetData?.find(ad => ad.assetId === parseInt(values.assetId))?.assetModelName || "Unknown",
-        quantity: parseInt(values.assetId),
-        reason: "Requested new cartridge",
-        requestedAt: new Date().toISOString().split('T')[0],
-        status: "Pending",
-      }]);
+    
 
       setTimeout(() => {
         window.location.reload();
@@ -182,12 +147,35 @@ const RequestCatridgeForm = ({ assetData, userData }: AssetFormProps) => {
             />
             <FormField
               control={form.control}
-              name="assetQuantityNumber"
+              name="assetId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Enter Quantity</FormLabel>
+                  <FormLabel>Select catridge type</FormLabel>
                   <FormControl>
-                    <Input placeholder="1" {...field} />
+                    <Select
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        onCategoryChange(value);
+                      }}
+                      value={field.value}
+                    >
+                      <SelectTrigger className="bg-background">
+                        <SelectValue
+                          placeholder="Select a catridge..."
+                          defaultValue={field.value || ""}
+                        />
+                        <SelectContent>
+                          {assetData?.map((category) => (
+                            <SelectItem
+                              key={category.assetId}
+                              value={category.assetModelName}
+                            >
+                              {category.assetModelName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </SelectTrigger>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

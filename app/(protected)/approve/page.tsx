@@ -23,36 +23,54 @@ export default function Component() {
       
       <div className="flex flex-col">
         
-        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
-          <div className="flex items-center gap-4">
+        <main className="flex flex-1 flex-col gap-2 p-4 md:gap-8 md:p-6">
+          <div className="flex items-center gap-2">
             <h1 className="font-semibold text-lg md:text-xl">Printer Cartridge Approvals</h1>
            
           </div>
-            <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-6">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card className="p-4 bg-white rounded-lg shadow-md">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center justify-between p-2 bg-blue-100 rounded-lg">
-                  <span>Overview</span>
-                  <span>1,552</span>
+            <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid md:grid-cols-1 gap-2">
+                    <Card className="bg-purple-100">
+                        <CardHeader>
+                            <CardTitle>Pending Requests</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold">2</div>
+                        </CardContent>
+                        </Card>
+                        
+                        <Card className="bg-orange-100">
+                        <CardHeader>
+                            <CardTitle>Total Requests</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="text-3xl font-bold">
+                            10
+                            </div>
+                        </CardContent>
+                    </Card>
                 </div>
-                <div className="flex items-center justify-between p-2 bg-purple-100 rounded-lg">
-                  <span>Campaigns</span>
-                  <span>1,552</span>
-                </div>
-                <div className="flex items-center justify-between p-2 bg-pink-100 rounded-lg">
-                  <span>Ad Group</span>
-                  <span>1,552</span>
-                </div>
-                <div className="flex items-center justify-between p-2 bg-yellow-100 rounded-lg">
-                  <span>Keywords</span>
-                  <span>1,552</span>
-                </div>
-              </CardContent>
-            </Card>
+                    <Card className="p-2 bg-white rounded-lg shadow-md">
+                    <CardHeader>
+                        <CardTitle className="text-lg font-semibold">Summary</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                        <div className="flex items-center justify-between p-2 bg-green-100 rounded-lg">
+                        <span>Approved so far</span>
+                        <span>1,552</span>
+                        </div>
+                        <div className="flex items-center justify-between p-2 bg-purple-100 rounded-lg">
+                        <span>Requested So far</span>
+                        <span>1,552</span>
+                        </div>
+                        <div className="flex items-center justify-between p-2 bg-pink-100 rounded-lg">
+                        <span>Request Declined So far</span>
+                        <span>1,552</span>
+                        </div>
+                        
+                    </CardContent>
+                    </Card>
             <Card className="p-4 bg-white rounded-lg shadow-md">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold">Top 5 products by spend</CardTitle>
@@ -61,42 +79,7 @@ export default function Component() {
                 <PiechartcustomChart className="w-full h-[200px]" />
               </CardContent>
             </Card>
-            <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Pending Requests</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold">2</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Approved Requests</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold">4</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Declined Requests</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold">5</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Total Requests</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-4xl font-bold">
-                  10
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+            
           <Card>
                 <div>
                   <CardHeader className="flex flex-row items-center space-y-0">

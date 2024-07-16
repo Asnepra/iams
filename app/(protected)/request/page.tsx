@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import Cookies from 'js-cookie';
 import RequestCatridgeForm from "@/components/requestcatridge";
@@ -99,6 +99,15 @@ export default function Home() {
       status: "Fulfilled",
     },
   ]);
+  const [selectedStatus, setSelectedStatus] = useState("Fulfilled")
+
+  const filteredRequests = useMemo(() => {
+    if (selectedStatus === "Fuldilled") {
+      return cartridgeHistory
+    } else {
+      return cartridgeHistory.filter((request) => request.status === selectedStatus)
+    }
+  }, [selectedStatus, cartridgeHistory])
 
   return (
     <div className="grid min-h-screen w-full ">
@@ -132,15 +141,28 @@ export default function Home() {
           </div>
           </Card>
           <Card className="w-1/2">
-                <CardHeader>
-                  <CardTitle>Catridge Request Timeline</CardTitle>
-                  <CardDescription>Status of your current Request</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {/* Example timeline items */}
-                  </div>
-                </CardContent>
+          <div className="bg-background rounded-lg shadow-sm p-6">
+          <h2 className="text-lg font-bold mb-4">Approval Timeline</h2>
+          <div className="after:absolute after:inset-y-0 after:w-px after:bg-muted-foreground/20 relative pl-6 after:left-0 grid gap-10">
+            {filteredRequests.map((request, index) => (
+              <div key={request.id} className="grid gap-1 text-sm relative">
+                <div
+                  className={`aspect-square w-3 rounded-full absolute left-0 translate-x-[-29.5px] z-10 top-1 ${
+                    request.status === "Pending"
+                      ? "bg-muted-foreground"
+                      : request.status === "Approved"
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                  }`}
+                />
+                <div className="font-medium">{request.requestedAt}</div>
+                <div className="text-muted-foreground">
+                  {request.printerModel} requested {request.printerModel} ({request.status})
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
               </Card>
         </div>
         </main>
