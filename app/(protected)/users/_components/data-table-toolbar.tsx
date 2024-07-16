@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DataTableViewOptions } from "@/components/data-table-view-options"
 
-import { priorities, statuses } from "./data/data"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 
 interface DataTableToolbarProps<TData> {
@@ -21,29 +20,16 @@ export function DataTableToolbar<TData>({
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
+      <div className="flex flex-1 py-1 items-center space-x-2">
         <Input
           placeholder="Filter name..."
-          value={(table.getColumn("EmployeeName")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("empName")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("EmployeeName")?.setFilterValue(event.target.value)
+            table.getColumn("empName")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[150px] lg:w-[250px]"
+          className="w-full rounded-lg bg-background md:w-[200px] lg:w-[336px]"
         />
-        {table.getColumn("EmpDepartment") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("EmpDepartment")}
-            title="Employee Department"
-            options={statuses}
-          />
-        )}
-        {table.getColumn("UserRole") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("UserRole")}
-            title="User Role"
-            options={priorities}
-          />
-        )}
+        
         {isFiltered && (
           <Button
             variant="ghost"

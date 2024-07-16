@@ -1,123 +1,74 @@
-"use client"
+import { ColumnDef } from "@tanstack/react-table";
+import { User } from "./data/schema"; // Assuming User type is imported from your schema
+import { DataTableColumnHeader } from "./data-table-column-header";
+import { DataTableRowActions } from "./data-table-row-actions";
 
-import { ColumnDef } from "@tanstack/react-table"
-
-import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
-
-import { labels, priorities, statuses } from "./data/data"
-import { Task } from "./data/schema"
-import { DataTableColumnHeader } from "./data-table-column-header"
-import { DataTableRowActions } from "./data-table-row-actions"
-
-export const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<User>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
+    accessorKey: "empNumber", // Use the corresponding key from your User type
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Number" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("empNumber")}</div>,
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "title",
+    accessorKey: "empName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Name" />
     ),
-    cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label)
-
-      return (
-        <div className="flex space-x-2">
-          {label && <Badge variant="outline">{label.label}</Badge>}
-          <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("title")}
-          </span>
-        </div>
-      )
-    },
+    cell: ({ row }) => (
+      <div className="flex items-center">
+        <img
+          src={row.getValue("empProfilePicture")}
+          alt="Profile"
+          className="h-8 w-8 rounded-full mr-2"
+        />
+        <span className="max-w-[500px] truncate font-medium">
+          {row.getValue("empName")}
+        </span>
+      </div>
+    ),
   },
   {
-    accessorKey: "status",
+    accessorKey: "empDepartment",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Department" />
     ),
-    cell: ({ row }) => {
-      const status = statuses.find(
-        (status) => status.value === row.getValue("status")
-      )
-
-      if (!status) {
-        return null
-      }
-
-      return (
-        <div className="flex w-[100px] items-center">
-          {status.icon && (
-            <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
-          <span>{status.label}</span>
-        </div>
-      )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
+    cell: ({ row }) => (
+      <span>{row.getValue("empDepartment")}</span>
+    ),
   },
   {
-    accessorKey: "priority",
+    accessorKey: "empMail",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Email" />
     ),
-    cell: ({ row }) => {
-      const priority = priorities.find(
-        (priority) => priority.value === row.getValue("priority")
-      )
-
-      if (!priority) {
-        return null
-      }
-
-      return (
-        <div className="flex items-center">
-          {priority.icon && (
-            <priority.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )}
-          <span>{priority.label}</span>
-        </div>
-      )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
+    cell: ({ row }) => (
+      <span>{row.getValue("empMail")}</span>
+    ),
+  },
+  {
+    accessorKey: "empRole",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Employee Role" />
+    ),
+    cell: ({ row }) => (
+      <span>{row.getValue("empRole")}</span>
+    ),
+  },
+  {
+    accessorKey: "empProfilePicture",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Profile Picture" />
+    ),
+    cell: ({ row }) => (
+      <img src={row.getValue("empProfilePicture")} alt="Profile" className="h-8 w-8 rounded-full" />
+    ),
   },
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },
-]
+];

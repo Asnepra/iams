@@ -7,15 +7,9 @@ import { Metadata } from 'next';
 import { DataTable } from './_components/data-table';
 import { columns } from './_components/columns';
 import { Card } from '@/components/ui/card';
+import { User } from './_components/data/schema';
 
-interface Employee {
-  empDepartment: string;
-  empMail: string;
-  empName: string;
-  empNumber: number;
-  empProfilePicture: string;
-  empRole: string;
-}
+
 
 interface EmpResultItem {
   empDepartment: string;
@@ -23,13 +17,13 @@ interface EmpResultItem {
 }
 
 interface ApiResponse {
-  empList: Employee[];
+  empList: User[];
   empDepartment: string;
   empResult: EmpResultItem[];
 }
 
 const UsersPage = () => {
-  const [empList, setEmpList] = useState<Employee[]>([]);
+  const [empList, setEmpList] = useState<User[]>([]);
   const [empDepartment, setEmpDepartment] = useState<string>('');
   const [empResult, setEmpResult] = useState<EmpResultItem[]>([]);
 
@@ -78,7 +72,7 @@ const UsersPage = () => {
           </div>
         </div>
         <Card className="p-2">
-          <DataTable data={mappedEmpList} columns={columns} />
+          <DataTable data={empList} columns={columns} />
         </Card>
       </div>
     </>

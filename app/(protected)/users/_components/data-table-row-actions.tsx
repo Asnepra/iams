@@ -1,9 +1,6 @@
-"use client"
-
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
-import { Row } from "@tanstack/react-table"
-
-import { Button } from "@/components/ui/button"
+import { DotsHorizontalIcon } from "@radix-ui/react-icons";
+import { Row } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,19 +13,25 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-import { labels } from "./data/data"
-import { taskSchema } from "./data/schema"
+} from "@/components/ui/dropdown-menu";
+import { labels } from "./data/data";
+import { userSchema } from "./data/schema"; // Assuming userSchema is imported from your schema file
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
+  row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const task = taskSchema.parse(row.original)
+  let user;
+  try {
+    user = userSchema.parse(row.original);
+  } catch (error) {
+    // Handle schema validation errors, e.g., log or fallback
+    console.error("Error parsing user data:", error);
+    return null; // Render nothing or fallback UI
+  }
 
   return (
     <DropdownMenu>
@@ -49,7 +52,8 @@ export function DataTableRowActions<TData>({
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value={task.label}>
+            {/* Assuming 'user.empRole' exists in your schema */}
+            <DropdownMenuRadioGroup value={user.empRole}>
               {labels.map((label) => (
                 <DropdownMenuRadioItem key={label.value} value={label.value}>
                   {label.label}
@@ -65,5 +69,5 @@ export function DataTableRowActions<TData>({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
