@@ -2,10 +2,38 @@ import { ColumnDef } from "@tanstack/react-table";
 import { User } from "./data/schema"; // Assuming User type is imported from your schema
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
+import Image from "next/image";
+
+// Import icons from radix-ui/react-icons
+import {
+  ArrowDownIcon,
+  ArrowRightIcon,
+  ArrowUpIcon,
+  CheckCircledIcon,
+  CircleIcon,
+  CrossCircledIcon,
+  QuestionMarkCircledIcon,
+  StopwatchIcon,
+} from "@radix-ui/react-icons";
+
+// Import icons from lucide-react
+import {
+  Shield,
+  ShieldEllipsis
+} from "lucide-react";
+
+// Import labels array defining user types and corresponding icons and colors
+import { labels } from "./data/data";
+
+// Create a map of gradient colors for each user type
+const gradientColorMap:Record<string,string> = {
+  Admin: "linear-gradient(to right, #30cfd0, #330867)",
+  Normal: "linear-gradient(to right, #4facfe, #00f2fe)",
+};
 
 export const columns: ColumnDef<User>[] = [
   {
-    accessorKey: "empNumber", // Use the corresponding key from your User type
+    accessorKey: "empNumber",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Number" />
     ),
@@ -20,9 +48,11 @@ export const columns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        <img
-          src={row.getValue("empProfilePicture")}
+        <Image
+          src={row.getValue("empProfilePicture") || "/user_profile.jpeg"}
           alt="Profile"
+          width={40}
+          height={40}
           className="h-8 w-8 rounded-full mr-2"
         />
         <span className="max-w-[500px] truncate font-medium">
@@ -54,18 +84,21 @@ export const columns: ColumnDef<User>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Role" />
     ),
-    cell: ({ row }) => (
-      <span>{row.getValue("empRole")}</span>
-    ),
-  },
-  {
-    accessorKey: "empProfilePicture",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Profile Picture" />
-    ),
-    cell: ({ row }) => (
-      <img src={row.getValue("empProfilePicture")} alt="Profile" className="h-8 w-8 rounded-full" />
-    ),
+    cell: ({ row }) => {
+      const userType = row.getValue("empRole") as string; // Assuming empType determines Admin or Normal
+      const label = labels.find((label) => label.value === userType);
+      const Icon = label?.icon || ShieldEllipsis; // Default to ShieldEllipsis if userType not found
+      const color = label?.color || "gray"; // Default color
+      const gradientColor = gradientColorMap[userType] || "gray"; // Default gradient color
+
+      
+      return (
+        <div className={`flex items-center} space-x-2`} >
+          <Icon size={22} color={`${color}`} /> {/* Adjust size and other styles as needed */}
+          <span className="">{row.getValue("empRole")}</span>
+        </div>
+      );
+    },
   },
   {
     id: "actions",
