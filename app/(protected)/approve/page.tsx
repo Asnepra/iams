@@ -16,15 +16,20 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/charts"
 import { Pie, PieChart } from "recharts"
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
+import { CatridgeTabs } from "./_components/tabs"
 
 export default function Component() {
   return (
     <div className="">
+      <div>
       
-      <div className="flex flex-col">
+      
         
         <main className="flex flex-1 flex-col gap-2 p-4 md:gap-8 md:p-6">
           <div className="flex items-center gap-2">
+            <div className="">
+            <CatridgeTabs/>
+            </div>
             <h1 className="font-semibold text-lg md:text-xl">Printer Cartridge Approvals</h1>
            
           </div>
@@ -73,7 +78,7 @@ export default function Component() {
                     </Card>
             <Card className="p-4 bg-white rounded-lg shadow-md">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Top 5 products by spend</CardTitle>
+                <CardTitle className="text-lg font-semibold">Department Requestors as on Date</CardTitle>
               </CardHeader>
               <CardContent className="flex items-center justify-center">
                 <PiechartcustomChart className="w-full h-[200px]" />
@@ -84,9 +89,6 @@ export default function Component() {
                 <div>
                   <CardHeader className="flex flex-row items-center space-y-0">
                     <CardTitle>Top Requesters</CardTitle>
-                    <Button variant="secondary" className="ml-auto">
-                      View All
-                    </Button>
                   </CardHeader>
                   <CardContent className="text-sm">
                     <div className="grid gap-4">
@@ -192,30 +194,68 @@ export default function Component() {
                 </CardContent>
               </Card>
               <Card>
-                <div>
-                  <CardHeader className="flex flex-row items-center space-y-0">
-                    <CardTitle>Approval Statistics</CardTitle>
-                    <Button variant="secondary" className="ml-auto">
-                      View Report
-                    </Button>
-                  </CardHeader>
-                  <CardContent className="text-sm">
-                    <div className="grid gap-4">
-                      <div className="flex items-center justify-between">
-                        <div>Pending Requests</div>
-                        <div className="font-medium">3</div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div>Approved Requests</div>
-                        <div className="font-medium">12</div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div>Rejected Requests</div>
-                        <div className="font-medium">5</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </div>
+                <CardHeader>
+                  <CardTitle>Catrdige History</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Cartridge</TableHead>
+                        <TableHead>Requester</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell className="font-medium">HP 123A Black Toner</TableCell>
+                        <TableCell>Sophia Anderson</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">Submitted</Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="outline" size="sm">
+                            Approve
+                          </Button>
+                          <Button variant="outline" size="sm" className="ml-2">
+                            Reject
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Canon 045 Cyan Toner</TableCell>
+                        <TableCell>John Doe</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">Submitted</Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="outline" size="sm">
+                            Approve
+                          </Button>
+                          <Button variant="outline" size="sm" className="ml-2">
+                            Reject
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell className="font-medium">Brother TN-760 Black Toner</TableCell>
+                        <TableCell>Jane Smith</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary">Submitted</Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="outline" size="sm">
+                            Approve
+                          </Button>
+                          <Button variant="outline" size="sm" className="ml-2">
+                            Reject
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </CardContent>
               </Card>
               
             </div>
