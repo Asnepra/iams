@@ -324,7 +324,6 @@ export default function Admin() {
             </div>
           </CardContent>
           <CardFooter>
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
           </CardFooter>
         </Card>
       </div>
@@ -492,7 +491,7 @@ function FilterIcon(props:any) {
     )
   }
 
-  function PiechartChart(props) {
+  function PiechartChart(props:any) {
     return (
       <div {...props}>
         <ChartContainer

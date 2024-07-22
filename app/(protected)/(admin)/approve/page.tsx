@@ -16,7 +16,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/charts"
 import { Pie, PieChart } from "recharts"
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
-import { CatridgeTabs } from "./_components/tabs"
+
 
 export default function Component() {
   return (
@@ -28,7 +28,7 @@ export default function Component() {
         <main className="flex flex-1 flex-col gap-2 p-4 md:gap-8 md:p-6">
           <div className="flex items-center gap-2">
             <div className="">
-            <CatridgeTabs/>
+            
             </div>
             <h1 className="font-semibold text-lg md:text-xl">Printer Cartridge Approvals</h1>
            

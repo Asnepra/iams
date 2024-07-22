@@ -12,6 +12,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Badge } from "@/components/ui/badge"
 import { CartesianGrid, XAxis, Bar, BarChart, Pie, PieChart, Line, LineChart } from "recharts"
 import { ChartTooltipContent, ChartTooltip, ChartContainer } from "@/components/ui/charts"
+import { BadgeAlertIcon } from "lucide-react"
 
 export default function Component() {
   return (
@@ -207,29 +208,10 @@ export default function Component() {
   )
 }
 
-function BadgeAlertIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
-      <line x1="12" x2="12" y1="8" y2="12" />
-      <line x1="12" x2="12.01" y1="16" y2="16" />
-    </svg>
-  )
-}
 
 
-function BarChartIcon(props) {
+
+function BarChartIcon(props:any) {
   return (
     <svg
       {...props}
@@ -251,7 +233,7 @@ function BarChartIcon(props) {
 }
 
 
-function BarchartChart(props) {
+function BarchartChart(props:any) {
   return (
     <div {...props}>
       <ChartContainer
@@ -291,7 +273,7 @@ function BarchartChart(props) {
 }
 
 
-function ComputerIcon(props) {
+function ComputerIcon(props:any) {
   return (
     <svg
       {...props}
@@ -314,7 +296,7 @@ function ComputerIcon(props) {
 }
 
 
-function LinechartChart(props) {
+function LinechartChart(props:any) {
   return (
     <div {...props}>
       <ChartContainer
@@ -357,7 +339,7 @@ function LinechartChart(props) {
 }
 
 
-function Package2Icon(props) {
+function Package2Icon(props:any) {
   return (
     <svg
       {...props}
@@ -379,7 +361,7 @@ function Package2Icon(props) {
 }
 
 
-function PiechartcustomChart(props) {
+function PiechartcustomChart(props:any) {
   return (
     <div {...props}>
       <ChartContainer
@@ -429,7 +411,7 @@ function PiechartcustomChart(props) {
 }
 
 
-function SearchIcon(props) {
+function SearchIcon(props:any) {
   return (
     <svg
       {...props}
@@ -450,7 +432,7 @@ function SearchIcon(props) {
 }
 
 
-function WarehouseIcon(props) {
+function WarehouseIcon(props:any) {
   return (
     <svg
       {...props}
@@ -473,22 +455,3 @@ function WarehouseIcon(props) {
 }
 
 
-function XIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  )
-}

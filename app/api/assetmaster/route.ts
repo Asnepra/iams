@@ -4,27 +4,10 @@ import jwt from 'jsonwebtoken'
 
 const sql = require('mssql')
 
-export const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
   
   try {
-    // Set CORS headers
-    // const headers = new Headers(req.headers)
-    // headers.set(
-    //   'Access-Control-Allow-Origin', '*');
-    //   headers.set(
-    //   'Access-Control-Allow-Methods', 'POST, OPTIONS');
-    //   //const headersInstance = headers()
-    // const authHeader = req.headers.get('authorization')
-    // //console.log("auth header", authHeader);
-
-    // const token = authHeader?.split(' ')[1] 
-    // //console.log("token 0----- ", token)
     // Extract token from request body
     const { token } = await req.json();
         
@@ -67,8 +50,9 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         if (decoded.exp < Math.floor(Date.now() / 1000)) {
           j.message="Invalid Token";
             j.status=400;
-          return NextResponse.json(
-            j
+            return new NextResponse(
+              JSON.stringify({ message: 'Token expired' }),
+              { status: 401 }
           );
         }
 
