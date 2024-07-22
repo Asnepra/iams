@@ -28,6 +28,7 @@ import { Textarea } from "./ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { useState } from "react";
 import { Badge } from "./ui/badge";
+import { UserData } from "@/schemas";
 
 interface AssetFormProps {
   assetData?: {
@@ -36,13 +37,7 @@ interface AssetFormProps {
     status: string;
     assetModelName: string;
   }[];
-  userData?: {
-    userId: string;
-    userName: string;
-    isAdmin: string;
-    userMail: string;
-    // Add other fields as needed
-  } | null;
+  userData?: UserData | null;
 }
 
 const assetSchema = z.object({

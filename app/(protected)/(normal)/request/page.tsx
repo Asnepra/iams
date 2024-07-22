@@ -10,15 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-
-interface UserData {
-  userId: string;
-  userName: string;
-  isAdmin: string;
-  userMail: string;
-  userDepartment:string;
-  // Add other fields as needed
-}
+import { UserData } from "@/schemas";
 
 function parseToken(token: string): UserData | null {
   try {
@@ -170,7 +162,7 @@ export default function Home() {
             <Card className="w-full">
               <CardHeader>
                 <CardTitle>Catridge History</CardTitle>
-                <CardDescription>View the status of your previously raised tickets.</CardDescription>
+                <CardDescription>View your history of Cartridge.</CardDescription>
               </CardHeader>
               <Separator/>
         <Table className="items-center">

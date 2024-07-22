@@ -15,6 +15,7 @@ export interface UserData {
   userRole: string;
   userMail: string;
   userProfilePic: string;
+  userDepartment:string;
   // Add other fields as needed
 }
 
