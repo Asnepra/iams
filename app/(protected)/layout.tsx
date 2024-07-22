@@ -53,7 +53,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       const data=res.data;
       if(data.message==='Success'){
         setIsValidToken(true);
-        if(data.isAdmin==='Admin')
+        if(data.isAdmin==='IT Admin')
           setIsAdmin(true);
       }
       else{
