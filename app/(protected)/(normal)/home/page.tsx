@@ -154,24 +154,7 @@ export default function Dashboard() {
                 <div className="text-2xl font-bold text-[#6D28D9]">{printerCount}</div>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Laptops</CardTitle>
-                <LaptopIcon className="w-10 h-10 text-gray-500 dark:text-gray-400" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-[#4338CA]">{laptopCount}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">Servers</CardTitle>
-                <ServerIcon className="w-10 h-10 text-gray-500 dark:text-gray-400" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-[#6D28D9]">{serverCount}</div>
-              </CardContent>
-            </Card>
+            
           </div>
           <div className="mt-4 md:mt-6">
             <Card>
