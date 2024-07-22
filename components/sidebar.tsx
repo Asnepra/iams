@@ -1,49 +1,38 @@
+
+"use client"
 import React from 'react';
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import {
-  ChevronLeft, Home, LineChart, Package,
-  PanelLeft, PlusCircle, Search,
-  Settings, ShoppingCart, Upload,
-  Users2, GitPullRequest, Plus,
-  Package2Icon, UploadCloudIcon, Printer,
-  Kanban,
-  HelpCircle, CheckCheck,
-  Box
-} from "lucide-react";
-
+import { Package2Icon } from "lucide-react";
 import { Separator } from './ui/separator';
-import { adminRoutes, normalRoutes } from '@/schemas';
+
+
 
 interface SidebarProps {
   className?: string;
-  isAdmin: boolean; // Accept isAdmin as a prop
+  routes: { icon: React.ComponentType<any>; href: string; label: string }[]; // Include routes prop
 }
 
-const Sidebar = ({ className, isAdmin }: SidebarProps) => {
-
+const Sidebar = ({ className, routes }: SidebarProps) => {
   const pathname = usePathname();
-
-  
-
-  const routesToRender = isAdmin ? adminRoutes : normalRoutes;
 
   return (
     <div className={`flex h-full ${className}`}>
       {/* Sidebar */}
       <aside className="flex flex-col text-primary bg-secondary">
         <div className="flex h-[60px] items-center border-b px-6">
-          <Link className="flex items-center gap-2 font-semibold" href="/home">
-            <Package2Icon className="h-6 w-6" />
-            <span className="">IT Assets</span>
+          <Link href="/home"
+             className="flex items-center gap-2 font-semibold">
+              <Package2Icon className="h-6 w-6" />
+              <span>IT Assets</span>
+            
           </Link>
         </div>
         <TooltipProvider>
           <nav className="flex flex-col items-start gap-2 px-2 py-2 sm:py-5">
-            {routesToRender.map((route, index) => (
+            {routes.map((route, index) => (
               <React.Fragment key={route.href}>
                 <Tooltip>
                   <TooltipTrigger asChild>
