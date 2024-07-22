@@ -5,14 +5,29 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import Sidebar from '@/components/sidebar';
 import Navbar from '@/components/navbar/Navbar';
+import { UserData } from '@/schemas';
 
 interface RootLayoutProps {
   children: React.ReactNode;
+}
+
+
+function parseToken(token: string): UserData | null {
+  try {
+    const [, payloadBase64] = token.split('.');
+    const decodedPayload = Buffer.from(payloadBase64, 'base64').toString('utf-8');
+    const parsedPayload = JSON.parse(decodedPayload);
+    return parsedPayload;
+  } catch (error) {
+    console.error('Error parsing token:', error);
+    return null;
+  }
 }
 const iamsToken="IamsToken";
 const RootLayout = ({ children }: RootLayoutProps) => {
   const router = useRouter();
   const pathName=usePathname();
+  const [userData, setUserData] = useState<UserData | null>(null); // State for user data
   const [isValidToken, setIsValidToken] = useState(false); // Initialize as false
   const [isAdmin, setIsAdmin] = useState(false); // Initialize as false
 
@@ -31,6 +46,9 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       const body={
         token:token
     }
+    const parsedToken = parseToken(token);
+    setUserData(parsedToken); // Set user data in state
+
       const res = await axios.post('/api/validateToken',body)
       const data=res.data;
       if(data.message==='Success'){
@@ -77,7 +95,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return isValidToken ? (
     <div className="">
       <div className="relative z-10">
-        <Navbar />
+        <Navbar userData={userData}/>
         <div className="hidden md:flex mt-16 max-w-52 flex-col fixed inset-y-0">
           {/* Pass isAdmin prop based on isValidToken */}
           <Sidebar isAdmin={isAdmin} />

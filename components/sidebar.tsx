@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { Separator } from './ui/separator';
+import { adminRoutes, normalRoutes } from '@/schemas';
 
 interface SidebarProps {
   className?: string;
@@ -26,76 +27,7 @@ const Sidebar = ({ className, isAdmin }: SidebarProps) => {
 
   const pathname = usePathname();
 
-  const normalRoutes = [
-    {
-      icon: Home,
-      href: "/home",
-      label: "Home",
-    },
-    {
-      icon: Printer,
-      href: "/request",
-      label: "Request Cartridge",
-    },
-    {
-      icon: Kanban,
-      href: "/complaint",
-      label: "Raise a complaint",
-    }
-  ];
-
-  const adminRoutes = [
-    {
-      icon: Home,
-      href: "/home",
-      label: "Home",
-    },
-    {
-      icon: Package,
-      href: "/assets",
-      label: "Assets",
-    },
-    {
-      icon: Printer,
-      href: "/request",
-      label: "Request Cartridge",
-    },
-    {
-      icon: CheckCheck,
-      href: "/approve",
-      label: "Approve Cartridge",
-    },
-    {
-      icon: Kanban,
-      href: "/complaint",
-      label: "Raise a complaint",
-    },
-    {
-      icon: Box,
-      href: "/admin",
-      label: "Assign ticket",
-    },
-    {
-      icon: UploadCloudIcon,
-      href: "/upload",
-      label: "Add / Upload",
-    },
-    {
-      icon: Users2,
-      href: "/users",
-      label: "Users",
-    },
-    {
-      icon: LineChart,
-      href: "/analytics",
-      label: "Analytics",
-    },
-    {
-      icon: Settings,
-      href: "/settings",
-      label: "Settings",
-    }
-  ];
+  
 
   const routesToRender = isAdmin ? adminRoutes : normalRoutes;
 

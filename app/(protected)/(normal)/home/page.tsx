@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import FormError from "@/components/form-error";
+import toast from "react-hot-toast";
 
 interface Asset {
   category: string;
@@ -60,12 +61,16 @@ export default function Dashboard() {
     try {
       const token = Cookies.get('token');
       if (!token) {
+        toast.error("Token Error")
+        router.push("/");
         throw new Error('Token not found in cookies');
       }
 
       const parsedToken = parseToken(token);
       if (!parsedToken) {
-        throw new Error('Unable to parse token');
+        toast.error("Token Error")
+        router.push("/");
+        //throw new Error('Unable to parse token');
       }
 
       setUserData(parsedToken); // Set user data in state
