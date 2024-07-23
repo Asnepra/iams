@@ -11,6 +11,8 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { UserData } from "@/schemas";
+import { DataTable } from "./_components/data-table";
+import { columns } from "./_components/columns";
 
 function parseToken(token: string): UserData | null {
   try {
@@ -59,35 +61,35 @@ export default function Home() {
 
   const [cartridgeHistory, setCartridgeHistory] = useState([
     {
-      id: 1,
+      id: "1",
       printerModel: "HP LaserJet Pro",
-      quantity: 2,
+      quantity: "2",
       reason: "Printer ran out of ink",
-      requestedAt: "2023-05-15",
+      requestedOn: "2023-05-15",
       status: "Fulfilled",
     },
     {
-      id: 2,
+      id: "2",
       printerModel: "Canon PIXMA",
-      quantity: 1,
+      quantity: "1",
       reason: "Printer cartridge is low",
-      requestedAt: "2023-03-20",
+      requestedOn: "2023-03-20",
       status: "Fulfilled",
     },
     {
-      id: 3,
+      id:"3",
       printerModel: "Epson WorkForce",
-      quantity: 3,
+      quantity: "4",
       reason: "Printer cartridge is empty",
-      requestedAt: "2023-01-10",
+      requestedOn: "2023-01-10",
       status: "Pending",
     },
     {
-      id: 4,
+      id: "4",
       printerModel: "Brother MFC",
-      quantity: 1,
+      quantity: "1",
       reason: "Printer cartridge is low",
-      requestedAt: "2022-11-05",
+      requestedOn: "2022-11-05",
       status: "Fulfilled",
     },
   ]);
@@ -104,14 +106,14 @@ export default function Home() {
   return (
     <div className="grid min-h-screen w-full ">
         <div className="flex flex-col">
-          <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
+          <main className="flex flex-1 flex-col gap-2 p-4 md:p-6">
             <div className="flex flex-row justify-aroundn space-x-2 gap-2">
               <Card className="w-1/2">
           <div className="h-full p-2 space-y-2 max-w-3xl mx-auto">
             {error && <FormError message={error} />}
             <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Name : {userData?.userName}</Label>
+                        <Label htmlFor="name">Name </Label>
                         <Input id="email" type="email" defaultValue={userData?.userName} disabled />
                       </div>
                       <div className="space-y-2">
@@ -147,7 +149,7 @@ export default function Home() {
                       : "bg-red-500"
                   }`}
                 />
-                <div className="font-medium">{request.requestedAt}</div>
+                <div className="font-medium">{request.requestedOn}</div>
                 <div className="text-muted-foreground">
                   {request.printerModel} requested {request.printerModel} ({request.status})
                 </div>
@@ -165,34 +167,10 @@ export default function Home() {
                 <CardDescription>View your history of Cartridge.</CardDescription>
               </CardHeader>
               <Separator/>
-        <Table className="items-center">
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Printer Model</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Reason</TableHead>
-              <TableHead>Requested At</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {cartridgeHistory.map((request) => (
-              <TableRow key={request.id}>
-                <TableCell>{request.id}</TableCell>
-                <TableCell>{request.printerModel}</TableCell>
-                <TableCell>{request.quantity}</TableCell>
-                <TableCell>{request.reason}</TableCell>
-                <TableCell>{request.requestedAt}</TableCell>
-                <TableCell>
-                  <Badge variant={request.status === "Fulfilled" ? "default" : request.status==="Pending"? "secondary":"destructive"}>{request.status}</Badge>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-
-        </Card>
+              <div className="p-2">
+                <DataTable columns={columns} data={cartridgeHistory}/>
+              </div>
+            </Card>
 
         
     </div>
