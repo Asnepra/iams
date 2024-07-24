@@ -2,6 +2,7 @@
 import { CheckCircledIcon, CrossCircledIcon, CubeIcon, QuestionMarkCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
 import { Box, CheckCheck, Home, Kanban, LineChart, Package, Printer, Settings, UploadCloudIcon, Users2, BoxesIcon, CircleIcon } from "lucide-react";
 import * as zod from "zod";
+import { z } from "zod";
 
 export const LoginSchema = zod.object({
   email: zod.string().min(6, { message: "Employee Number 6 digit is required" }),
@@ -63,6 +64,18 @@ export interface TicketProps{
 }
 
 
+export const userSchema=z.object({
+  empDepartment: z.string(),
+  empMail: z.string(),
+  empName: z.string(),
+  empNumber: z.string(),
+  empProfilePicture: z.string(),
+  empRole: z.string(),
+})
+
+export type User = z.infer<typeof userSchema>
+
+
 
 
 
@@ -113,6 +126,14 @@ export const CREATED_ON_STRING = "createdAt";
 export const RESOLUTION_TIME_STRING = "resolutionTime";
 
 
+export const EMPDEPARTMENT_STRING="EmpDepartment";
+export const EMPMAIL_STRING="EmpMail";
+export const EMPPROFILEPIC_STRING="EmpProfilePic";
+export const EMPLOYEENAME_STRING="EmployeeName";
+export const EMPLOYEENUMBER_STRING="EmployeeNumber"
+export const USERROLE_STRING="UserRole";
+
+
 // Normal user routes
 export const normalRoutes = [
   {
@@ -146,6 +167,11 @@ export const hrAdminRoutes = [
 export const itAdminRoutes = [
   ...normalRoutes,
   {
+    icon: BoxesIcon,
+    href: "/addstock",
+    label: "Add Stocks",
+  },
+  {
     icon: Package,
     href: "/assets",
     label: "Manage Assets",
@@ -155,6 +181,22 @@ export const itAdminRoutes = [
     href: "/upload",
     label: "Add / Upload",
   },
+  {
+    icon: Users2,
+    href: "/users",
+    label: "Users",
+},
+{
+    icon: LineChart,
+    href: "/analytics",
+    label: "Analytics",
+},
+{
+    icon: Settings,
+    href: "/settings",
+    label: "Settings",
+},
+  
 ];
 
 // Admin routes combining HR Admin and IT Admin routes
@@ -187,8 +229,18 @@ export const adminRoutes = [
   ...hrAdminRoutes,
   ...itAdminRoutes,
   {
-    icon: Settings,
-    href: "/settings",
-    label: "Settings",
+      icon: Users2,
+      href: "/users",
+      label: "Users",
+  },
+  {
+      icon: LineChart,
+      href: "/analytics",
+      label: "Analytics",
+  },
+  {
+      icon: Settings,
+      href: "/settings",
+      label: "Settings",
   },
 ];

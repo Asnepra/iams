@@ -5,11 +5,10 @@ const sql = require('mssql')
 
 export const POST = async (req: NextRequest, res: NextResponse) => {
     try {
-        const token1 = await req.json(); // Assuming the token is sent in the request body
-        //console.log("token ------------", token1);
-
+        // Extract token from request body
+        const { token } = await req.json();
+            
         // Check if token is missing
-        const {token} = token1;
         //console.log(token);
         if (!token) {
             return new NextResponse(
@@ -30,15 +29,11 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                 );
             }
             try{
-                const { userId, isAdmin } = decoded;
+              
             
 
             
-            //console.log("User ID:", userId);
-            //console.log("Is Admin:", isAdmin);
-            if(isAdmin!=='Admin'){
-                return new NextResponse(JSON.stringify("Unauthorized Access"),{status:401});
-            }
+
         }catch(error){
             return new NextResponse(
                 JSON.stringify({ message: 'Invalid token or database error' }),
@@ -63,12 +58,12 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             ORDER BY EmpDepartment;`
 
             const empList= await sql.query`SELECT 
-                [EmployeeNumber] AS empNumber,
-                [EmployeeName] AS empName,
-                [EmpDepartment] AS empDepartment,
-                [EmpMail] AS empMail,             
-                [EmpProfilePic] AS empProfilePicture,
-                [UserRole] AS empRole
+                [EmployeeNumber] ,
+                [EmployeeName] ,
+                [EmpDepartment] ,
+                [EmpMail] ,             
+                [EmpProfilePic] ,
+                [UserRole] 
                 FROM [IAMS].[dbo].[UserMaster]
                 ORDER BY [EmployeeName];`
 

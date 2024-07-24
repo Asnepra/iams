@@ -1,7 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { User } from "./data/schema";
-import { DataTableColumnHeader } from "./data-table-column-header";
-import { DataTableRowActions } from "./data-table-row-actions";
+
 import Image from "next/image";
 
 // Import icons from radix-ui/react-icons
@@ -13,25 +12,27 @@ import {
 // Import labels array defining user types and corresponding icons and colors
 import { labels } from "./data/data";
 import FallbackImage from "@/components/fallback-Image";
+import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
+import { EMPDEPARTMENT_STRING, EMPLOYEENAME_STRING, EMPLOYEENUMBER_STRING, EMPMAIL_STRING, EMPPROFILEPIC_STRING, USERROLE_STRING } from "@/schemas";
 
 export const columns: ColumnDef<User>[] = [
   {
-    accessorKey: "empNumber",
+    accessorKey: EMPLOYEENUMBER_STRING,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Number" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("empNumber")}</div>,
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue(EMPLOYEENUMBER_STRING)}</div>,
 
   },
   {
-    accessorKey: "empProfilePicture",
+    accessorKey: EMPPROFILEPIC_STRING,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Picture" />
     ),
     cell: ({ row }) => (
       <div className="flex items-center ">
         <FallbackImage
-          src={row.getValue("empProfilePicture") || "/user_profile.jpeg"}
+          src={row.getValue(EMPPROFILEPIC_STRING) || "/user_profile.jpeg"}
           alt="Profile"
           className="h-8 w-8 rounded-full mr-2"
           width={40}
@@ -41,48 +42,48 @@ export const columns: ColumnDef<User>[] = [
     ),
   },
   {
-    accessorKey: "empName",
+    accessorKey: EMPLOYEENAME_STRING,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Name" />
     ),
     cell: ({ row }) => (
       <div className="flex items-center ">
       <FallbackImage
-        src={row.getValue("empProfilePicture") || "/user_profile.jpeg"}
+        src={row.getValue(EMPPROFILEPIC_STRING) || "/user_profile.jpeg"}
         alt="Profile"
         className="h-8 w-8 rounded-full mr-2"
         width={40}
         height={40}
       />
-      {row.getValue("empName")}
+      {row.getValue(EMPLOYEENAME_STRING)}
     </div>
     ),
   },
   {
-    accessorKey: "empDepartment",
+    accessorKey: EMPDEPARTMENT_STRING,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Department" />
     ),
     cell: ({ row }) => (
-      <span>{row.getValue("empDepartment")}</span>
+      <span>{row.getValue(EMPDEPARTMENT_STRING)}</span>
     ),
   },
   {
-    accessorKey: "empMail",
+    accessorKey: EMPMAIL_STRING,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Email" />
     ),
     cell: ({ row }) => (
-      <span>{row.getValue("empMail")}</span>
+      <span>{row.getValue(EMPMAIL_STRING)}</span>
     ),
   },
   {
-    accessorKey: "empRole",
+    accessorKey: USERROLE_STRING,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Role" />
     ),
     cell: ({ row }) => {
-      const userType = row.getValue("empRole") as string;
+      const userType = row.getValue(USERROLE_STRING) as string;
       const label = labels.find((label) => label.value === userType);
       const Icon = label?.icon || ShieldEllipsis;
       const color = label?.color || "gray";
@@ -98,8 +99,5 @@ export const columns: ColumnDef<User>[] = [
 
   
 
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-  },
+  
 ];

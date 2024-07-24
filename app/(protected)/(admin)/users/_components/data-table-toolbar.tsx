@@ -5,9 +5,10 @@ import { Table } from "@tanstack/react-table"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { DataTableViewOptions } from "@/components/data-table-view-options"
 
-import { DataTableFacetedFilter } from "./data-table-faceted-filter"
+
+import { DataTableViewOptions } from "@/components/table/data-table-view-options"
+import { EMPLOYEENAME_STRING } from "@/schemas"
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
@@ -23,9 +24,9 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 py-1 items-center space-x-2">
         <Input
           placeholder="Filter name..."
-          value={(table.getColumn("empName")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn(EMPLOYEENAME_STRING)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("empName")?.setFilterValue(event.target.value)
+            table.getColumn(EMPLOYEENAME_STRING)?.setFilterValue(event.target.value)
           }
           className="w-full rounded-lg bg-background md:w-[200px] lg:w-[336px]"
         />

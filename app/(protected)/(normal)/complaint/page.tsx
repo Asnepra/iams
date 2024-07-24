@@ -33,6 +33,7 @@ import { Badge } from "@/components/ui/badge";
 import ComplaintForm from "@/components/complaintForm";
 import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/columns";
+import ApprovalTimeline from "./_components/data-timeline";
 
 interface Asset {
     assetId:string;
@@ -206,7 +207,8 @@ export default function ComplaintPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {/* Example timeline items */}
+                  <ApprovalTimeline filteredRequests={priorityList}/>
+
                   </div>
                 </CardContent>
               </Card>
