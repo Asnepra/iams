@@ -31,6 +31,8 @@ import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import ComplaintForm from "@/components/complaintForm";
+import { DataTable } from "./_components/data-table";
+import { columns } from "./_components/columns";
 
 interface Asset {
     assetId:string;
@@ -217,71 +219,7 @@ export default function ComplaintPage() {
                 <CardDescription>View the status of your previously raised tickets.</CardDescription>
               </CardHeader>
               <CardContent>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Ticket ID</TableHead>
-                      <TableHead>Asset</TableHead>
-                      <TableHead>Issue</TableHead>
-                      <TableHead>Priority</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Assigned To</TableHead>
-                      <TableHead>Created At</TableHead>
-                      <TableHead>Resolution Time</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {ticketData.map((ticket) => (
-                      <TableRow key={ticket.ticketId}>
-                        <TableCell>
-                          <Link href="#" className="font-medium" prefetch={false}>
-                            #{ticket.ticketId}
-                          </Link>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            {imageCategoryMap[ticket.categoryName]}
-                            <span>{ticket.assetModelName}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div>
-                            <div className="font-medium">{ticket.issue}</div>
-                            <div className="text-sm text-muted-foreground">{ticket.issue}</div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge className={priorityList.find((priority) => priority.priorityName === ticket.priority)?.priorityColor}>
-                            {ticket.priority}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="default">{ticket.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Avatar className="w-6 h-6 border">
-                              <AvatarImage src="/user_profile.jpeg" />
-                              <AvatarFallback>{ticket.assignedToEmployeeName}</AvatarFallback>
-                            </Avatar>
-                            <span>{ticket.assignedToEmployeeName}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <time dateTime={ticket.createdAt}>
-                            {new Date(ticket.createdAt).toLocaleDateString("en-US", {
-                              year: "numeric",
-                              month: "long",
-                              day: "numeric",
-                            })}
-                          </time>
-                        </TableCell>
-                        <TableCell>{ticket.resolutionTime}</TableCell>
-                        {/* Action buttons could go here */}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                <DataTable columns={columns} data={ticketData}/>
               </CardContent>
             </Card>
           </div>

@@ -52,6 +52,18 @@ export interface CartridgeProps{
 
 
 
+export interface TicketProps{
+  ticketId:string;
+  asset:string; // asset name HP Prodesk 600 G1
+  issue:string;
+  status:string;
+  assignedTo:string;
+  createdOn:string;
+  resolutionTime:string;
+}
+
+
+
 
 
 export const statuses = [
@@ -92,6 +104,14 @@ export const QUANTITY_STRING="quantity";
 export const REASON_STRING="reason";
 export const REQUESTED_ON_STRING="requestedOn";
 export const STATUS_STRING="status";
+
+export const COMPLAINT_ID_STRING = "ticketId";
+export const ASSET_STRING = "assetModelName";
+export const ISSUE_STRING = "issue";
+export const ASSIGNED_TO_STRING = "assignedToEmployeeName";
+export const CREATED_ON_STRING = "createdAt";
+export const RESOLUTION_TIME_STRING = "resolutionTime";
+
 
 // Normal user routes
 export const normalRoutes = [

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 
 
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
-import { PRINTER_MODAL_STRING, STATUS_STRING, statuses } from "@/schemas"
+import { ASSET_STRING, PRINTER_MODAL_STRING, STATUS_STRING, statuses } from "@/schemas"
 import { DataTableViewOptions } from "@/components/table/data-table-view-options"
 
 
@@ -25,10 +25,10 @@ export function DataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
-          placeholder="Filter printers..."
-          value={(table.getColumn(PRINTER_MODAL_STRING)?.getFilterValue() as string) ?? ""}
+          placeholder="Filter Assets..."
+          value={(table.getColumn(ASSET_STRING)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn(PRINTER_MODAL_STRING)?.setFilterValue(event.target.value)
+            table.getColumn(ASSET_STRING)?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />

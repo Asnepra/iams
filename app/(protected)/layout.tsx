@@ -119,7 +119,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
     <div className="">
       <div className="relative z-10">
         <Navbar userData={userData} routes={allowedRoutes} />
-        <div className="hidden md:flex mt-16 max-w-52 flex-col fixed inset-y-0">
+        <div className="Z-10 hidden md:flex mt-16 max-w-52 flex-col fixed inset-y-0">
           <Sidebar routes={allowedRoutes} />
         </div>
         <div className="mt-16 h-auto flex flex-col md:ml-52 bg-muted/40 mx-2 px-2 border-b">
