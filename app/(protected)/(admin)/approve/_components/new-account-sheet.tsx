@@ -10,6 +10,7 @@ import {
 
 import { AccountForm } from "./account-form";
 import { CartridgeSchemaStock } from "@/schemas/printerSchema";
+import { useNewAccount } from "./hooks/use-new-accounts";
   
  
   
@@ -18,18 +19,14 @@ import { CartridgeSchemaStock } from "@/schemas/printerSchema";
   const NewAccountSheet = () => {
     const { isOpen, onClose } = useNewAccount();
   
-    const mutation = useCreateAccount();
+    // const mutation = useCreateAccount();
   
     const onSubmit = (values: FormValues) => {
-      mutation.mutate(values, {
-          onSuccess: () => {
-              onClose()
-          }
-      })
+      console.log("data cartridge", values);
     };
   
     return (
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent className="space-y-4">
           <SheetHeader>
             <SheetTitle>New Catridge</SheetTitle>
@@ -39,9 +36,10 @@ import { CartridgeSchemaStock } from "@/schemas/printerSchema";
           </SheetHeader>
           <AccountForm
             onSubmit={onSubmit}
-            disabled={mutation.isPending}
+            disabled={false}
             defaultValues={{
-              name: "",
+              cartridgeName: "",
+              cartridgeQuantity:""
             }}
           />
         </SheetContent>

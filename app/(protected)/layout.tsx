@@ -7,6 +7,7 @@ import axios from 'axios';
 import Sidebar from '@/components/sidebar';
 import Navbar from '@/components/navbar/Navbar';
 import { normalRoutes, itAdminRoutes, hrAdminRoutes, UserData, IT_ADMIN_USER_ROLE, HR_ADMIN_USER_ROLE } from '@/schemas';
+import SheetProvider from '@/providers/sheet-providers';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -123,6 +124,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
           <Sidebar routes={allowedRoutes} />
         </div>
         <div className="mt-16 h-auto flex flex-col md:ml-52 bg-muted/40 mx-2 px-2 border-b">
+        <SheetProvider></SheetProvider>
           {children}
         </div>
       </div>
