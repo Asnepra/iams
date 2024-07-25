@@ -16,9 +16,46 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/charts"
 import { Pie, PieChart } from "recharts"
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
+import { DataTable } from "../../(normal)/request/_components/data-table"
+import { columns } from "../../(normal)/request/_components/columns"
+import { useState } from "react"
 
 
-export default function Component() {
+export default function ApproveScreen() {
+  const [cartridgeHistory, setCartridgeHistory] = useState([
+    {
+      id: "1",
+      printerModel: "HP LaserJet Pro",
+      quantity: "2",
+      reason: "Printer ran out of ink",
+      requestedOn: "2023-05-15",
+      status: "Fulfilled",
+    },
+    {
+      id: "2",
+      printerModel: "Canon PIXMA",
+      quantity: "1",
+      reason: "Printer cartridge is low",
+      requestedOn: "2023-03-20",
+      status: "Fulfilled",
+    },
+    {
+      id:"3",
+      printerModel: "Epson WorkForce",
+      quantity: "4",
+      reason: "Printer cartridge is empty",
+      requestedOn: "2023-01-10",
+      status: "Pending",
+    },
+    {
+      id: "4",
+      printerModel: "Brother MFC",
+      quantity: "1",
+      reason: "Printer cartridge is low",
+      requestedOn: "2022-11-05",
+      status: "Fulfilled",
+    },
+  ]);
   return (
     <div className="">
       <div>
@@ -76,56 +113,9 @@ export default function Component() {
                         
                     </CardContent>
                     </Card>
-            <Card className="p-4 bg-white rounded-lg shadow-md">
-              <CardHeader>
-                <CardTitle className="text-lg font-semibold">Department Requestors as on Date</CardTitle>
-              </CardHeader>
-              <CardContent className="flex items-center justify-center">
-                <PiechartcustomChart className="w-full h-[200px]" />
-              </CardContent>
-            </Card>
             
-          <Card>
-                <div>
-                  <CardHeader className="flex flex-row items-center space-y-0">
-                    <CardTitle>Top Requesters</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-sm">
-                    <div className="grid gap-4">
-                      <div className="flex items-center gap-4">
-                        <Avatar className="border w-11 h-11">
-                          <AvatarImage src="/placeholder-user.jpg" />
-                          <AvatarFallback>SA</AvatarFallback>
-                        </Avatar>
-                        <div className="grid">
-                          <div className="font-semibold">Sophia Anderson</div>
-                          <div className="text-muted-foreground">5 requests</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Avatar className="border w-11 h-11">
-                          <AvatarImage src="/placeholder-user.jpg" />
-                          <AvatarFallback>JD</AvatarFallback>
-                        </Avatar>
-                        <div className="grid">
-                          <div className="font-semibold">John Doe</div>
-                          <div className="text-muted-foreground">3 requests</div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <Avatar className="border w-11 h-11">
-                          <AvatarImage src="/placeholder-user.jpg" />
-                          <AvatarFallback>JS</AvatarFallback>
-                        </Avatar>
-                        <div className="grid">
-                          <div className="font-semibold">Jane Smith</div>
-                          <div className="text-muted-foreground">2 requests</div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </div>
-              </Card>
+            
+
               
             </div>
             <div className="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col gap-6">
@@ -193,68 +183,13 @@ export default function Component() {
                   </Table>
                 </CardContent>
               </Card>
-              <Card>
+            <Card>
                 <CardHeader>
-                  <CardTitle>Catrdige History</CardTitle>
+                  <CardTitle>History of</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Cartridge</TableHead>
-                        <TableHead>Requester</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell className="font-medium">HP 123A Black Toner</TableCell>
-                        <TableCell>Sophia Anderson</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">Submitted</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="outline" size="sm">
-                            Approve
-                          </Button>
-                          <Button variant="outline" size="sm" className="ml-2">
-                            Reject
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">Canon 045 Cyan Toner</TableCell>
-                        <TableCell>John Doe</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">Submitted</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="outline" size="sm">
-                            Approve
-                          </Button>
-                          <Button variant="outline" size="sm" className="ml-2">
-                            Reject
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">Brother TN-760 Black Toner</TableCell>
-                        <TableCell>Jane Smith</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">Submitted</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="outline" size="sm">
-                            Approve
-                          </Button>
-                          <Button variant="outline" size="sm" className="ml-2">
-                            Reject
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                <DataTable columns={columns} data={cartridgeHistory}/>
+
                 </CardContent>
               </Card>
               
