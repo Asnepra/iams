@@ -154,12 +154,6 @@ export default function ComplaintPage() {
     }
   };
 
-  const imageCategoryMap: Record<string, JSX.Element> = {
-    Computer: <ComputerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-    Laptop: <LaptopIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-    Printer: <PrinterIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-    Server: <ServerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-  };
 
   return (
     

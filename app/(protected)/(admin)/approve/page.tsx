@@ -9,8 +9,11 @@ import {DataTable} from "../../(normal)/request/_components/data-table";
 import { columns } from "../../(normal)/request/_components/columns";
 import TicketCard from "./_components/ticketinformation";
 import { CartridgeApprovalProps } from "@/schemas/printerSchema";
+import { HistoryDialog } from "./_components/dialog-history";
 
 export default function ApproveScreen() {
+  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
+  const [selectedHistory, setSelectedHistory] = useState<any>(null); 
   const [cartridgeHistory, setCartridgeHistory] = useState([
     {
       id: "1",
@@ -73,6 +76,7 @@ export default function ApproveScreen() {
   ]);
 
   const handleApprove = (id: string) => {
+    
     // Assuming you want to remove the request from pending after approval
     const updatedRequests = pendingRequests.filter((request) => request.requestId !== id);
     setPendingRequests(updatedRequests);
@@ -105,6 +109,13 @@ export default function ApproveScreen() {
       }]);
     }
   };
+  const handleHistory = (id: string) => {
+    const selected = cartridgeHistory.find((item) => item.id === id);
+    if (selected) {
+      setSelectedHistory(selected);
+      setIsHistoryDialogOpen(true);
+    }
+  };
 
   return (
     <div className="">
@@ -114,7 +125,6 @@ export default function ApproveScreen() {
             <div>
               <TicketCard />
             </div>
-            <h1 className="font-semibold text-lg md:text-xl">Printer Cartridge Approvals</h1>
           </div>
           <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-4">
             <div className="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col gap-6">
@@ -143,6 +153,9 @@ export default function ApproveScreen() {
                             <Button variant="outline" size="sm" className="ml-2" onClick={() => handleReject(request.requestId)}>
                               Reject
                             </Button>
+                            <Button variant="outline" size="sm" className="ml-2" onClick={() => handleHistory(request.requestId)}>
+                              History
+                            </Button>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -162,6 +175,8 @@ export default function ApproveScreen() {
           </div>
         </main>
       </div>
+      <HistoryDialog />
+
     </div>
   );
 }
