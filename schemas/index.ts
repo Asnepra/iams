@@ -161,6 +161,11 @@ export const hrAdminRoutes = [
     href: "/addstock",
     label: "Add Stocks",
   },
+  {
+    icon: CheckCheck,
+    href: "/approve",
+    label: "Approve Cartridge",
+  },
 ];
 
 // IT Admin routes
@@ -169,7 +174,12 @@ export const itAdminRoutes = [
   {
     icon: BoxesIcon,
     href: "/addstock",
-    label: "Add Stocks",
+    label: "Add Cartridges",
+  },
+  {
+    icon: CheckCheck,
+    href: "/approve",
+    label: "Approve Cartridge",
   },
   {
     icon: Package,
@@ -181,6 +191,7 @@ export const itAdminRoutes = [
     href: "/upload",
     label: "Add / Upload",
   },
+  
   {
     icon: Users2,
     href: "/users",
