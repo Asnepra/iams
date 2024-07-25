@@ -1,25 +1,14 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/DkxSxs2XjqJ
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
 
 "use client"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem } from "@/components/ui/dropdown-menu"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/charts"
-import { Pie, PieChart } from "recharts"
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
-import { DataTable } from "../../(normal)/request/_components/data-table"
-import { columns } from "../../(normal)/request/_components/columns"
-import { useState } from "react"
-
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {DataTable} from "../../(normal)/request/_components/data-table";
+import { columns } from "../../(normal)/request/_components/columns";
+import TicketCard from "./_components/ticketinformation";
+import { CartridgeApprovalProps } from "@/schemas/printerSchema";
 
 export default function ApproveScreen() {
   const [cartridgeHistory, setCartridgeHistory] = useState([
@@ -40,7 +29,7 @@ export default function ApproveScreen() {
       status: "Fulfilled",
     },
     {
-      id:"3",
+      id: "3",
       printerModel: "Epson WorkForce",
       quantity: "4",
       reason: "Printer cartridge is empty",
@@ -56,70 +45,80 @@ export default function ApproveScreen() {
       status: "Fulfilled",
     },
   ]);
+
+  const [pendingRequests, setPendingRequests] = useState<CartridgeApprovalProps[]>([
+    {
+      requestId: "REQ001",
+      cartridgeId: 123,
+      cartridgeDescription: "CYAN 25X15X2",
+      requesterName: "John Doe",
+      profilePic: "https://example.com/profile-pic.jpg",
+      requesterGrade: "Senior Engineer",
+      requestedOn: "2024-07-25T09:00:00Z",
+      reason: "Need replacement cartridge for urgent printing tasks.",
+      reqeusterGrade: ""
+    },
+    {
+      requestId: "REQ002",
+      cartridgeId: 456,
+      cartridgeDescription: "MAGENTA 30X20X2",
+      requesterName: "Jane Smith",
+      profilePic: "https://example.com/jane-profile-pic.jpg",
+      requesterGrade: "Junior Developer",
+      requestedOn: "2024-07-24T14:30:00Z",
+      reason: "Running low on ink, need additional cartridge for upcoming project.",
+      reqeusterGrade: ""
+    },
+    // Add more dummy data objects as needed
+  ]);
+
+  const handleApprove = (id: string) => {
+    // Assuming you want to remove the request from pending after approval
+    const updatedRequests = pendingRequests.filter((request) => request.requestId !== id);
+    setPendingRequests(updatedRequests);
+
+    // Add the approved request to history
+    const approvedRequest = pendingRequests.find((request) => request.requestId === id);
+    if (approvedRequest) {
+      setCartridgeHistory([...cartridgeHistory, {
+        ...approvedRequest, status: "Approved",
+        id: "",
+        printerModel: "",
+        quantity: ""
+      }]);
+    }
+  };
+
+  const handleReject = (id: string) => {
+    // Assuming you want to remove the request from pending after rejection
+    const updatedRequests = pendingRequests.filter((request) => request.requestId !== id);
+    setPendingRequests(updatedRequests);
+
+    // Add the rejected request to history
+    const rejectedRequest = pendingRequests.find((request) => request.requestId === id);
+    if (rejectedRequest) {
+      setCartridgeHistory([...cartridgeHistory, {
+        ...rejectedRequest, status: "Rejected",
+        id: "",
+        printerModel: "",
+        quantity: ""
+      }]);
+    }
+  };
+
   return (
     <div className="">
       <div>
-      
-      
-        
         <main className="flex flex-1 flex-col gap-2 p-4 md:gap-8 md:p-6">
           <div className="flex items-center gap-2">
-            <div className="">
-            
+            <div>
+              <TicketCard />
             </div>
             <h1 className="font-semibold text-lg md:text-xl">Printer Cartridge Approvals</h1>
-           
           </div>
-            <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-4">
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    <div className="grid md:grid-cols-1 gap-2">
-                    <Card className="bg-purple-100">
-                        <CardHeader>
-                            <CardTitle>Pending Requests</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-bold">2</div>
-                        </CardContent>
-                        </Card>
-                        
-                        <Card className="bg-orange-100">
-                        <CardHeader>
-                            <CardTitle>Total Requests</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="text-3xl font-bold">
-                            10
-                            </div>
-                        </CardContent>
-                    </Card>
-                </div>
-                    <Card className="p-2 bg-white rounded-lg shadow-md">
-                    <CardHeader>
-                        <CardTitle className="text-lg font-semibold">Summary</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <div className="flex items-center justify-between p-2 bg-green-100 rounded-lg">
-                        <span>Approved so far</span>
-                        <span>1,552</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 bg-purple-100 rounded-lg">
-                        <span>Requested So far</span>
-                        <span>1,552</span>
-                        </div>
-                        <div className="flex items-center justify-between p-2 bg-pink-100 rounded-lg">
-                        <span>Request Declined So far</span>
-                        <span>1,552</span>
-                        </div>
-                        
-                    </CardContent>
-                    </Card>
-            
-            
-
-              
-            </div>
+          <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-4">
             <div className="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col gap-6">
-            <Card>
+              <Card>
                 <CardHeader>
                   <CardTitle>Pending Requests</CardTitle>
                 </CardHeader>
@@ -129,125 +128,40 @@ export default function ApproveScreen() {
                       <TableRow>
                         <TableHead>Cartridge</TableHead>
                         <TableHead>Requester</TableHead>
-                        <TableHead>Status</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      <TableRow>
-                        <TableCell className="font-medium">HP 123A Black Toner</TableCell>
-                        <TableCell>Sophia Anderson</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">Submitted</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="outline" size="sm">
-                            Approve
-                          </Button>
-                          <Button variant="outline" size="sm" className="ml-2">
-                            Reject
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">Canon 045 Cyan Toner</TableCell>
-                        <TableCell>John Doe</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">Submitted</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="outline" size="sm">
-                            Approve
-                          </Button>
-                          <Button variant="outline" size="sm" className="ml-2">
-                            Reject
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell className="font-medium">Brother TN-760 Black Toner</TableCell>
-                        <TableCell>Jane Smith</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">Submitted</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="outline" size="sm">
-                            Approve
-                          </Button>
-                          <Button variant="outline" size="sm" className="ml-2">
-                            Reject
-                          </Button>
-                        </TableCell>
-                      </TableRow>
+                      {pendingRequests.map((request) => (
+                        <TableRow key={request.requestId}>
+                          <TableCell className="font-medium">{request.cartridgeDescription}</TableCell>
+                          <TableCell>{request.requesterName}</TableCell>
+                          <TableCell className="text-right">
+                            <Button variant="outline" size="sm" onClick={() => handleApprove(request.requestId)}>
+                              Approve
+                            </Button>
+                            <Button variant="outline" size="sm" className="ml-2" onClick={() => handleReject(request.requestId)}>
+                              Reject
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableBody>
                   </Table>
                 </CardContent>
               </Card>
-            <Card>
+              <Card>
                 <CardHeader>
-                  <CardTitle>History of</CardTitle>
+                  <CardTitle>History of Cartridges</CardTitle>
                 </CardHeader>
                 <CardContent>
-                <DataTable columns={columns} data={cartridgeHistory}/>
-
+                  <DataTable columns={columns} data={cartridgeHistory} />
                 </CardContent>
               </Card>
-              
             </div>
           </div>
         </main>
       </div>
     </div>
-  )
+  );
 }
-
-
-function PiechartcustomChart(props:any) {
-    return (
-      <div {...props}>
-        <ChartContainer
-          config={{
-            visitors: {
-              label: "Visitors",
-            },
-            chrome: {
-              label: "Chrome",
-              color: "hsl(var(--chart-1))",
-            },
-            safari: {
-              label: "Safari",
-              color: "hsl(var(--chart-2))",
-            },
-            firefox: {
-              label: "Firefox",
-              color: "hsl(var(--chart-3))",
-            },
-            edge: {
-              label: "Edge",
-              color: "hsl(var(--chart-4))",
-            },
-            other: {
-              label: "Other",
-              color: "hsl(var(--chart-5))",
-            },
-          }}
-        >
-          <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-            <Pie
-              data={[
-                { browser: "chrome", visitors: 275, fill: "var(--color-chrome)" },
-                { browser: "safari", visitors: 200, fill: "var(--color-safari)" },
-                { browser: "firefox", visitors: 187, fill: "var(--color-firefox)" },
-                { browser: "edge", visitors: 173, fill: "var(--color-edge)" },
-                { browser: "other", visitors: 90, fill: "var(--color-other)" },
-              ]}
-              dataKey="visitors"
-              nameKey="browser"
-            />
-          </PieChart>
-        </ChartContainer>
-      </div>
-    )
-  }
-
