@@ -19,6 +19,7 @@ import { CARTRIDGE_DESCRIPTION_STRING, CartridgeApprovalProps, CartridgeType, IA
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
+import { UpdateDialog } from "@/components/update-dialog";
 
 
 const AccountsPage = () => {
@@ -94,10 +95,9 @@ const AccountsPage = () => {
       <Card className="border-none drop-shadow-sm">
         <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
           <CardTitle className="text-xl line-clamp-1">Add Catridge Stock page</CardTitle>
-          <Button onClick={newAccount.onOpen} size="sm">
-            <Plus className="size-4 mr-2" />
-            Add new
-          </Button>
+          <div className="flex items-center space-x-2">
+            <UpdateDialog />
+          </div>
         </CardHeader>
         <CardContent>
           <DataTable

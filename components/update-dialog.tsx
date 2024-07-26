@@ -13,17 +13,18 @@ import { Label } from "@/components/ui/label"
 import { useState } from "react"
 import { format } from "date-fns"  // Import the date formatting function
 import { PROFILE_PIC_BASE_URL } from "@/schemas"
+import { Plus } from "lucide-react"
 
 interface UpdateDialogProps {
-  row: any; // Adjust this type based on your row data
+  row?: any; // Adjust this type based on your row data
 }
 
 export function UpdateDialog({ row }: UpdateDialogProps) {
   // Extract data from the row
-  const name = row.getValue("catrdigeDescription") ?? ""
-  const stock = row.getValue("stock") ?? ""
-  const lastUpdated = row.getValue("updatedOn") ?? ""
-  const updatedBy = row.getValue("updatedBy") ?? ""
+  const name = row?.getValue("catrdigeDescription") ?? ""
+  const stock = row?.getValue("stock") ?? ""
+  const lastUpdated = row?.getValue("updatedOn") ?? ""
+  const updatedBy = row?.getValue("updatedBy") ?? ""
   // Ensure updatedBy is a string and pad it to 8 digits if necessary
   const padToEightDigits = (id: any) => {
     const strId = String(id); // Convert to string
@@ -45,11 +46,14 @@ export function UpdateDialog({ row }: UpdateDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Update Stock</Button>
+      <Button  size="sm">
+            <Plus className="size-4 mr-2" />
+            Add Stock
+          </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Details</DialogTitle>
+          <DialogTitle>Add Details</DialogTitle>
           <DialogDescription>
             Make changes to the details here. Click save when you're done.
           </DialogDescription>
