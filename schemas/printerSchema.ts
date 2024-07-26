@@ -34,11 +34,12 @@ export interface CartridgeApprovalProps{
 
 export const REQUEST_ID_STRING = "requestId";
 export const CARTRIDGE_ID_STRING = "cartridgeId";
-export const CARTRIDGE_DESCRIPTION_STRING = "cartridgeDescription";
+export const CARTRIDGE_DESCRIPTION_STRING = "catridgeDescription";
 export const REQUESTOR_NAME_STRING = "requestorName";
 export const PROFILE_PIC_STRING = "profilePic";
 export const REQUESTOR_GRADE_STRING = "requestorGrade";
 export const REQUESTED_ON_STRING = "requestedOn";
+export const STOCK_STRING="stock";
 
 export const ID_CARTRIDGE_STRING="id";
 export const PRINTER_MODAL_STRING="printerModel";
@@ -72,6 +73,16 @@ export const CartridgeSchemaStock = z.object({
   //lastUpdatedBy: z.number(), // Assuming lastUpdatedBy is a number
   //lastUpdatedOn: z.string(), // Assuming lastUpdatedOn is a string representing date/time
 });
+
+
+export interface IAMS_CATRIDGE{
+  catridgeId: string;
+        catrdigeDescription: string;
+        stock: string;
+        updatedOn:string;
+        updatedBy:string;
+        assetBatchId:string;
+}
 
 
 const pendingRequests: CartridgeApprovalProps[] = [
