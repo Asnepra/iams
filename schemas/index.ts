@@ -134,6 +134,10 @@ export const EMPLOYEENUMBER_STRING="EmployeeNumber"
 export const USERROLE_STRING="UserRole";
 
 
+
+export const PROFILE_PIC_BASE_URL="https://xsparsh.indianoil.in/allempphoto/EmpPhoto/";
+
+
 // Normal user routes
 export const normalRoutes = [
   {

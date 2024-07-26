@@ -11,6 +11,8 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
+import { format } from "date-fns"  // Import the date formatting function
+import { PROFILE_PIC_BASE_URL } from "@/schemas"
 
 interface UpdateDialogProps {
   row: any; // Adjust this type based on your row data
@@ -22,9 +24,22 @@ export function UpdateDialog({ row }: UpdateDialogProps) {
   const stock = row.getValue("stock") ?? ""
   const lastUpdated = row.getValue("updatedOn") ?? ""
   const updatedBy = row.getValue("updatedBy") ?? ""
-  const profilePic = row.getValue("profilePic") ?? ""
+  // Ensure updatedBy is a string and pad it to 8 digits if necessary
+  const padToEightDigits = (id: any) => {
+    const strId = String(id); // Convert to string
+    return strId.length < 8 ? '0'.repeat(8 - strId.length) + strId : strId; // Pad with leading zeros
+  };
+  // Format updatedBy to ensure it is 8 digits long
+  const formattedUpdatedBy = padToEightDigits(updatedBy)
+  const profilePic = `${PROFILE_PIC_BASE_URL}${formattedUpdatedBy}`
+
+  // Parse and format the date
+  const formattedLastUpdated = lastUpdated
+    ? format(new Date(lastUpdated), "MMMM d, yyyy h:mm a")
+    : "N/A"
 
   // State for editable fields
+  const [editableName, setEditableName] = useState(name)
   const [editableStock, setEditableStock] = useState(stock)
 
   return (
@@ -40,12 +55,18 @@ export function UpdateDialog({ row }: UpdateDialogProps) {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          {/* Profile Picture */}
+          {/* Profile Picture and Metadata */}
           <div className="flex items-center space-x-4">
-            <img src={profilePic} alt="Profile Picture" className="w-12 h-12 rounded-full" />
+            <img
+              src={profilePic}
+              alt="Profile Picture"
+              className="w-12 h-12 rounded-full"
+            />
             <div className="flex flex-col">
               <span className="font-medium">{updatedBy}</span>
-              <span className="text-sm text-gray-500">Last updated: {lastUpdated}</span>
+              <span className="text-sm text-gray-500">
+                Last updated: {formattedLastUpdated}
+              </span>
             </div>
           </div>
           {/* Editable fields */}
@@ -56,8 +77,7 @@ export function UpdateDialog({ row }: UpdateDialogProps) {
             <Input
               id="name"
               value={name}
-              //onChange={(e) => setEditableName(e.target.value)}
-              //disabled={true}
+              
               className="col-span-3"
             />
           </div>
