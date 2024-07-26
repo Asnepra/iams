@@ -17,9 +17,10 @@ import { Plus } from "lucide-react"
 
 interface UpdateDialogProps {
   row?: any; // Adjust this type based on your row data
+  title?:string;
 }
 
-export function UpdateDialog({ row }: UpdateDialogProps) {
+export function UpdateDialog({ row, title }: UpdateDialogProps) {
   // Extract data from the row
   const name = row?.getValue("catrdigeDescription") ?? ""
   const stock = row?.getValue("stock") ?? ""
@@ -46,10 +47,16 @@ export function UpdateDialog({ row }: UpdateDialogProps) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-      <Button  size="sm">
-            <Plus className="size-4 mr-2" />
-            Add Stock
-          </Button>
+      <Button size="sm">
+          {title ? (
+            <>
+              <Plus className="size-4 mr-2" />
+              {title}
+            </>
+          ) : (
+            "Update Stock"
+          )}
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
