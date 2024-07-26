@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CartridgeSchema = z.object({
-  assetId: z.string().min(1, {
+  catridgeId: z.string().min(1, {
     message: "Please select a Cartridge.",
   }),
   assetPrinterCatridgeMessage: z.string().min(1, {

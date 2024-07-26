@@ -4,7 +4,6 @@
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
 
-
 "use client"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -20,7 +19,7 @@ import { useState, useEffect } from "react"
 import toast from "react-hot-toast"
 import Cookies from 'js-cookie';
 import { CartridgeType } from "@/schemas/printerSchema"
-
+import { useNewAccount } from "../approve/_components/hooks/use-new-accounts"
 
 export default function AddCartrdigeStock() {
     
@@ -81,6 +80,8 @@ export default function AddCartrdigeStock() {
           router.push("/");
         }
       };
+      const {onOpen} = useNewAccount();
+
   return (
     <div className="w-full max-w-6xl mx-auto py-12 px-4 md:px-6">
       <div className="grid gap-6">
@@ -89,6 +90,8 @@ export default function AddCartrdigeStock() {
           <p className="text-muted-foreground max-w-md mx-auto">
             Keep track of your printer cartridge inventory and easily add new stock.
           </p>
+          <Button onClick={onOpen}>Sheet</Button>
+
           </div>
         
         <AddStockCatridgeForm data={assets}/>
@@ -98,3 +101,4 @@ export default function AddCartrdigeStock() {
     </div>
   )
 }
+

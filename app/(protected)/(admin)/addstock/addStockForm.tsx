@@ -29,32 +29,26 @@ import { CartridgeProps, UserData } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { CartridgeSchema, CartridgeType } from "@/schemas/printerSchema";
 
-
 interface AddStockCatridgeFormProps {
   data: CartridgeType[];
 }
 
 const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
-  //console.log("passed data", data);
   const token = Cookies.get('token');
   const form = useForm<z.infer<typeof CartridgeSchema>>({
     resolver: zodResolver(CartridgeSchema),
     defaultValues: {
-      assetId: "",
+      catridgeId: "",
       assetPrinterCatridgeMessage: "",
       assetPrinterCatridgeQuantity: "",
     },
   });
 
 
-  function onCategoryChange(value:any) {
-   
-    }
-
   const onSubmit = async (values: z.infer<typeof CartridgeSchema>) => {
     try {
       const data = {
-        assetPrinterId: values.assetId,
+        assetPrinterId: values.catridgeId,
         assetPrinterCartridgeMessage: values.assetPrinterCatridgeMessage,
         assetPrinterCartridgeQuantity: Number(values.assetPrinterCatridgeQuantity) // Ensure quantity is parsed to number
         // Add more fields as needed
@@ -82,7 +76,7 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
             
           <FormField
             control={form.control}
-            name="assetId"
+            name="catridgeId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Asset List</FormLabel>
@@ -90,7 +84,7 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
                   <Select
                     onValueChange={(value) => {
                       field.onChange(value);
-                     onCategoryChange(value); 
+                     
                     }
                   }
                     value={field.value}
@@ -118,7 +112,6 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
               </FormItem>
             )}
           />
-
 
           <FormField
               control={form.control}
@@ -170,3 +163,5 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
 };
 
 export default AddStockCatridgeForm;
+
+
