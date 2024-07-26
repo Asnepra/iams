@@ -1,49 +1,30 @@
-"use client"
-
-import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
-
-
-//import { Actions } from "./actions"
-import { CARTRIDGE_DESCRIPTION_STRING, CARTRIDGE_ID_STRING, CartridgeApprovalProps, IAMS_CATRIDGE, STATUS_STRING, STOCK_STRING } from "@/schemas/printerSchema"
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
-
-//export type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>["data"][0]
+import { UpdateDialog } from "@/components/update-dialog"
+import { IAMS_CATRIDGE, STOCK_STRING } from "@/schemas/printerSchema"
 
 export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
   {
-    id: "select",
-    accessorKey: CARTRIDGE_ID_STRING,
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
+    accessorKey: "id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Catridge Id" />
     ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
+    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "catridgeDescription",
-    header: ({ column }) => {
+    accessorKey: "catrdigeDescription",
+    header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Catridge Name" />
-
-    },
+    ),
     cell: ({ row }) => (
-      <span>{row.getValue(CARTRIDGE_DESCRIPTION_STRING)}</span>
+      <div className="flex space-x-2">
+        <span className="max-w-[500px] truncate font-medium">
+          {row.getValue("catrdigeDescription")}
+        </span>
+      </div>
     ),
   },
   {
@@ -52,18 +33,11 @@ export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
       <DataTableColumnHeader column={column} title="Stock" />
     ),
     cell: ({ row }) => (
-      <span>{row.getValue(STOCK_STRING)}</span>
+      <div className="flex w-[100px] items-center">
+        <span>{row.getValue(STOCK_STRING)}</span>
+      </div>
     ),
-  },
-  {
-    accessorKey: "updatedBy",
-    header: ({ column }) => {
-      <DataTableColumnHeader column={column} title="Last Updated By" />
-
-    },
-    cell: ({ row }) => (
-      <span>{row.getValue(CARTRIDGE_DESCRIPTION_STRING)}</span>
-    ),
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
     accessorKey: "updatedOn",
@@ -71,11 +45,26 @@ export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
       <DataTableColumnHeader column={column} title="Updated On" />
     ),
     cell: ({ row }) => (
-      <span>{row.getValue(STOCK_STRING)}</span>
+      <div className="flex items-center">
+        <span>{row.getValue("updatedOn")}</span>
+      </div>
     ),
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
-  // {
-  //   id: "actions",
-  //   cell: ({ row }) => <Actions id={row.original.cartridgeId}/>
-  // },
+  {
+    accessorKey: "updatedBy",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Updated By" />
+    ),
+    cell: ({ row }) => (
+      <div className="flex items-center">
+        <span>{row.getValue("updatedBy")}</span>
+      </div>
+    ),
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => <UpdateDialog row={row} />,
+  },
 ]

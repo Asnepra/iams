@@ -27,6 +27,7 @@ import {
 import React from "react";
 import { Trash } from "lucide-react";
 import { DataTablePagination } from "./data-table-pagination";
+import { DataTableToolbar } from "./data-table-toolbar";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,7 +42,7 @@ export function DataTable<TData, TValue>({
   data,
   filterKey,
 
-  disabled,
+  
 }: DataTableProps<TData, TValue>) {
   const [ConfirmationDialog, confirm] = useConfirm(
     "Delete Confirmation",
@@ -83,26 +84,10 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <Button
-            disabled={disabled}
-            size="sm"
-            variant="outline"
-            className="ml-auto font-normal text-xs"
-            onClick={async () => {
-              const ok = await confirm();
-
-              if (ok) {
-                //onDelete(table.getFilteredSelectedRowModel().rows);
-                table.resetRowSelection();
-              }
-            }}
-          >
-            <Trash className="size-4 mr-2" />
-            Delete ({table.getFilteredSelectedRowModel().rows.length})
-          </Button>
-        )}
+        
       </div>
+    
+
 
       <div className="rounded-md border">
         <Table>

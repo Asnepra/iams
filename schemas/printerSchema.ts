@@ -76,12 +76,19 @@ export const CartridgeSchemaStock = z.object({
 
 
 export interface IAMS_CATRIDGE{
-  catridgeId: string;
+  id: string;
         catrdigeDescription: string;
         stock: string;
         updatedOn:string;
         updatedBy:string;
         assetBatchId:string;
+}
+
+export interface DialogProps{
+  dialogButtonText:string;
+  dialogTitle:string;
+  dialogDescription:string;
+  
 }
 
 

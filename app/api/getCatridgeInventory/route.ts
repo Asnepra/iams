@@ -85,7 +85,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
      // Map the result to a JSON format
     const countryData = cartridgeInventory.recordset.map((record: any) => ({
-        catridgeId: record.CARTRIDGE_ID,
+        id: record.CARTRIDGE_ID,
         catrdigeDescription: record.CARTRIDGE_DESC,
         stock: record.STOCK,
         updatedOn:record.UPDATED_ON,

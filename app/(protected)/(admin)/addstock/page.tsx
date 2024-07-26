@@ -103,12 +103,12 @@ const AccountsPage = () => {
           <DataTable
             columns={columns}
             data={assets}
-            filterKey={CARTRIDGE_DESCRIPTION_STRING}
+            filterKey="catrdigeDescription"
             // onDelete={(row) => {
             //   const ids = row.map((r) =>  r.original.id)
             //   deleteAccounts.mutate({ ids })
             // }}
-            disabled={false}
+            
           />
         </CardContent>
       </Card>
