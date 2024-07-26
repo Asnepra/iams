@@ -1,20 +1,17 @@
 "use client";
 
-import NewAccountSheet from "@/app/(protected)/(admin)/approve/_components/new-account-sheet";
-import { useEffect, useState } from "react";
+import NewAccountSheet from "@/components/new-account-sheet";
+
+
 
 const SheetProvider = () => {
 
   
   
 
-  const [isMounted, setIsMounted]= useState(false);
 
-  useEffect(()=>{
-    setIsMounted(true);
-  })
 
-  if(!!isMounted) return null;
+;
 
 //   const isMounted = useMountedState()
 
