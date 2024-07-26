@@ -22,30 +22,6 @@ import Cookies from 'js-cookie';
 import { CartridgeType } from "@/schemas/printerSchema"
 
 
-const cartridgeData: CartridgeType[] = [
-    {
-      id: 1,
-      cartridgeName: "CYAN 25X15X2",
-      cartridgeQuantity: 100,
-      lastUpdatedBy: 12345,
-      lastUpdatedOn: "2024-07-24T12:00:00Z",
-    },
-    {
-      id: 2,
-      cartridgeName: "MAGENTA 30X20X2",
-      cartridgeQuantity: 50,
-      lastUpdatedBy: 54321,
-      lastUpdatedOn: "2024-07-23T10:30:00Z",
-    },
-    {
-      id: 3,
-      cartridgeName: "YELLOW 20X10X2",
-      cartridgeQuantity: 75,
-      lastUpdatedBy: 98765,
-      lastUpdatedOn: "2024-07-22T15:45:00Z",
-    },
-    // Add more dummy data objects as needed
-  ];
 export default function AddCartrdigeStock() {
     
     const [error, setError] = useState<string | undefined>("");
@@ -88,16 +64,17 @@ export default function AddCartrdigeStock() {
           setUserData(parsedToken); // Set user data in state
     
           const body = { token: token };
-          const response = await axios.post('/api/getassets', body);
-    
-          if (response.data && Array.isArray(response.data)) {
-            const assetData = response.data;
-            setAssets(assetData);
-    
-          } else {
-            setError("Inavlid Details from Server");
-            //throw new Error('Invalid response from server');
-          }
+          axios.post('/api/getCatridgeInventory', body)
+          .then(async (response:any) => {
+            const data = response.data;
+            //console.log("data --------",data)
+            if(data.message==='Login Failed'){
+              setError("Login Failed");
+              return;
+            }
+            setAssets(data);
+            console.log("data catrhidge", data);
+          })
         } catch (error) {
           console.error('Error fetching assets:', error);
           setError("Error fetching assets. Please try again.");
@@ -114,7 +91,7 @@ export default function AddCartrdigeStock() {
           </p>
           </div>
         
-        <AddStockCatridgeForm data={cartridgeData}/>
+        <AddStockCatridgeForm data={assets}/>
         
         
       </div>

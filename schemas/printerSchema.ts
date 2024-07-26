@@ -14,11 +14,11 @@ export const CartridgeSchema = z.object({
 
 
 export interface CartridgeType{
-    id:number;
-    cartridgeName:string;
-    cartridgeQuantity:number;
-    lastUpdatedBy:number;
-    lastUpdatedOn:string;
+    catridgeId:number;
+    catridgeDescription:string;
+    stock:number;
+    updatedBy:number;
+    updatedOn:string;
 }
 
 export interface CartridgeApprovalProps{
@@ -39,6 +39,7 @@ export const REQUESTOR_NAME_STRING = "requestorName";
 export const PROFILE_PIC_STRING = "profilePic";
 export const REQUESTOR_GRADE_STRING = "requestorGrade";
 export const REQUESTED_ON_STRING = "requestedOn";
+
 
 export const ID_CARTRIDGE_STRING="id";
 export const PRINTER_MODAL_STRING="printerModel";

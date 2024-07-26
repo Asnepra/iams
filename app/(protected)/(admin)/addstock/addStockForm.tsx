@@ -35,6 +35,7 @@ interface AddStockCatridgeFormProps {
 }
 
 const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
+  //console.log("passed data", data);
   const token = Cookies.get('token');
   const form = useForm<z.infer<typeof CartridgeSchema>>({
     resolver: zodResolver(CartridgeSchema),
@@ -45,10 +46,10 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
     },
   });
 
-  const onCategoryChange = (value: any) => {
-    // Implement your logic for category change
-    // Ensure subcategoryData, setFilteredSubCategoryData, setSelectedCategory are defined
-  };
+
+  function onCategoryChange(value:any) {
+   
+    }
 
   const onSubmit = async (values: z.infer<typeof CartridgeSchema>) => {
     try {
@@ -79,42 +80,44 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <div className="grid grid-cols-2 gap-x-8 gap-y-4">
             
-            <FormField
-              control={form.control}
-              name="assetId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Select cartridge type</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        onCategoryChange(value);
-                      }}
-                      value={field.value}
-                    >
-                      <SelectTrigger className="bg-background">
-                        <SelectValue
-                          placeholder="Select a cartridge..."
-                          defaultValue={field.value || ""}
-                        />
-                        <SelectContent>
-                          {data?.map((category) => (
-                            <SelectItem
-                              key={category.id}
-                              value={category.cartridgeName}
-                            >
-                              {category.cartridgeName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </SelectTrigger>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="assetId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Asset List</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                     onCategoryChange(value); 
+                    }
+                  }
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue
+                        placeholder="Select a category..."
+                        defaultValue={field.value || ""} // Set default value to an empty string
+                      />
+                      <SelectContent>
+                        {data?.map((category) => (
+                          <SelectItem
+                            key={category.catridgeId}
+                            value={category.catridgeId.toString()}
+                          >
+                            {category.catridgeDescription}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </SelectTrigger>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
 
           <FormField
