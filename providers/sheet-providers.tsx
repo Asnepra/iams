@@ -1,6 +1,8 @@
 "use client";
 
-import NewAccountSheet from "@/app/(protected)/(admin)/approve/_components/new-account-sheet";
+import NewAccountSheet from "@/components/new-account-sheet";
+
+
 
 const SheetProvider = () => {
 

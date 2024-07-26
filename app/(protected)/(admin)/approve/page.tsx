@@ -10,7 +10,7 @@ import { columns } from "../../(normal)/request/_components/columns";
 import TicketCard from "./_components/ticketinformation";
 import { CartridgeApprovalProps } from "@/schemas/printerSchema";
 import { HistoryDialog } from "./_components/dialog-history";
-import { useNewAccount } from "./_components/hooks/use-new-accounts";
+import { useNewAccount } from "../../../../hooks/use-new-accounts";
 
 export default function ApproveScreen() {
   const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
@@ -155,9 +155,7 @@ export default function ApproveScreen() {
                             <Button variant="outline" size="sm" className="ml-2" onClick={() => handleReject(request.requestId)}>
                               Reject
                             </Button>
-                            <Button variant="outline" size="sm" className="ml-2" onClick={() => handleHistory(request.requestId)}>
-                              History
-                            </Button>
+                            <HistoryDialog />
                           </TableCell>
                         </TableRow>
                       ))}
@@ -177,7 +175,7 @@ export default function ApproveScreen() {
           </div>
         </main>
       </div>
-      <HistoryDialog />
+      
 
     </div>
   );

@@ -20,7 +20,7 @@ import { useState, useEffect } from "react"
 import toast from "react-hot-toast"
 import Cookies from 'js-cookie';
 import { CartridgeType } from "@/schemas/printerSchema"
-import { useNewAccount } from "../approve/_components/hooks/use-new-accounts"
+import { useNewAccount } from "../../../../hooks/use-new-accounts"
 
 
 const cartridgeData: CartridgeType[] = [
