@@ -156,9 +156,7 @@ export default function ApproveScreen() {
                             <Button variant="outline" size="sm" className="ml-2" onClick={() => handleReject(request.requestId)}>
                               Reject
                             </Button>
-                            <Button variant="outline" size="sm" className="ml-2" onClick={() => handleHistory(request.requestId)}>
-                              History
-                            </Button>
+                            <HistoryDialog/>
                           </TableCell>
                         </TableRow>
                       ))}
@@ -178,7 +176,7 @@ export default function ApproveScreen() {
           </div>
         </main>
       </div>
-      <HistoryDialog />
+      
 
     </div>
   );

@@ -11,6 +11,7 @@ import {
 import { AccountForm } from "./account-form";
 import { CartridgeSchemaStock } from "@/schemas/printerSchema";
 import { useNewAccount } from "./hooks/use-new-accounts";
+import toast from "react-hot-toast";
   
  
   
@@ -22,6 +23,7 @@ import { useNewAccount } from "./hooks/use-new-accounts";
     // const mutation = useCreateAccount();
   
     const onSubmit = (values: FormValues) => {
+        toast.success("Entry created");
       console.log("data cartridge", values);
     };
   
