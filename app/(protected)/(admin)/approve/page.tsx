@@ -117,7 +117,7 @@ export default function ApproveScreen() {
       setIsHistoryDialogOpen(true);
     }
   };
-  const {onOpen} = useNewAccount();
+  
 
   return (
     <div className="">
@@ -126,7 +126,6 @@ export default function ApproveScreen() {
           <div className="flex items-center gap-2">
             <div>
               <TicketCard />
-              <Button onClick={onOpen}>Sheet</Button>
             </div>
           </div>
           <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-4">

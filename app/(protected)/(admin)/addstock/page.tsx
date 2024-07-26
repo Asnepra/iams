@@ -20,6 +20,7 @@ import { useState, useEffect } from "react"
 import toast from "react-hot-toast"
 import Cookies from 'js-cookie';
 import { CartridgeType } from "@/schemas/printerSchema"
+import { useNewAccount } from "../approve/_components/hooks/use-new-accounts"
 
 
 const cartridgeData: CartridgeType[] = [
@@ -104,6 +105,7 @@ export default function AddCartrdigeStock() {
           router.push("/");
         }
       };
+      const {onOpen} = useNewAccount();
   return (
     <div className="w-full max-w-6xl mx-auto py-12 px-4 md:px-6">
       <div className="grid gap-6">
@@ -113,6 +115,8 @@ export default function AddCartrdigeStock() {
             Keep track of your printer cartridge inventory and easily add new stock.
           </p>
           </div>
+          <Button onClick={onOpen}>Sheet</Button>
+
         
         <AddStockCatridgeForm data={cartridgeData}/>
         
