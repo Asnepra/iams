@@ -62,11 +62,20 @@ export interface CartridgeApprovalProps {
 
 
 
-export const CartridgeSchemaStock = z.object({
+export const CartridgeSchemaStockAdd = z.object({
   //id: z.number(), // Assuming id is a number
   cartridgeName: z.string().min(1, {
     message: "Please enter a Cartridge Name.",
   }),
+  cartridgeQuantity: z.string().min(1, {
+    message: "Please enter a valid Quantity greater than 0.",
+  }),
+  //lastUpdatedBy: z.number(), // Assuming lastUpdatedBy is a number
+  //lastUpdatedOn: z.string(), // Assuming lastUpdatedOn is a string representing date/time
+});
+
+export const CartridgeSchemaStockUpdate = z.object({
+  //id: z.number(), // Assuming id is a number
   cartridgeQuantity: z.string().min(1, {
     message: "Please enter a valid Quantity greater than 0.",
   }),

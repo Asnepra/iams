@@ -79,7 +79,31 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
      //const { TRANS_ID, CARTRIDGE_ID, QTY, UPDATED_ON } = data;
 
      const cartridgeInventory=await sql.query`
-                Select * from [IAMS].[dbo].[IAMS_M_CARTRIDGE];
+                WITH CTE AS (
+                SELECT
+                    [CATRIDGE_HISTORY_ID],
+                    [CARTRIDGE_ID],
+                    [CARTRIDGE_DESC],
+                    [STOCK],
+                    [UPDATED_ON],
+                    [UPDATE_BY_USERID],
+                    [ASSET_BATCH_ID],
+                    ROW_NUMBER() OVER (PARTITION BY [CARTRIDGE_ID] ORDER BY [UPDATED_ON] DESC) AS RowNum
+                FROM [IAMS].[dbo].[IAMS_M_CARTRIDGE]
+            )
+
+            SELECT
+                [CATRIDGE_HISTORY_ID],
+                [CARTRIDGE_ID],
+                [CARTRIDGE_DESC],
+                [STOCK],
+                [UPDATED_ON],
+                [UPDATE_BY_USERID],
+                [ASSET_BATCH_ID]
+            FROM CTE
+            WHERE RowNum = 1
+            ORDER BY [CARTRIDGE_ID];
+
     
      `;
 

@@ -1,26 +1,21 @@
-import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react"
-import { format } from "date-fns"  // Import the date formatting function
-import { PROFILE_PIC_BASE_URL } from "@/schemas"
-import { Plus } from "lucide-react"
+import { useState } from "react";
+import { format } from "date-fns"; // Import the date formatting function
+import { PROFILE_PIC_BASE_URL } from "@/schemas";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import CatridgeForm from "./catridge-form";
+
 
 interface UpdateDialogProps {
   row?: any; // Adjust this type based on your row data
-  title?:string;
+  title?: string;
+  add: boolean;
 }
 
-export function UpdateDialog({ row, title }: UpdateDialogProps) {
+export function UpdateDialog({ row, title, add }: UpdateDialogProps) {
   // Extract data from the row
   const name = row?.getValue("catrdigeDescription") ?? ""
   const stock = row?.getValue("stock") ?? ""
@@ -43,24 +38,25 @@ export function UpdateDialog({ row, title }: UpdateDialogProps) {
   // State for editable fields
   const [editableName, setEditableName] = useState(name)
   const [editableStock, setEditableStock] = useState(stock)
+  console.log("catridge name", name);
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-      <Button size="sm">
-          {title ? (
+        <Button size="sm">
+          {add ? (
             <>
               <Plus className="size-4 mr-2" />
               {title}
             </>
           ) : (
-            "Update Stock"
+            <span>{title}</span> 
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Add Details</DialogTitle>
+          <DialogTitle>{add ? <>{title}</> : <span>{title}</span>}</DialogTitle>
           <DialogDescription>
             Make changes to the details here. Click save when you're done.
           </DialogDescription>
@@ -68,46 +64,16 @@ export function UpdateDialog({ row, title }: UpdateDialogProps) {
         <div className="grid gap-4 py-4">
           {/* Profile Picture and Metadata */}
           <div className="flex items-center space-x-4">
-            <img
-              src={profilePic}
-              alt="Profile Picture"
-              className="w-12 h-12 rounded-full"
-            />
+            <img src={profilePic} alt="Profile Picture" className="w-12 h-12 rounded-full" />
             <div className="flex flex-col">
               <span className="font-medium">{updatedBy}</span>
-              <span className="text-sm text-gray-500">
-                Last updated: {formattedLastUpdated}
-              </span>
+              <span className="text-sm text-gray-500">Last updated: {formattedLastUpdated}</span>
             </div>
           </div>
-          {/* Editable fields */}
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              value={name}
-              
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="stock" className="text-right">
-              Stock
-            </Label>
-            <Input
-              id="stock"
-              value={editableStock}
-              onChange={(e) => setEditableStock(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
+          {/* CatridgeForm */}
+          <CatridgeForm isUpdate={!add} catrdigeName={name} />
         </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

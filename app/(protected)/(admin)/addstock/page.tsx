@@ -96,7 +96,7 @@ const AccountsPage = () => {
         <CardHeader className="gap-y-2 lg:flex-row lg:items-center lg:justify-between">
           <CardTitle className="text-xl line-clamp-1">Add Catridge Stock page</CardTitle>
           <div className="flex items-center space-x-2">
-            <UpdateDialog title={"Add Stock"} />
+            <UpdateDialog title={"Add Catridge"} add={true}/>
           </div>
         </CardHeader>
         <CardContent>
