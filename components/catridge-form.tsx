@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { CartridgeSchemaStockAdd, CartridgeSchemaStockUpdate } from "@/schemas/printerSchema";
 import { useState } from "react";
 import { Label } from "./ui/label";
+import Cookies from 'js-cookie';
+import toast from "react-hot-toast";
 
 interface CatridgeFormProps {
   isUpdate: boolean;
@@ -29,27 +31,43 @@ const CatridgeForm = ({ isUpdate, catrdigeName }: CatridgeFormProps) => {
 
   const onSubmit = async (values: any) => {
     setIsPending(true);
-console.log("values from form", values);
-    const url = isUpdate ? "/api/updateStock" : "/api/addCartridge";
+  
+    try {
+      const token = Cookies.get('token');
+      if (!token) {
+        throw new Error('Token not found in cookies');
+      }
+  
+      // Build the body object based on whether it's an update or add operation
+      const body = isUpdate
+        ? { cartridgeQuantity: values.cartridgeQuantity, token }
+        : { cartridgeName: values.cartridgeName, cartridgeQuantity: values.cartridgeQuantity, token };
+      const url = isUpdate ? `/api/updateStock` : `/api/addCatridgeModel`;
+      console.log("body",body);
+  
+      const response = await axios.post(url, body)
+      .then((response)=>{
+        toast.success("Successfully added");
+        //reload page after 3 seconds
+        // Delayed page reload after 3 seconds
+      setTimeout(() => {
+        router.push("/addstock")
+      }, 3000);
 
-    // try {
-    //   const response = await axios.post(url, values);
-    //   const data = response.data;
-    //   if (data.message === 'Login Failed') {
-    //     setError("Login Failed");
-    //   } else {
-    //     const { token } = data;
-    //     document.cookie = `token=${token}; path=/`;
-    //     router.push('/home');
-    //     setSuccess("Operation successful");
-    //     form.reset();
-    //   }
-    // } catch (err) {
-    //   setError("Something went wrong.");
-    // } finally {
-    //   setIsPending(false);
-    // }
+      });
+      //console.log("API response", response.data);
+  
+      //setSuccess("Operation successful");
+      form.reset();
+  
+    } catch (error) {
+      console.error("Error in Axios request", error);
+      setError("Something went wrong.");
+    } finally {
+      setIsPending(false);
+    }
   };
+  
 
   return (
     <Form {...form}>
@@ -130,9 +148,6 @@ console.log("values from form", values);
             />
           </>
         )}
-
-        {error && <FormMessage>{error}</FormMessage>}
-        {success && <FormMessage>{success}</FormMessage>}
         <Button type="submit" className="w-full" disabled={isPending}>
           {isUpdate ? "Update Stock" : "Add Cartridge to Inventory"}
         </Button>
