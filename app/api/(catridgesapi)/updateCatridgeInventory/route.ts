@@ -60,31 +60,67 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         { status: 401 }
       );
     }
-  
+    try {
+      await mssqlconnect(); // Ensure mssql connection is correctly established
     
-    await mssqlconnect();
-    //Fetch all the  data
-
+      // Start a transaction
+      const transaction = new sql.Transaction();
     
-        
-
-     //console.log("Asset Model Id received ------------------ ",assetModelId);
-     //console.log("guarantee Id received ------------------ ",guaranteeStatus);
-     //const { TRANS_ID, CARTRIDGE_ID, QTY, UPDATED_ON } = data;
-
-     const cartridgeHistory=await sql.query`
-                  UPDATE [IAMS].[dbo].[IAMS_M_CARTRIDGE]
-                SET 
-                    STOCK = ${cartridgeQuantity},
-                    UPDATED_ON = GETDATE(),
-                    UPDATE_BY_USERID = ${user}
-                WHERE 
-                    CARTRIDGE_ID = ${catridgeId}
-
-
+      // Begin the transaction
+      await transaction.begin();
     
-     `;
-     return new NextResponse(JSON.stringify(cartridgeHistory), { status: 200 });
+      try {
+        // Query to retrieve cartridge details and insert into history
+        const query = await transaction.request()
+          .query(`
+            DECLARE @CartridgeDesc NVARCHAR(255);
+            DECLARE @AssetBatchId INT;
+    
+            -- Retrieve Cartridge Description and Asset Batch ID based on Cartridge ID
+            SELECT 
+                @CartridgeDesc = CARTRIDGE_DESC,
+                @AssetBatchId = ASSET_BATCH_ID
+            FROM [IAMS].[dbo].[IAMS_M_CARTRIDGE]
+            WHERE CARTRIDGE_ID = ${catridgeId}; -- Replace ${catridgeId} with the actual cartridge ID you want to query
+    
+            -- Insert into Cartridge History Table
+            INSERT INTO [IAMS].[dbo].[IAMS_M_CARTRIDGE] (
+                [CARTRIDGE_ID],
+                [CARTRIDGE_DESC],
+                [STOCK],
+                [UPDATED_ON],
+                [UPDATE_BY_USERID],
+                [ASSET_BATCH_ID]
+            )
+            VALUES (
+                ${catridgeId}, -- Replace with the actual cartridge ID you are inserting
+                @CartridgeDesc,
+                ${cartridgeQuantity}, -- Example: Inserting with stock value 0 (adjust as per your requirement)
+                GETDATE(),
+                ${user}, -- Assuming 'user' variable holds the user ID
+                @AssetBatchId
+            );
+          `);
+    
+        // Commit the transaction
+        await transaction.commit();
+    
+        // Check if insertion into history was successful or handle accordingly
+        if (query.rowsAffected[0] > 0) {
+          return new NextResponse(JSON.stringify({ message: 'Insert into history successful' }), { status: 200 });
+        } else {
+          return new NextResponse(JSON.stringify({ message: 'No rows inserted into history' }), { status: 404 });
+        }
+      } catch (error) {
+        // Rollback the transaction in case of error
+        await transaction.rollback();
+        throw error;
+      }
+    } catch (error) {
+      console.error("Error querying/inserting database", error);
+      return new NextResponse("Internal Server Error", { status: 500 });
+    }
+    
     
   } catch (error) {
     // Handle errors and send an error response with status code 500
