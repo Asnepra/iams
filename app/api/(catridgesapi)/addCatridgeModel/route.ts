@@ -1,6 +1,6 @@
 import mssqlconnect from "@/lib/mssqlconnect";
 import { NextRequest, NextResponse } from "next/server";
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const sql = require('mssql');
 
@@ -19,33 +19,39 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         { status: 400 }
       );
     }
+    let response = {
+      message: 'Failure',
+      isAdmin: 'False',
+      userId: 'Dummy',
+      userName: 'Name',
+      mail: 'abc@gmail.com',
+      data: [],
+      maxPages: 0
+    };
+    let user=null;
+    let admin=null;
 
-    // Verify the JWT token
-    let user = null;
-    let admin;
-
-    const decode = jwt.verify(token, `${process.env.JWT_SECRET}`, (err: any, decoded: any) => {
-      if (err) {
-        // Token verification failed
-        return new NextResponse(
-          JSON.stringify({ message: 'Invalid Token' }),
-          { status: 401 }
-        );
-      }
+    try {
+      // Verify JWT token
+      const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`) as JwtPayload;
 
       // Check token expiration
-      if (decoded.exp < Math.floor(Date.now() / 1000)) {
-        return new NextResponse(
-          JSON.stringify({ message: 'Token expired' }),
-          { status: 401 }
-        );
+      if (typeof decoded.exp === 'number' && decoded.exp < Math.floor(Date.now() / 1000)) {
+        response.message = 'Token expired';
+        return new NextResponse(JSON.stringify(response), { status: 401 });
       }
-
+    
       // Token is valid
       const { userId, isAdmin } = decoded;
       user = userId;
       admin = isAdmin;
-    });
+    } catch (err) {
+      // Token verification failed
+      return new NextResponse(
+        JSON.stringify({ message: 'Invalid Token' }),
+        { status: 401 }
+      );
+    }
 
     // Uncomment and complete your database logic
      await mssqlconnect(); // Ensure mssql connection is correctly established

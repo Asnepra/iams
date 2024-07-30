@@ -21,6 +21,7 @@ export function UpdateDialog({ row, title, add }: UpdateDialogProps) {
   const stock = row?.getValue("stock") ?? ""
   const lastUpdated = row?.getValue("updatedOn") ?? ""
   const updatedBy = row?.getValue("updatedBy") ?? ""
+  const id=row?.getValue("id")??""
   // Ensure updatedBy is a string and pad it to 8 digits if necessary
   const padToEightDigits = (id: any) => {
     const strId = String(id); // Convert to string
@@ -38,7 +39,7 @@ export function UpdateDialog({ row, title, add }: UpdateDialogProps) {
   // State for editable fields
   const [editableName, setEditableName] = useState(name)
   const [editableStock, setEditableStock] = useState(stock)
-  console.log("catridge name", name);
+  //console.log("catridge name", name);
 
   return (
     <Dialog>
@@ -71,7 +72,7 @@ export function UpdateDialog({ row, title, add }: UpdateDialogProps) {
             </div>
           </div>
           {/* CatridgeForm */}
-          <CatridgeForm isUpdate={!add} catrdigeName={name} />
+          <CatridgeForm isUpdate={!add} catrdigeName={name} catridgeId={id}/>
         </div>
       </DialogContent>
     </Dialog>

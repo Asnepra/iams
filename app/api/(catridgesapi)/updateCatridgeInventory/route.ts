@@ -9,7 +9,11 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   
   try {
     // Extract token from request body
-    const { data, token } = await req.json();
+    const body = await req.json();
+    //Extract data
+    const {cartridgeQuantity, token, catridgeId}= body;
+    
+    console.log("received in api", cartridgeQuantity, catridgeId, token);
         
     // Check if token is missing
     //console.log(token);
@@ -76,15 +80,21 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
      //console.log("Asset Model Id received ------------------ ",assetModelId);
      //console.log("guarantee Id received ------------------ ",guaranteeStatus);
-     const { TRANS_ID, CARTRIDGE_ID, QTY, UPDATED_ON } = data;
+     //const { TRANS_ID, CARTRIDGE_ID, QTY, UPDATED_ON } = data;
 
      const cartridgeHistory=await sql.query`
-                UPDATE [dbo].[IAMS_M_CARTRIDGE_INVENTORY]
-      SET [QTY] = ${QTY}, [UPDATED_ON] = '${UPDATED_ON}'
-      WHERE [TRANS_ID] = ${TRANS_ID} AND [CARTRIDGE_ID] = ${CARTRIDGE_ID};
+                UPDATE [IAMS].[dbo].[IAMS_M_CARTRIDGE]
+                SET 
+                    [STOCK] = ${cartridgeQuantity},
+                    [UPDATED_ON] = GETDATE(),
+                    [UPDATED_BY_USERID] = ${user},
+                WHERE 
+                    [CATRIDGE_HISTORY_ID] = ${catridgeId};
+
+
     
      `;
-     return new NextResponse(JSON.stringify(cartridgeHistory), { status: 500 });
+     return new NextResponse(JSON.stringify("succes updated"), { status: 500 });
     
   } catch (error) {
     // Handle errors and send an error response with status code 500

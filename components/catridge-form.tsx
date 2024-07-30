@@ -15,9 +15,10 @@ import toast from "react-hot-toast";
 interface CatridgeFormProps {
   isUpdate: boolean;
   catrdigeName?:string;
+  catridgeId?:string;
 }
 
-const CatridgeForm = ({ isUpdate, catrdigeName }: CatridgeFormProps) => {
+const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId }: CatridgeFormProps) => {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | undefined>("");
@@ -40,9 +41,9 @@ const CatridgeForm = ({ isUpdate, catrdigeName }: CatridgeFormProps) => {
   
       // Build the body object based on whether it's an update or add operation
       const body = isUpdate
-        ? { cartridgeQuantity: values.cartridgeQuantity, token }
+        ? { cartridgeQuantity: values.cartridgeQuantity, token, catridgeId }
         : { cartridgeName: values.cartridgeName, cartridgeQuantity: values.cartridgeQuantity, token };
-      const url = isUpdate ? `/api/updateStock` : `/api/addCatridgeModel`;
+      const url = isUpdate ? `/api/updateCatridgeInventory` : `/api/addCatridgeModel`;
       console.log("body",body);
   
       const response = await axios.post(url, body)
@@ -51,9 +52,17 @@ const CatridgeForm = ({ isUpdate, catrdigeName }: CatridgeFormProps) => {
         //reload page after 3 seconds
         // Delayed page reload after 3 seconds
       setTimeout(() => {
-        router.push("/addstock")
-      }, 3000);
+        location.reload();
 
+      }, 2000);
+
+      }).catch((error)=>{
+        console.log('error',error);
+        toast.error("Something unexpected Happen, redirecting...");
+        setTimeout(() => {
+          location.reload();
+
+        }, 2000);
       });
       //console.log("API response", response.data);
   
@@ -61,8 +70,8 @@ const CatridgeForm = ({ isUpdate, catrdigeName }: CatridgeFormProps) => {
       form.reset();
   
     } catch (error) {
-      console.error("Error in Axios request", error);
-      setError("Something went wrong.");
+      //console.error("Error in Axios request", error);
+      //setError("Something went wrong.");
     } finally {
       setIsPending(false);
     }
