@@ -104,11 +104,6 @@ const AccountsPage = () => {
             columns={columns}
             data={assets}
             filterKey="catrdigeDescription"
-            // onDelete={(row) => {
-            //   const ids = row.map((r) =>  r.original.id)
-            //   deleteAccounts.mutate({ ids })
-            // }}
-            
           />
         </CardContent>
       </Card>

@@ -79,30 +79,19 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
      //const { TRANS_ID, CARTRIDGE_ID, QTY, UPDATED_ON } = data;
 
      const cartridgeInventory=await sql.query`
-                WITH CTE AS (
-                SELECT
-                    [CATRIDGE_HISTORY_ID],
-                    [CARTRIDGE_ID],
-                    [CARTRIDGE_DESC],
-                    [STOCK],
-                    [UPDATED_ON],
-                    [UPDATE_BY_USERID],
-                    [ASSET_BATCH_ID],
-                    ROW_NUMBER() OVER (PARTITION BY [CARTRIDGE_ID] ORDER BY [UPDATED_ON] DESC) AS RowNum
-                FROM [IAMS].[dbo].[IAMS_M_CARTRIDGE]
-            )
+                			SELECT
 
-            SELECT
-                [CATRIDGE_HISTORY_ID],
-                [CARTRIDGE_ID],
-                [CARTRIDGE_DESC],
-                [STOCK],
-                [UPDATED_ON],
-                [UPDATE_BY_USERID],
-                [ASSET_BATCH_ID]
-            FROM CTE
-            WHERE RowNum = 1
-            ORDER BY [CARTRIDGE_ID];
+                      CI.[CARTRIDGE_ID],
+                      CI.[QTY],
+                      CI.[UPDATED_ON],
+
+                      C.[CARTRIDGE_DESC],
+                      C.[UPDATE_BY_USERID],
+                      C.[ASSET_BATCH_ID]
+                  FROM 
+                      [IAMS].[dbo].[IAMS_M_CARTRIDGE_INVENTORY] CI
+                  JOIN
+                      [IAMS].[dbo].[IAMS_M_CARTRIDGE] C ON CI.[CARTRIDGE_ID] = C.[CARTRIDGE_ID];
 
     
      `;
@@ -111,7 +100,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     const countryData = cartridgeInventory.recordset.map((record: any) => ({
         id: record.CARTRIDGE_ID,
         catrdigeDescription: record.CARTRIDGE_DESC,
-        stock: record.STOCK,
+        stock: record.QTY,
         updatedOn:record.UPDATED_ON,
         updatedBy:record.UPDATE_BY_USERID,
         assetBatchId:record.ASSET_BATCH_ID
