@@ -8,6 +8,8 @@ import { DataTable } from './_components/data-table';
 import { columns } from './_components/columns';
 import { Card } from '@/components/ui/card';
 import { User } from './_components/data/schema';
+import LineChartComponent from './_components/line-chart';
+import { EMPLOYEENAME_STRING } from '@/schemas';
 
 
 
@@ -52,13 +54,13 @@ const UsersPage = () => {
         <div className="flex items-center justify-between space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
-            <p className="text-muted-foreground">
-              Here&apos;s a list of your tasks for this month!
-            </p>
+           
           </div>
+          
         </div>
+        <LineChartComponent empResult={empResult}/>
         <Card className="p-2">
-          <DataTable data={empList} columns={columns} />
+          <DataTable data={empList} columns={columns} filterKey={EMPLOYEENAME_STRING}/>
         </Card>
       </div>
     </>

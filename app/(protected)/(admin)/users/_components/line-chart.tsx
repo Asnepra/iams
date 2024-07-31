@@ -1,28 +1,48 @@
-"use client"
-
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts"
-
+import { useState, useEffect } from 'react';
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis, Tooltip, LabelList, Rectangle } from 'recharts';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/charts"
+} from '@/components/ui/charts';
 
-export default function LineChartComponent() {
+interface EmpResultItem {
+  empDepartment: string;
+  employeeCount: number;
+}
+
+interface BarChartProps {
+  empResult: EmpResultItem[];
+}
+
+const BarChartComponent: React.FC<BarChartProps> = ({ empResult }) => {
+  const [chartData, setChartData] = useState<any[]>([]);
+
+  useEffect(() => {
+    // Update chartData whenever empResult changes
+    if (empResult && empResult.length > 0) {
+      const newData = empResult.map((item) => ({
+        department: item.empDepartment,
+        employeeCount: item.employeeCount,
+      }));
+      setChartData(newData);
+    }
+  }, [empResult]);
+
   return (
-    <Card className="flex flex-col lg:max-w-md">
-      <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+    <Card className="flex flex-col lg:max-w-3xl h-full">
+      <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 flex-1">
         <div>
           <CardDescription>Total Employees</CardDescription>
           <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
-            {empResult.length > 0 ? empResult[0].employeeCount : 'Loading...'}
+            {empResult.length > 0 ? empResult.reduce((acc, curr) => acc + curr.employeeCount, 0) : 'Loading...'}
           </CardTitle>
         </div>
       </CardHeader>
@@ -36,57 +56,25 @@ export default function LineChartComponent() {
           }}
           className="w-full"
         >
-          <LineChart
-            accessibilityLayer
-            margin={{
-              left: 14,
-              right: 14,
-              top: 10,
-            }}
-            data={empResult.map((item) => ({
-              date: item.empDepartment, // Assuming empDepartment is date field
-              resting: item.employeeCount, // Assuming employeeCount is resting field
-            }))}
+          <BarChart
+            data={chartData}
+            margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
           >
-            <CartesianGrid
-              strokeDasharray="4 4"
-              vertical={false}
-              stroke="hsl(var(--muted-foreground))"
-              strokeOpacity={0.5}
-            />
-            <YAxis hide domain={['dataMin - 10', 'dataMax + 10']} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value} // Assuming empDepartment is in a suitable format
-            />
-            <Line
-              dataKey="resting"
-              type="natural"
-              fill="var(--color-resting)"
-              stroke="var(--color-resting)"
-              strokeWidth={2}
-              dot={false}
-              activeDot={{
-                fill: 'var(--color-resting)',
-                stroke: 'var(--color-resting)',
-                r: 4,
-              }}
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  indicator="line"
-                  labelFormatter={(value) => value} // Customize label as needed
-                />
-              }
-              cursor={false}
-            />
-          </LineChart>
+            <CartesianGrid strokeDasharray="2 2" />
+            <XAxis dataKey="department" />
+            <YAxis />
+            <Tooltip />
+            <Bar dataKey="employeeCount" fill="var(--color-resting)"
+                  
+                  radius={5}
+                  fillOpacity={0.6}
+                  activeBar={<Rectangle fillOpacity={0.8} />}>
+            </Bar>
+          </BarChart>
         </ChartContainer>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
+
+export default BarChartComponent;
