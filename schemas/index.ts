@@ -201,16 +201,16 @@ export const itAdminRoutes = [
     href: "/users",
     label: "Users",
 },
-{
-    icon: LineChart,
-    href: "/analytics",
-    label: "Analytics",
-},
-{
-    icon: Settings,
-    href: "/settings",
-    label: "Settings",
-},
+// {
+//     icon: LineChart,
+//     href: "/analytics",
+//     label: "Analytics",
+// },
+// {
+//     icon: Settings,
+//     href: "/settings",
+//     label: "Settings",
+// },
   
 ];
 
