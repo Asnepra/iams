@@ -51,18 +51,18 @@ const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId }: CatridgeFormProps)
         toast.success("Successfully added");
         //reload page after 3 seconds
         // Delayed page reload after 3 seconds
-      // setTimeout(() => {
-      //   location.reload();
+      setTimeout(() => {
+        location.reload();
 
-      // }, 2000);
+      }, 2000);
 
       }).catch((error)=>{
         console.log('error',error);
         toast.error("Something unexpected Happen, redirecting...");
-        // setTimeout(() => {
-        //   location.reload();
+        setTimeout(() => {
+          location.reload();
 
-        // }, 2000);
+        }, 2000);
       });
       //console.log("API response", response.data);
   
