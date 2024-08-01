@@ -158,7 +158,7 @@ const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId }: CatridgeFormProps)
           </>
         )}
         <Button type="submit" className="w-full" disabled={isPending}>
-          {isUpdate ? "Update Stock" : "Add Cartridge to Inventory"}
+          {isUpdate ? "Add Stock" : "Add Cartridge to Inventory"}
         </Button>
       </form>
     </Form>

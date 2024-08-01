@@ -58,7 +58,9 @@ const UsersPage = () => {
           </div>
           
         </div>
-        <LineChartComponent empResult={empResult}/>
+        <div className='grid grid-cols-2'>
+          <LineChartComponent empResult={empResult}/>
+        </div>
         <Card className="p-2">
           <DataTable data={empList} columns={columns} filterKey={EMPLOYEENAME_STRING}/>
         </Card>

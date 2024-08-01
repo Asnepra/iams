@@ -12,6 +12,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/charts';
+import { Separator } from '@/components/ui/separator';
 
 interface EmpResultItem {
   empDepartment: string;
@@ -44,6 +45,7 @@ const BarChartComponent: React.FC<BarChartProps> = ({ empResult }) => {
           <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
             {empResult.length > 0 ? empResult.reduce((acc, curr) => acc + curr.employeeCount, 0) : 'Loading...'}
           </CardTitle>
+          <Separator/>
         </div>
       </CardHeader>
       <CardContent className="flex flex-1 items-center">

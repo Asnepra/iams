@@ -65,6 +65,6 @@ export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <UpdateDialog row={row} add={false} title="Add Stocks"/>,
+    cell: ({ row }) => <UpdateDialog row={row} add={false} title="Add Quantity"/>,
   },
 ]
