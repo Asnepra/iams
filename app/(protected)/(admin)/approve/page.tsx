@@ -7,114 +7,66 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@
 import { Badge } from "@/components/ui/badge";
 import {DataTable} from "../../(normal)/request/_components/data-table";
 import { columns } from "../../(normal)/request/_components/columns";
-import TicketCard from "./_components/ticketinformation";
+
 import { CartridgeApprovalProps } from "@/schemas/printerSchema";
-import { HistoryDialog } from "./_components/dialog-history";
-import { useNewAccount } from "../../../../hooks/use-new-accounts";
 
-export default function ApproveScreen() {
-  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
-  const [selectedHistory, setSelectedHistory] = useState<any>(null); 
-  const [cartridgeHistory, setCartridgeHistory] = useState([
-    {
-      id: "1",
-      printerModel: "HP LaserJet Pro",
-      quantity: "2",
-      reason: "Printer ran out of ink",
-      requestedOn: "2023-05-15",
-      status: "Fulfilled",
-    },
-    {
-      id: "2",
-      printerModel: "Canon PIXMA",
-      quantity: "1",
-      reason: "Printer cartridge is low",
-      requestedOn: "2023-03-20",
-      status: "Fulfilled",
-    },
-    {
-      id: "3",
-      printerModel: "Epson WorkForce",
-      quantity: "4",
-      reason: "Printer cartridge is empty",
-      requestedOn: "2023-01-10",
-      status: "Pending",
-    },
-    {
-      id: "4",
-      printerModel: "Brother MFC",
-      quantity: "1",
-      reason: "Printer cartridge is low",
-      requestedOn: "2022-11-05",
-      status: "Fulfilled",
-    },
-  ]);
+import { parseToken } from "@/lib/parsetoken";
+import toast from "react-hot-toast";
+import Cookies from 'js-cookie';
+import { useRouter } from "next/navigation";
+import { UserDataType } from "@/schemas";
+import axios from "axios";
+import { PendingCatridgeRequestProps } from "@/schemas/requests";
 
-  const [pendingRequests, setPendingRequests] = useState<CartridgeApprovalProps[]>([
-    {
-      requestId: "REQ001",
-      cartridgeId: 123,
-      cartridgeDescription: "CYAN 25X15X2",
-      requesterName: "John Doe",
-      profilePic: "https://example.com/profile-pic.jpg",
-      requesterGrade: "Senior Engineer",
-      requestedOn: "2024-07-25T09:00:00Z",
-      reason: "Need replacement cartridge for urgent printing tasks.",
-      reqeusterGrade: ""
-    },
-    {
-      requestId: "REQ002",
-      cartridgeId: 456,
-      cartridgeDescription: "MAGENTA 30X20X2",
-      requesterName: "Jane Smith",
-      profilePic: "https://example.com/jane-profile-pic.jpg",
-      requesterGrade: "Junior Developer",
-      requestedOn: "2024-07-24T14:30:00Z",
-      reason: "Running low on ink, need additional cartridge for upcoming project.",
-      reqeusterGrade: ""
-    },
-    // Add more dummy data objects as needed
-  ]);
+export default function CatridgeScreen() {
+
+  const router=useRouter();
+
+  const [userData, setUserData]= useState<UserDataType | null>(null);
+  const [pendingRequests, setPendingRequests] = useState<PendingCatridgeRequestProps | null>(null);
+
 
   const handleApprove = (id: string) => {
     
-    // Assuming you want to remove the request from pending after approval
-    const updatedRequests = pendingRequests.filter((request) => request.requestId !== id);
-    setPendingRequests(updatedRequests);
-
-    // Add the approved request to history
-    const approvedRequest = pendingRequests.find((request) => request.requestId === id);
-    if (approvedRequest) {
-      setCartridgeHistory([...cartridgeHistory, {
-        ...approvedRequest, status: "Approved",
-        id: "",
-        printerModel: "",
-        quantity: ""
-      }]);
-    }
+    
   };
 
   const handleReject = (id: string) => {
-    // Assuming you want to remove the request from pending after rejection
-    const updatedRequests = pendingRequests.filter((request) => request.requestId !== id);
-    setPendingRequests(updatedRequests);
-
-    // Add the rejected request to history
-    const rejectedRequest = pendingRequests.find((request) => request.requestId === id);
-    if (rejectedRequest) {
-      setCartridgeHistory([...cartridgeHistory, {
-        ...rejectedRequest, status: "Rejected",
-        id: "",
-        printerModel: "",
-        quantity: ""
-      }]);
-    }
+    
   };
   const handleHistory = (id: string) => {
-    const selected = cartridgeHistory.find((item) => item.id === id);
-    if (selected) {
-      setSelectedHistory(selected);
-      setIsHistoryDialogOpen(true);
+    
+  };
+
+
+  const getData = async () => {
+    try {
+      const token = Cookies.get('token');
+      if (!token) {
+        toast.error("Token Error")
+        router.push("/");
+        throw new Error('Token not found in cookies');
+      }
+
+      const parsedToken = parseToken(token);
+      if (!parsedToken) {
+        toast.error("Token Error")
+        router.push("/");
+        //throw new Error('Unable to parse token');
+      }
+
+      setUserData(parsedToken); // Set user data in state
+
+      const body = { token: token };
+      const response = await axios.post('/api/pendingRequest', body)
+      .then((response)=>{
+        console.log("Pending Requests", response);
+        setPendingRequests(response.data);
+      });
+    } catch (error) {
+      console.error('Error fetching assets:', error);
+      //setError("Error fetching assets. Please try again.");
+      //router.push("/");
     }
   };
   
@@ -125,7 +77,7 @@ export default function ApproveScreen() {
         <main className="flex flex-1 flex-col gap-2 p-4 md:gap-8 md:p-6">
           <div className="flex items-center gap-2">
             <div>
-              <TicketCard />
+              {userData?.userName}
             </div>
           </div>
           <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-4">
@@ -144,8 +96,8 @@ export default function ApproveScreen() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {pendingRequests.map((request) => (
-                        <TableRow key={request.requestId}>
+                      {/* {pendingRequests?.map((request) => (
+                        <TableRow key={request.ca}>
                           <TableCell className="font-medium">{request.cartridgeDescription}</TableCell>
                           <TableCell>{request.requesterName}</TableCell>
                           <TableCell className="text-right">
@@ -155,10 +107,10 @@ export default function ApproveScreen() {
                             <Button variant="outline" size="sm" className="ml-2" onClick={() => handleReject(request.requestId)}>
                               Reject
                             </Button>
-                            <HistoryDialog />
+                            
                           </TableCell>
                         </TableRow>
-                      ))}
+                      ))} */}
                     </TableBody>
                   </Table>
                 </CardContent>
@@ -168,7 +120,7 @@ export default function ApproveScreen() {
                   <CardTitle>History of Cartridges</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <DataTable columns={columns} data={cartridgeHistory} />
+                  {/* <DataTable columns={columns} data={cartridgeHistory} /> */}
                 </CardContent>
               </Card>
             </div>
