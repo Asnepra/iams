@@ -54,19 +54,27 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         // Query to fetch records with STATUS_ID = 201
         const result = await transaction.request()
           .query(`
-            SELECT 
-              [TRANS_ID],
-              [ASSET_ID],
-              [CARTRIDGE_ID],
-              [REQUESTED_QTY],
-              [APPROVED_QTY],
-              [STATUS_ID],
-              [REQUESTED_BY],
-              [REQUESTED_ON],
-              [APPROVED_BY],
-              [APPROVED_ON]
-            FROM [IAMS].[dbo].[IAMS_X_CARTRIDGE]
-            WHERE [STATUS_ID] = 201;
+            	SELECT 
+                r.[TRANS_ID],
+                r.[ASSET_ID],
+                r.[CARTRIDGE_ID],
+                r.[REQUESTED_QTY],
+                r.[APPROVED_QTY],
+                r.[STATUS_ID],
+                r.[REQUESTED_BY],
+                r.[REQUESTED_ON],
+                r.[APPROVED_BY],
+                r.[APPROVED_ON],
+                u.[EMPLOYEE_NAME] AS RequesterName,
+                c.[CARTRIDGE_DESC] AS CartridgeDescription
+            FROM 
+                [IAMS].[dbo].[IAMS_X_CARTRIDGE] r
+                INNER JOIN [IAMS].[dbo].[IAMS_M_USER] u 
+                    ON r.[REQUESTED_BY] = u.[PERSONAL_NO]
+                INNER JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE] c 
+                    ON r.[CARTRIDGE_ID] = c.[CARTRIDGE_ID]
+            WHERE 
+                r.[STATUS_ID] = 201;
           `);
     
         // Map the result to JSON format
@@ -80,7 +88,9 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
           requestedBy: record.REQUESTED_BY,
           requestedOn: record.REQUESTED_ON,
           approvedBy: record.APPROVED_BY,
-          approvedOn: record.APPROVED_ON
+          approvedOn: record.APPROVED_ON,
+          requesterName: record.RequesterName,
+          cartridgeDescription: record.CartridgeDescription
         }));
     
         // Commit the transaction

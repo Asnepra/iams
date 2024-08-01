@@ -9,4 +9,6 @@ export interface PendingCatridgeRequestProps {
     requestedOn: string;
     approvedBy: string;
     approvedOn: string;
+    requesterName: string;
+    cartridgeDescription: string;
 }

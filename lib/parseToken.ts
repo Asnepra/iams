@@ -11,4 +11,21 @@ export function parseToken(token: string): UserDataType | null {
       return null;
     }
   }
+
+
+// Function to pad a number or string to 8 digits
+const padToEightDigits = (id: any): string => {
+    const strId = String(id); // Convert to string
+    return strId.length < 8 ? '0'.repeat(8 - strId.length) + strId : strId; // Pad with leading zeros
+  };
+  
+  // Function to get the full profile URL
+  export function getFullProfileUrl(employeeNumber: string): string {
+    const paddedEmployeeNumber = padToEightDigits(employeeNumber); // Corrected parameter
+    const url = `https://xsparsh.indianoil.in/allempphoto/EmpPhoto/${paddedEmployeeNumber}`;
+    return url;
+  }
+  
+
+  
   

@@ -10,13 +10,15 @@ import { columns } from "../../(normal)/request/_components/columns";
 
 import { CartridgeApprovalProps } from "@/schemas/printerSchema";
 
-import { parseToken } from "@/lib/parseToken";
+import { getFullProfileUrl, parseToken } from "@/lib/parseToken";
 import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation";
 import { UserDataType } from "@/schemas";
 import axios from "axios";
 import { PendingCatridgeRequestProps } from "@/schemas/requests";
+import { url } from "inspector";
+import { DialogButton } from "./_components/custom-dialog";
 
 export default function CatridgeScreen() {
 
@@ -26,8 +28,9 @@ export default function CatridgeScreen() {
   const [pendingRequests, setPendingRequests] = useState<PendingCatridgeRequestProps[] | null>([]);
 
 
-  const handleApprove = (id: string) => {
-    
+
+  const handleApprove = (id: string, reason:string) => {
+    console.log("cliecke on trbnas id ---", id, reason);
     
   };
 
@@ -92,25 +95,50 @@ export default function CatridgeScreen() {
                 </CardHeader>
                 <CardContent>
                   <Table>
-                    <TableHeader>
+                  <TableHeader>
                       <TableRow>
+                        <TableHead>Pending ID</TableHead>
+                        <TableHead>Asset Name</TableHead>
                         <TableHead>Cartridge</TableHead>
-                        <TableHead>Requester</TableHead>
+                        <TableHead>Requested Qty</TableHead>
+                        <TableHead>Requested By</TableHead>
+                        <TableHead>Requested On</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {pendingRequests?.map((request) => (
-                        <TableRow key={request.cartridgeId}>
-                          <TableCell className="font-medium">{request.requestedBy}</TableCell>
+                    {pendingRequests?.map((request) => (
+                        <TableRow key={request.transId}>
+                          <TableCell className="font-medium">P#0000{request.transId}</TableCell>
+                          <TableCell>{request.assetId}</TableCell>
+                          <TableCell>{request.cartridgeDescription}</TableCell>
+                          <TableCell>{request.requestedQty}</TableCell>
+                          <TableCell className="flex items-center p-3">
+                          <img
+                              alt="employee Pic"
+                              src={getFullProfileUrl(request.requestedBy)} // Correct URL for employee image
+                              //correct url is url+erequestorID
+                              width={40} // Adjust size as needed
+                              height={40}
+                              className="w-12 h-12 rounded-full"                            />
+                          
+                            {request.requesterName}
+                          </TableCell>
                           <TableCell>{request.requestedOn}</TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="outline" size="sm" onClick={() => handleApprove(request.requestedQty)}>
-                              Approve
-                            </Button>
-                            <Button variant="outline" size="sm" className="ml-2" onClick={() => handleReject(request.statusId)}>
-                              Reject
-                            </Button>
+                          <TableCell className="text-right space-x-2">
+                            <DialogButton
+                              title={'Approve'}
+                              id={request.transId}
+                              description={`Please provide a reason`}
+                              onClose={handleApprove}
+                            />
+                            <DialogButton
+                              title={'Reject'}
+                              id={request.transId}
+                              description={`Please provide a reason`}
+                              onClose={handleApprove}
+                            />
+                            
                             
                           </TableCell>
                         </TableRow>
