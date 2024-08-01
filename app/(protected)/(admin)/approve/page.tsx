@@ -1,6 +1,6 @@
 
 "use client"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
@@ -10,7 +10,7 @@ import { columns } from "../../(normal)/request/_components/columns";
 
 import { CartridgeApprovalProps } from "@/schemas/printerSchema";
 
-import { parseToken } from "@/lib/parsetoken";
+import { parseToken } from "@/lib/parseToken";
 import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
 import { useRouter } from "next/navigation";
@@ -23,7 +23,7 @@ export default function CatridgeScreen() {
   const router=useRouter();
 
   const [userData, setUserData]= useState<UserDataType | null>(null);
-  const [pendingRequests, setPendingRequests] = useState<PendingCatridgeRequestProps | null>(null);
+  const [pendingRequests, setPendingRequests] = useState<PendingCatridgeRequestProps[] | null>([]);
 
 
   const handleApprove = (id: string) => {
@@ -37,6 +37,10 @@ export default function CatridgeScreen() {
   const handleHistory = (id: string) => {
     
   };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
 
   const getData = async () => {
@@ -60,7 +64,7 @@ export default function CatridgeScreen() {
       const body = { token: token };
       const response = await axios.post('/api/pendingRequest', body)
       .then((response)=>{
-        console.log("Pending Requests", response);
+        console.log("Pending Requests", response.data);
         setPendingRequests(response.data);
       });
     } catch (error) {
@@ -96,21 +100,21 @@ export default function CatridgeScreen() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {/* {pendingRequests?.map((request) => (
-                        <TableRow key={request.ca}>
-                          <TableCell className="font-medium">{request.cartridgeDescription}</TableCell>
-                          <TableCell>{request.requesterName}</TableCell>
+                      {pendingRequests?.map((request) => (
+                        <TableRow key={request.cartridgeId}>
+                          <TableCell className="font-medium">{request.requestedBy}</TableCell>
+                          <TableCell>{request.requestedOn}</TableCell>
                           <TableCell className="text-right">
-                            <Button variant="outline" size="sm" onClick={() => handleApprove(request.requestId)}>
+                            <Button variant="outline" size="sm" onClick={() => handleApprove(request.requestedQty)}>
                               Approve
                             </Button>
-                            <Button variant="outline" size="sm" className="ml-2" onClick={() => handleReject(request.requestId)}>
+                            <Button variant="outline" size="sm" className="ml-2" onClick={() => handleReject(request.statusId)}>
                               Reject
                             </Button>
                             
                           </TableCell>
                         </TableRow>
-                      ))} */}
+                      ))}
                     </TableBody>
                   </Table>
                 </CardContent>

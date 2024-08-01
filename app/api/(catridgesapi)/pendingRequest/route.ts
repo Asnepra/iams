@@ -88,11 +88,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     
         // Return a successful response with data
         return new NextResponse(
-          JSON.stringify({
-            message: 'Success',
-            data: data,
-            isAdmin: isAdmin
-          }),
+          JSON.stringify(data),
           { status: 200 }
         );
       } catch (queryError) {
