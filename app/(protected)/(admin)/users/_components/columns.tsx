@@ -73,8 +73,8 @@ export const columns: ColumnDef<User>[] = [
       const color = label?.color || "gray";
 
       return (
-        <div className="flex items-center space-x-2">
-          <Icon size={22} color={color} /> {/* Adjust size and other styles as needed */}
+        <div className={`flex items-center space-x-2`}>
+          <Icon size={22} fill={color} /> {/* Adjust size and other styles as needed */}
           <span className="">{userType}</span>
         </div>
       );

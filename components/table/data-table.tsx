@@ -75,17 +75,8 @@ export function DataTable<TData, TValue>({
   return (
     <div className="space-y-4">
       <ConfirmationDialog />
-      <div className="flex items-center py-4">
-        <Input
-          placeholder={`Filter ${filterKey}...`}
-          value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filterKey)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        
-      </div>
+      
+      <DataTableToolbar table={table} filterKey={filterKey} />
     
 
 

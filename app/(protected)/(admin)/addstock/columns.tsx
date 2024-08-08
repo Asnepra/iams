@@ -3,6 +3,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header"
 import { UpdateDialog } from "@/components/update-dialog"
 import { IAMS_CATRIDGE, STOCK_STRING } from "@/schemas/printerSchema"
+import { formatDate } from "@/lib/utils"
 
 export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
   {
@@ -46,7 +47,7 @@ export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex items-center">
-        <span>{row.getValue("updatedOn")}</span>
+        <span>{formatDate(row.getValue("updatedOn"))}</span>
       </div>
     ),
     filterFn: (row, id, value) => value.includes(row.getValue(id)),

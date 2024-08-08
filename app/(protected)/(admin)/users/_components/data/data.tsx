@@ -23,9 +23,15 @@ export const labels = [
     color:"#3e9392"
   },
   {
+    value: "IT Admin",
+    label: "IT Admin",
+    icon: ShieldEllipsis,
+    color:"#20948B"
+  },
+  {
     value: "Normal",
     label: "Normal",
     icon: Shield,
-    color:"gray"
+    color:"#EDF4F2"
   }
 ]

@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import CatridgeForm from "./catridge-form";
+import { formatDate } from "@/lib/utils";
 
 
 interface UpdateDialogProps {
@@ -32,9 +33,7 @@ export function UpdateDialog({ row, title, add }: UpdateDialogProps) {
   const profilePic = `${PROFILE_PIC_BASE_URL}${formattedUpdatedBy}`
 
   // Parse and format the date
-  const formattedLastUpdated = lastUpdated
-    ? format(new Date(lastUpdated), "MMMM d, yyyy h:mm a")
-    : "N/A"
+  const formattedLastUpdated = formatDate(lastUpdated)
 
   // State for editable fields
   const [editableName, setEditableName] = useState(name)
