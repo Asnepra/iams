@@ -160,11 +160,11 @@ export const normalRoutes = [
     href: "/request",
     label: "Request Cartridge",
   },
-  {
-    icon: Kanban,
-    href: "/complaint",
-    label: "Raise a complaint",
-  },
+  // {
+  //   icon: Kanban,
+  //   href: "/complaint",
+  //   label: "Raise a complaint",
+  // },
 ];
 
 // HR Admin routes
@@ -195,11 +195,11 @@ export const itAdminRoutes = [
     href: "/approve",
     label: "Approve Cartridge",
   },
-  {
-    icon: Package,
-    href: "/assets",
-    label: "Manage Assets",
-  },
+  // {
+  //   icon: Package,
+  //   href: "/assets",
+  //   label: "Manage Assets",
+  // },
   {
     icon: UploadCloudIcon,
     href: "/upload",

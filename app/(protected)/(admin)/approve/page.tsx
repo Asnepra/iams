@@ -34,7 +34,7 @@ export default function CatridgeScreen() {
     
   };
 
-  const handleReject = (id: string) => {
+  const handleReject = (id: string, reason:string) => {
     
   };
   const handleHistory = (id: string) => {
@@ -113,7 +113,7 @@ export default function CatridgeScreen() {
                           <TableCell>{request.assetId}</TableCell>
                           <TableCell>{request.cartridgeDescription}</TableCell>
                           <TableCell>{request.requestedQty}</TableCell>
-                          <TableCell className="flex items-center p-3">
+                          <TableCell className="flex items-center p-3 font-semibold">
                           <img
                               alt="employee Pic"
                               src={getFullProfileUrl(request.requestedBy)} // Correct URL for employee image
@@ -136,7 +136,7 @@ export default function CatridgeScreen() {
                               title={'Reject'}
                               id={request.transId}
                               description={`Please provide a reason`}
-                              onClose={handleApprove}
+                              onClose={handleReject}
                             />
                             
                             
