@@ -76,6 +76,16 @@ export const userSchema=z.object({
 export type User = z.infer<typeof userSchema>
 
 
+export interface UserDataType{
+  userProfilePic: string;
+  userId: string;
+  userRole: string;
+  userName: string;
+  userMail: string;
+  userDepartment: string;
+}
+
+
 
 
 
@@ -134,6 +144,10 @@ export const EMPLOYEENUMBER_STRING="EmployeeNumber"
 export const USERROLE_STRING="UserRole";
 
 
+
+export const PROFILE_PIC_BASE_URL="https://xsparsh.indianoil.in/allempphoto/EmpPhoto/";
+
+
 // Normal user routes
 export const normalRoutes = [
   {
@@ -146,11 +160,11 @@ export const normalRoutes = [
     href: "/request",
     label: "Request Cartridge",
   },
-  {
-    icon: Kanban,
-    href: "/complaint",
-    label: "Raise a complaint",
-  },
+  // {
+  //   icon: Kanban,
+  //   href: "/complaint",
+  //   label: "Raise a complaint",
+  // },
 ];
 
 // HR Admin routes
@@ -181,11 +195,11 @@ export const itAdminRoutes = [
     href: "/approve",
     label: "Approve Cartridge",
   },
-  {
-    icon: Package,
-    href: "/assets",
-    label: "Manage Assets",
-  },
+  // {
+  //   icon: Package,
+  //   href: "/assets",
+  //   label: "Manage Assets",
+  // },
   {
     icon: UploadCloudIcon,
     href: "/upload",
@@ -197,16 +211,16 @@ export const itAdminRoutes = [
     href: "/users",
     label: "Users",
 },
-{
-    icon: LineChart,
-    href: "/analytics",
-    label: "Analytics",
-},
-{
-    icon: Settings,
-    href: "/settings",
-    label: "Settings",
-},
+// {
+//     icon: LineChart,
+//     href: "/analytics",
+//     label: "Analytics",
+// },
+// {
+//     icon: Settings,
+//     href: "/settings",
+//     label: "Settings",
+// },
   
 ];
 

@@ -4,10 +4,14 @@ import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Metadata } from 'next';
-import { DataTable } from './_components/data-table';
+
 import { columns } from './_components/columns';
 import { Card } from '@/components/ui/card';
 import { User } from './_components/data/schema';
+import LineChartComponent from './_components/line-chart';
+import { EMPLOYEENAME_STRING } from '@/schemas';
+import { useRouter } from 'next/navigation';
+import { DataTable } from '@/components/table/data-table';
 
 
 
@@ -21,6 +25,7 @@ const UsersPage = () => {
   const [empList, setEmpList] = useState<User[]>([]);
   const [empDepartment, setEmpDepartment] = useState<string>('');
   const [empResult, setEmpResult] = useState<EmpResultItem[]>([]);
+  const router= useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -38,7 +43,7 @@ const UsersPage = () => {
       } catch (error) {
         console.error('Error fetching data:', error);
         // Handle error, e.g., redirect to home page
-        // router.push('/home');
+         router.push('/home');
       }
     };
 
@@ -52,13 +57,15 @@ const UsersPage = () => {
         <div className="flex items-center justify-between space-y-2">
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
-            <p className="text-muted-foreground">
-              Here&apos;s a list of your tasks for this month!
-            </p>
+           
           </div>
+          
+        </div>
+        <div className='grid grid-cols-2'>
+          <LineChartComponent empResult={empResult}/>
         </div>
         <Card className="p-2">
-          <DataTable data={empList} columns={columns} />
+          <DataTable data={empList} columns={columns} filterKey={EMPLOYEENAME_STRING}/>
         </Card>
       </div>
     </>

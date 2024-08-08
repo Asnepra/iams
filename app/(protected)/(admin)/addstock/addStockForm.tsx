@@ -29,7 +29,6 @@ import { CartridgeProps, UserData } from "@/schemas";
 import { Input } from "@/components/ui/input";
 import { CartridgeSchema, CartridgeType } from "@/schemas/printerSchema";
 
-
 interface AddStockCatridgeFormProps {
   data: CartridgeType[];
 }
@@ -39,21 +38,17 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
   const form = useForm<z.infer<typeof CartridgeSchema>>({
     resolver: zodResolver(CartridgeSchema),
     defaultValues: {
-      assetId: "",
+      catridgeId: "",
       assetPrinterCatridgeMessage: "",
       assetPrinterCatridgeQuantity: "",
     },
   });
 
-  const onCategoryChange = (value: any) => {
-    // Implement your logic for category change
-    // Ensure subcategoryData, setFilteredSubCategoryData, setSelectedCategory are defined
-  };
 
   const onSubmit = async (values: z.infer<typeof CartridgeSchema>) => {
     try {
       const data = {
-        assetPrinterId: values.assetId,
+        assetPrinterId: values.catridgeId,
         assetPrinterCartridgeMessage: values.assetPrinterCatridgeMessage,
         assetPrinterCartridgeQuantity: Number(values.assetPrinterCatridgeQuantity) // Ensure quantity is parsed to number
         // Add more fields as needed
@@ -79,43 +74,44 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           <div className="grid grid-cols-2 gap-x-8 gap-y-4">
             
-            <FormField
-              control={form.control}
-              name="assetId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Select cartridge type</FormLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        onCategoryChange(value);
-                      }}
-                      value={field.value}
-                    >
-                      <SelectTrigger className="bg-background">
-                        <SelectValue
-                          placeholder="Select a cartridge..."
-                          defaultValue={field.value || ""}
-                        />
-                        <SelectContent>
-                          {data?.map((category) => (
-                            <SelectItem
-                              key={category.id}
-                              value={category.cartridgeName}
-                            >
-                              {category.cartridgeName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </SelectTrigger>
-                    </Select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+          <FormField
+            control={form.control}
+            name="catridgeId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Asset List</FormLabel>
+                <FormControl>
+                  <Select
+                    onValueChange={(value) => {
+                      field.onChange(value);
+                     
+                    }
+                  }
+                    value={field.value}
+                    defaultValue={field.value}
+                  >
+                    <SelectTrigger className="bg-background">
+                      <SelectValue
+                        placeholder="Select a category..."
+                        defaultValue={field.value || ""} // Set default value to an empty string
+                      />
+                      <SelectContent>
+                        {data?.map((category) => (
+                          <SelectItem
+                            key={category.catridgeId}
+                            value={category.catridgeId.toString()}
+                          >
+                            {category.catridgeDescription}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </SelectTrigger>
+                  </Select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
               control={form.control}
@@ -167,3 +163,5 @@ const AddStockCatridgeForm = ({ data }: AddStockCatridgeFormProps) => {
 };
 
 export default AddStockCatridgeForm;
+
+

@@ -9,7 +9,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
   
   try {
     // Extract token from request body
-    const { dataToUpdate , token } = await req.json();
+    const { token } = await req.json();
         
     // Check if token is missing
     //console.log(token);
@@ -76,22 +76,24 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
 
      //console.log("Asset Model Id received ------------------ ",assetModelId);
      //console.log("guarantee Id received ------------------ ",guaranteeStatus);
+     //const { TRANS_ID, CARTRIDGE_ID, QTY, UPDATED_ON } = data;
 
-     const cartridgeHistory=await sql.query`
-                UPDATE [dbo].[IAMS_X_CARTRIDGE]
-      SET [ASSET_ID] = ${dataToUpdate.assetId},
-          [CARTRIDGE_ID] = ${dataToUpdate.cartridgeId},
-          [REQUESTED_QTY] = ${dataToUpdate.requestedQty},
-          [APPROVED_QTY] = ${dataToUpdate.approvedQty},
-          [STATUS_ID] = ${dataToUpdate.statusId},
-          [REQUESTED_BY] = ${dataToUpdate.requestedBy},
-          [REQUESTED_ON] = ${dataToUpdate.requestedOn},
-          [APPROVED_BY] = ${dataToUpdate.approvedBy},
-          [APPROVED_ON] = ${dataToUpdate.approvedOn}
-      WHERE [TRANS_ID] = ${dataToUpdate.transId};
+     const cartridgeInventory=await sql.query`
+                Select * from [IAMS].[dbo].[IAMS_M_CARTRIDGE];
     
      `;
-     return new NextResponse(JSON.stringify(cartridgeHistory), { status: 500 });
+
+     // Map the result to a JSON format
+    const countryData = cartridgeInventory.recordset.map((record: any) => ({
+        catridgeId: record.CARTRIDGE_ID,
+        catrdigeDescription: record.CARTRIDGE_DESC,
+        stock: record.STOCK,
+        updatedOn:record.UPDATED_ON,
+        updatedBy:record.UPDATE_BY_USERID,
+        assetBatchId:record.ASSET_BATCH_ID
+        // Add more fields as needed
+      }));
+     return new NextResponse(JSON.stringify(countryData), { status: 200 });
     
   } catch (error) {
     // Handle errors and send an error response with status code 500

@@ -11,9 +11,11 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { UserData } from "@/schemas";
-import { DataTable } from "./_components/data-table";
+
 import { columns } from "./_components/columns";
 import ApprovalTimeline from "./_components/data-timeline";
+import { DataTable } from "@/components/table/data-table";
+import { PRINTER_MODAL_STRING } from "@/schemas/printerSchema";
 
 function parseToken(token: string): UserData | null {
   try {
@@ -148,7 +150,7 @@ export default function Home() {
               </CardHeader>
               <Separator/>
               <div className="p-2">
-                <DataTable columns={columns} data={cartridgeHistory}/>
+                <DataTable columns={columns} data={cartridgeHistory} filterKey={PRINTER_MODAL_STRING}/>
               </div>
             </Card>
 

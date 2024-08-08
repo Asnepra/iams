@@ -124,7 +124,6 @@ const RootLayout = ({ children }: RootLayoutProps) => {
           <Sidebar routes={allowedRoutes} />
         </div>
         <div className="mt-16 h-auto flex flex-col md:ml-52 bg-muted/40 mx-2 px-2 border-b">
-        <SheetProvider></SheetProvider>
           {children}
         </div>
       </div>

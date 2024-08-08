@@ -28,7 +28,10 @@ const Navbar = ({ className, userData, routes }: NavbarProps) => {
 
   // Handle logout action
   const handleLogout = () => {
+    console.log("logout called")
     localStorage.removeItem('token');
+    document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+
     router.push('/');
   };
 

@@ -42,7 +42,7 @@ const LoginForm = () => {
   
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-startTransition(() => {
+  startTransition(() => {
   axios.post('/api/login', values)
     .then(async (response:any) => {
       const data = response.data;

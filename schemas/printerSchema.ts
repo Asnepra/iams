@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CartridgeSchema = z.object({
-  assetId: z.string().min(1, {
+  catridgeId: z.string().min(1, {
     message: "Please select a Cartridge.",
   }),
   assetPrinterCatridgeMessage: z.string().min(1, {
@@ -14,11 +14,11 @@ export const CartridgeSchema = z.object({
 
 
 export interface CartridgeType{
-    id:number;
-    cartridgeName:string;
-    cartridgeQuantity:number;
-    lastUpdatedBy:number;
-    lastUpdatedOn:string;
+    catridgeId:number;
+    catridgeDescription:string;
+    stock:number;
+    updatedBy:number;
+    updatedOn:string;
 }
 
 export interface CartridgeApprovalProps{
@@ -34,11 +34,13 @@ export interface CartridgeApprovalProps{
 
 export const REQUEST_ID_STRING = "requestId";
 export const CARTRIDGE_ID_STRING = "cartridgeId";
-export const CARTRIDGE_DESCRIPTION_STRING = "cartridgeDescription";
+export const CARTRIDGE_DESCRIPTION_STRING = "catridgeDescription";
 export const REQUESTOR_NAME_STRING = "requestorName";
 export const PROFILE_PIC_STRING = "profilePic";
 export const REQUESTOR_GRADE_STRING = "requestorGrade";
 export const REQUESTED_ON_STRING = "requestedOn";
+export const STOCK_STRING="stock";
+
 
 export const ID_CARTRIDGE_STRING="id";
 export const PRINTER_MODAL_STRING="printerModel";
@@ -61,7 +63,7 @@ export interface CartridgeApprovalProps {
 
 
 
-export const CartridgeSchemaStock = z.object({
+export const CartridgeSchemaStockAdd = z.object({
   //id: z.number(), // Assuming id is a number
   cartridgeName: z.string().min(1, {
     message: "Please enter a Cartridge Name.",
@@ -72,6 +74,32 @@ export const CartridgeSchemaStock = z.object({
   //lastUpdatedBy: z.number(), // Assuming lastUpdatedBy is a number
   //lastUpdatedOn: z.string(), // Assuming lastUpdatedOn is a string representing date/time
 });
+
+export const CartridgeSchemaStockUpdate = z.object({
+  //id: z.number(), // Assuming id is a number
+  cartridgeQuantity: z.string().min(1, {
+    message: "Please enter a valid Quantity greater than 0.",
+  }),
+  //lastUpdatedBy: z.number(), // Assuming lastUpdatedBy is a number
+  //lastUpdatedOn: z.string(), // Assuming lastUpdatedOn is a string representing date/time
+});
+
+
+export interface IAMS_CATRIDGE{
+  id: string;
+        catrdigeDescription: string;
+        stock: string;
+        updatedOn:string;
+        updatedBy:string;
+        assetBatchId:string;
+}
+
+export interface DialogProps{
+  dialogButtonText:string;
+  dialogTitle:string;
+  dialogDescription:string;
+  
+}
 
 
 const pendingRequests: CartridgeApprovalProps[] = [

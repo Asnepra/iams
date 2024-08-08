@@ -13,10 +13,10 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { CartridgeSchemaStock } from "@/schemas/printerSchema";
+import { CartridgeSchemaStockUpdate } from "@/schemas/printerSchema";
 
 
-type FormValues = z.input<typeof CartridgeSchemaStock>;
+type FormValues = z.input<typeof CartridgeSchemaStockUpdate>;
 
 type Props = {
   id?: string;
@@ -34,7 +34,7 @@ export const AccountForm = ({
   disabled,
 }: Props) => {
   const form = useForm<FormValues>({
-    resolver: zodResolver(CartridgeSchemaStock),
+    resolver: zodResolver(CartridgeSchemaStockUpdate),
     defaultValues: defaultValues,
   });
 
@@ -53,7 +53,7 @@ export const AccountForm = ({
         className="space-y-4 pt-4"
       >
         <FormField
-          name="cartridgeName"
+          name="cartridgeQuantity"
           control={form.control}
           render={({ field }) => (
             <FormItem>

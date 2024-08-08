@@ -8,10 +8,12 @@ import {
 
   import { z } from "zod";
 
-import { AccountForm } from "./account-form";
+
 import { CartridgeSchemaStock } from "@/schemas/printerSchema";
-import { useNewAccount } from "./hooks/use-new-accounts";
-import toast from "react-hot-toast";
+import { useNewAccount } from "@/hooks/use-new-accounts";
+import { AccountForm } from "@/app/(protected)/(admin)/approve/_components/account-form";
+
+
   
  
   

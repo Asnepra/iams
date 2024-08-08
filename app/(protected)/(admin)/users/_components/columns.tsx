@@ -14,6 +14,7 @@ import { labels } from "./data/data";
 import FallbackImage from "@/components/fallback-Image";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
 import { EMPDEPARTMENT_STRING, EMPLOYEENAME_STRING, EMPLOYEENUMBER_STRING, EMPMAIL_STRING, EMPPROFILEPIC_STRING, USERROLE_STRING } from "@/schemas";
+import { getFullProfileUrl } from "@/lib/parseToken";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -25,23 +26,6 @@ export const columns: ColumnDef<User>[] = [
 
   },
   {
-    accessorKey: EMPPROFILEPIC_STRING,
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Employee Picture" />
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center ">
-        <FallbackImage
-          src={row.getValue(EMPPROFILEPIC_STRING) || "/user_profile.jpeg"}
-          alt="Profile"
-          className="h-8 w-8 rounded-full mr-2"
-          width={40}
-          height={40}
-        />
-      </div>
-    ),
-  },
-  {
     accessorKey: EMPLOYEENAME_STRING,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Employee Name" />
@@ -49,7 +33,7 @@ export const columns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <div className="flex items-center ">
       <FallbackImage
-        src={row.getValue(EMPPROFILEPIC_STRING) || "/user_profile.jpeg"}
+        src={getFullProfileUrl(row.getValue(EMPLOYEENUMBER_STRING)) || "/user_profile.jpeg"}
         alt="Profile"
         className="h-8 w-8 rounded-full mr-2"
         width={40}
@@ -89,8 +73,8 @@ export const columns: ColumnDef<User>[] = [
       const color = label?.color || "gray";
 
       return (
-        <div className="flex items-center space-x-2">
-          <Icon size={22} color={color} /> {/* Adjust size and other styles as needed */}
+        <div className={`flex items-center space-x-2`}>
+          <Icon size={22} fill={color} /> {/* Adjust size and other styles as needed */}
           <span className="">{userType}</span>
         </div>
       );
