@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CartridgeSchema = z.object({
-  assetId: z.string().min(1, {
+  catridgeId: z.string().min(1, {
     message: "Please select a Cartridge.",
   }),
   assetPrinterCatridgeMessage: z.string().min(1, {
@@ -14,11 +14,11 @@ export const CartridgeSchema = z.object({
 
 
 export interface CartridgeType{
-    id:number;
-    cartridgeName:string;
-    cartridgeQuantity:number;
-    lastUpdatedBy:number;
-    lastUpdatedOn:string;
+    catridgeId:number;
+    catridgeDescription:string;
+    stock:number;
+    updatedBy:number;
+    updatedOn:string;
 }
 
 export interface CartridgeApprovalProps{
@@ -40,6 +40,7 @@ export const PROFILE_PIC_STRING = "profilePic";
 export const REQUESTOR_GRADE_STRING = "requestorGrade";
 export const REQUESTED_ON_STRING = "requestedOn";
 export const STOCK_STRING="stock";
+
 
 export const ID_CARTRIDGE_STRING="id";
 export const PRINTER_MODAL_STRING="printerModel";

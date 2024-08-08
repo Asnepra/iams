@@ -25,6 +25,7 @@ import { AccountForm } from "@/app/(protected)/(admin)/approve/_components/accou
     // const mutation = useCreateAccount();
   
     const onSubmit = (values: FormValues) => {
+        toast.success("Entry created");
       console.log("data cartridge", values);
     };
   
