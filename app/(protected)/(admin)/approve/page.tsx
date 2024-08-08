@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import {DataTable} from "../../(normal)/request/_components/data-table";
-import { columns } from "../../(normal)/request/_components/columns";
+
 
 import { CartridgeApprovalProps } from "@/schemas/printerSchema";
 
@@ -19,6 +17,7 @@ import axios from "axios";
 import { PendingCatridgeRequestProps } from "@/schemas/requests";
 import { url } from "inspector";
 import { DialogButton } from "./_components/custom-dialog";
+import { formatDate } from "@/lib/utils";
 
 export default function CatridgeScreen() {
 
@@ -124,7 +123,7 @@ export default function CatridgeScreen() {
                           
                             {request.requesterName}
                           </TableCell>
-                          <TableCell>{request.requestedOn}</TableCell>
+                          <TableCell>{formatDate(request.requestedOn)}</TableCell>
                           <TableCell className="text-right space-x-2">
                             <DialogButton
                               title={'Approve'}
