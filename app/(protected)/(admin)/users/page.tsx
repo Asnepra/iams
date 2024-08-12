@@ -65,7 +65,7 @@ const UsersPage = () => {
           <LineChartComponent empResult={empResult}/>
         </div>
         <Card className="p-2">
-          <DataTable data={empList} columns={columns} filterKey={EMPLOYEENAME_STRING}/>
+          <DataTable data={empList} columns={columns} filterKey={EMPLOYEENAME_STRING} filterString='Employee Name'/>
         </Card>
       </div>
     </>

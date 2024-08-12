@@ -104,6 +104,7 @@ const AccountsPage = () => {
             columns={columns}
             data={assets}
             filterKey="catrdigeDescription"
+            filterString="Catridge Name"
           />
         </CardContent>
       </Card>

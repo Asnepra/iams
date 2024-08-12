@@ -35,19 +35,18 @@ interface DataTableProps<TData, TValue> {
   filterKey: string;
 
   disabled?: boolean;
+  filterString?:string;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   filterKey,
+  filterString,
 
   
 }: DataTableProps<TData, TValue>) {
-  const [ConfirmationDialog, confirm] = useConfirm(
-    "Delete Confirmation",
-    "Are you sure you want to delete the selected row(s)?"
-  );
+  
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -74,9 +73,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <ConfirmationDialog />
       
-      <DataTableToolbar table={table} filterKey={filterKey} />
+      
+      <DataTableToolbar table={table} filterKey={filterKey} filterString={filterString}/>
     
 
 

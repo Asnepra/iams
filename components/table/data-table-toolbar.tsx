@@ -9,12 +9,14 @@ import { DataTableViewOptions } from "@/components/table/data-table-view-options
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>,
-  filterKey: string, // Ensure you pass this as a prop
+  filterKey: string,
+  filterString?:string // Ensure you pass this as a prop
 }
 
 export function DataTableToolbar<TData>({
   table,
-  filterKey, // Accept filterKey as a prop
+  filterKey,
+  filterString // Accept filterKey as a prop
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
   const column = table.getColumn(filterKey)
@@ -23,7 +25,7 @@ export function DataTableToolbar<TData>({
     <div className="flex items-center justify-between">
       <div className="flex flex-1 py-1 items-center space-x-2">
         <Input
-          placeholder={`Filter ${filterKey}...`}
+          placeholder={`Filter ${filterString}...`}
           value={(column?.getFilterValue() as string) ?? ""}
           onChange={(event) => column?.setFilterValue(event.target.value)}
           className="w-full rounded-lg bg-background md:w-[200px] lg:w-[336px]"

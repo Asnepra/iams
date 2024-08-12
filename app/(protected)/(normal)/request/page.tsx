@@ -15,9 +15,27 @@ import { UserData } from "@/schemas";
 import { columns } from "./_components/columns";
 import ApprovalTimeline from "./_components/data-timeline";
 import { DataTable } from "@/components/table/data-table";
-import { PRINTER_MODAL_STRING } from "@/schemas/printerSchema";
+import { PRINTER_MODAL_STRING, PrinterDataProps } from "@/schemas/printerSchema";
 import CatridgeForm from "./_components/catridge-form";
 
+
+
+
+  // Mock data
+  const printers: PrinterDataProps[] = [
+    { printerId: "1", printerName: "Printer A", cartridges: [
+      { cartridgeId: "cyan", cartridgeName: "Cyan", quantity: 10 },
+      { cartridgeId: "magenta", cartridgeName: "Magenta", quantity: 15 },
+      { cartridgeId: "yellow", cartridgeName: "Yellow", quantity: 5 },
+      { cartridgeId: "black", cartridgeName: "Black", quantity: 20 },
+    ] },
+    { printerId: "2", printerName: "Printer B", cartridges: [
+      { cartridgeId: "cyan", cartridgeName: "Cyan", quantity: 8 },
+      { cartridgeId: "magenta", cartridgeName: "Magenta", quantity: 12 },
+      { cartridgeId: "yellow", cartridgeName: "Yellow", quantity: 6 },
+      { cartridgeId: "black", cartridgeName: "Black", quantity: 18 },
+    ] }
+  ];
 function parseToken(token: string): UserData | null {
   try {
     const [, payloadBase64] = token.split('.');
@@ -97,6 +115,8 @@ export default function Home() {
       status: "Fulfilled",
     },
   ]);
+
+
   const [selectedStatus, setSelectedStatus] = useState("Fulfilled")
 
   const filteredRequests = useMemo(() => {
@@ -118,11 +138,11 @@ export default function Home() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Name </Label>
-                        <Input id="email" type="email" defaultValue={userData?.userName} disabled />
+                        <Input id="email" type="text" defaultValue={userData?.userName} disabled />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">Employee Number</Label>
-                        <Input id="email" type="email" defaultValue={userData?.userId} disabled />
+                        <Input id="email" type="number" defaultValue={userData?.userId} disabled />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -132,11 +152,11 @@ export default function Home() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">Department</Label>
-                        <Input id="email" type="email" defaultValue={userData?.userDepartment} disabled />
+                        <Input id="email" type="text" defaultValue={userData?.userDepartment} disabled />
                       </div>
                     </div>
             {/* <RequestCatridgeForm assetData={assetData} userData={userData} /> */}
-            <CatridgeForm/>
+            <CatridgeForm printers={printers}/>
           </div>
           </Card>
           <Card className="w-1/2">
@@ -152,7 +172,7 @@ export default function Home() {
               </CardHeader>
               <Separator/>
               <div className="p-2">
-                <DataTable columns={columns} data={cartridgeHistory} filterKey={PRINTER_MODAL_STRING}/>
+                <DataTable columns={columns} data={cartridgeHistory} filterKey={PRINTER_MODAL_STRING} filterString={"Printer Modal"}/>
               </div>
             </Card>
 

@@ -23,18 +23,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { PrinterDataProps } from "@/schemas/printerSchema";
 
-interface CartridgeProps {
-  cartridgeId: string;
-  cartridgeName: string;
-  quantity: number;
-}
 
-interface PrinterDataProps {
-  printerId: string;
-  printerName: string;
-  cartridges: CartridgeProps[];
-}
 
 const CartridgeFormSchema = z.object({
   printerId: z.string().min(1, "Select a printer"),
@@ -45,25 +36,13 @@ const CartridgeFormSchema = z.object({
   assetPrinterCartridgeMessage: z.string().min(1, "Please enter a message"),
 });
 
-// Mock data
-const printers: PrinterDataProps[] = [
-  { printerId: "1", printerName: "Printer A", cartridges: [
-    { cartridgeId: "cyan", cartridgeName: "Cyan", quantity: 10 },
-    { cartridgeId: "magenta", cartridgeName: "Magenta", quantity: 15 },
-    { cartridgeId: "yellow", cartridgeName: "Yellow", quantity: 5 },
-    { cartridgeId: "black", cartridgeName: "Black", quantity: 20 },
-  ] },
-  { printerId: "2", printerName: "Printer B", cartridges: [
-    { cartridgeId: "cyan", cartridgeName: "Cyan", quantity: 8 },
-    { cartridgeId: "magenta", cartridgeName: "Magenta", quantity: 12 },
-    { cartridgeId: "yellow", cartridgeName: "Yellow", quantity: 6 },
-    { cartridgeId: "black", cartridgeName: "Black", quantity: 18 },
-  ] }
-];
+interface CartridgeFormProps {
+  printers: PrinterDataProps[];
+}
 
 type CartridgeKeys = "blackCartridge" | "cyanCartridge" | "magentaCartridge" | "yellowCartridge";
 
-const CartridgeForm = () => {
+const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
   const token = Cookies.get('token');
   const form = useForm<z.infer<typeof CartridgeFormSchema>>({
     resolver: zodResolver(CartridgeFormSchema),
