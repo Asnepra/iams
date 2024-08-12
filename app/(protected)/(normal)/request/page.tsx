@@ -16,6 +16,7 @@ import { columns } from "./_components/columns";
 import ApprovalTimeline from "./_components/data-timeline";
 import { DataTable } from "@/components/table/data-table";
 import { PRINTER_MODAL_STRING } from "@/schemas/printerSchema";
+import CatridgeForm from "./_components/catridge-form";
 
 function parseToken(token: string): UserData | null {
   try {
@@ -114,7 +115,7 @@ export default function Home() {
               <Card className="w-1/2">
           <div className="h-full p-2 space-y-2 max-w-3xl mx-auto">
             {error && <FormError message={error} />}
-            <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Name </Label>
                         <Input id="email" type="email" defaultValue={userData?.userName} disabled />
@@ -134,7 +135,8 @@ export default function Home() {
                         <Input id="email" type="email" defaultValue={userData?.userDepartment} disabled />
                       </div>
                     </div>
-            <RequestCatridgeForm assetData={assetData} userData={userData} />
+            {/* <RequestCatridgeForm assetData={assetData} userData={userData} /> */}
+            <CatridgeForm/>
           </div>
           </Card>
           <Card className="w-1/2">

@@ -22,15 +22,22 @@ import {
 
 import Cookies from 'js-cookie';
 import toast from "react-hot-toast";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+
+
+import { UserData } from "@/schemas";
 import { Textarea } from "@/components/ui/textarea";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
-import { PrinterCartridgeProps, UserData } from "@/schemas";
+import { Label } from "@/components/ui/label";
 
 
+interface AssetFormProps {
+  assetData?: {
+    assetId: number;
+    assetModelId: number;
+    status: string;
+    assetModelName: string;
+  }[];
+  userData?: UserData | null;
+}
 
 const assetSchema = z.object({
   assetId: z.string().min(1, {
@@ -44,7 +51,7 @@ const assetSchema = z.object({
   }),
 });
 
-const RequestCatridgeForm = ({ assetData, userData }: PrinterCartridgeProps) => {
+const RequestCatridgeForm = ({ assetData, userData }: AssetFormProps) => {
   const token = Cookies.get('token');
   const form = useForm<z.infer<typeof assetSchema>>({
     resolver: zodResolver(assetSchema),
@@ -54,6 +61,12 @@ const RequestCatridgeForm = ({ assetData, userData }: PrinterCartridgeProps) => 
       assetPrinterCatridgeMessage:"",
     },
   });
+
+  const options = [
+    { label: "React", value: "react" },
+    { label: "Vue", value: "vue" },
+    { label: "Svelte", value: "svelte" },
+  ];
 
   
 
@@ -67,7 +80,6 @@ const RequestCatridgeForm = ({ assetData, userData }: PrinterCartridgeProps) => 
       const data = {
         assetPrinterId: values.assetId,
         assetCatridgeNumber: values.assetQuantityNumber,
-        token:token
         // Add more fields as needed
       };
 
