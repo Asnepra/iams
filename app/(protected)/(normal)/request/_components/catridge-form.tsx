@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -21,18 +21,12 @@ import {
   Select,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { PrinterDataProps } from "@/schemas/printerSchema";
-
-
+import { useState } from "react";
 
 const CartridgeFormSchema = z.object({
   printerId: z.string().min(1, "Select a printer"),
-  blackCartridge: z.boolean().default(false).optional(),
-  cyanCartridge: z.boolean().default(false).optional(),
-  magentaCartridge: z.boolean().default(false).optional(),
-  yellowCartridge: z.boolean().default(false).optional(),
   assetPrinterCartridgeMessage: z.string().min(1, "Please enter a message"),
 });
 
@@ -48,38 +42,32 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
     resolver: zodResolver(CartridgeFormSchema),
     defaultValues: {
       printerId: "1",
-      blackCartridge: false,
-      cyanCartridge: false,
-      magentaCartridge: false,
-      yellowCartridge: false,
       assetPrinterCartridgeMessage: "",
     },
   });
 
-  const { watch, handleSubmit, setValue, control } = form;
-  const selectedPrinterId = watch("printerId");
-  const selectedPrinter = printers.find(printer => printer.assetModel === selectedPrinterId);
+  const [selectedPrinterId, setSelectedPrinterId] = useState<string | undefined>(form.getValues().printerId);
+  const selectedPrinter = printers.find(printer => printer.assetBatchId.toString() === selectedPrinterId);
+  const [catrdiDoeID, setCatrodgeValue]= useState([]);// for each catridgeId and catridgeValue set the response for the selected printer
 
   const onSubmit = async (values: z.infer<typeof CartridgeFormSchema>) => {
     try {
       const data = {
         printerId: values.printerId,
-        cartridges: {
-          blackCartridge: values.blackCartridge,
-          cyanCartridge: values.cyanCartridge,
-          magentaCartridge: values.magentaCartridge,
-          yellowCartridge: values.yellowCartridge,
-        },
+        catridges:[selectedIdValue]
         assetPrinterCartridgeMessage: values.assetPrinterCartridgeMessage,
       };
+
       console.log("data", data);
 
-    //   await axios.post(`/api/assetmaster`, data);
-    //   toast.success("Data Added Successfully!");
+      // Uncomment to make the API request
+      // await axios.post(`/api/assetmaster`, data, {
+      //   headers: { Authorization: `Bearer ${token}` }
+      // });
+      toast.success("Data Added Successfully!");
 
-    //   setTimeout(() => {
-    //     window.location.reload();
-    //   }, 3000); // Refresh page after 3 seconds
+      // Optional page reload or redirect
+      // setTimeout(() => window.location.reload(), 3000);
     } catch (error) {
       console.error("Error adding asset:", error);
       toast.error("Failed to add asset. Please try again.");
@@ -88,10 +76,9 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-        
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <FormField
-          control={control}
+          control={form.control}
           name="printerId"
           render={({ field }) => (
             <FormItem>
@@ -100,7 +87,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
                 <Select
                   onValueChange={(value) => {
                     field.onChange(value);
-                    setValue("printerId", value); // Ensure value is set correctly
+                    setSelectedPrinterId(value);
                   }}
                   value={field.value}
                 >
@@ -109,8 +96,8 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
                     <SelectContent>
                       {printers.map(printer => (
                         <SelectItem
-                          key={printer.assetModel}
-                          value={printer.assetModel}
+                          key={printer.assetBatchId}
+                          value={printer.assetBatchId.toString()}
                         >
                           {printer.assetModel}
                         </SelectItem>
@@ -130,7 +117,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
               {selectedPrinter.cartridges.map(cartridge => (
                 <FormField
                   key={cartridge.cartridgeId}
-                  control={control}
+                  control={form.control}
                   name={`${cartridge.cartridgeId}Cartridge` as CartridgeKeys}
                   render={({ field }) => (
                     <FormItem>
@@ -138,7 +125,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
                         <FormControl>
                           <Checkbox
                             checked={field.value}
-                            onCheckedChange={field.onChange}
+                            onCheckedChange={(value) => field.onChange(value === true)}
                           />
                         </FormControl>
                         <div className="flex-1 space-x-2">
@@ -153,26 +140,25 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
               ))}
             </div>
 
-
             <div className="space-y-2">
-            <FormField
-              control={control}
-              name="assetPrinterCartridgeMessage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Reason for Request</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Explain why you need a new cartridge"
-                      {...field}
-                      className="textarea"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+              <FormField
+                control={form.control}
+                name="assetPrinterCartridgeMessage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Reason for Request</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Explain why you need a new cartridge"
+                        {...field}
+                        className="textarea"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </>
         )}
 
