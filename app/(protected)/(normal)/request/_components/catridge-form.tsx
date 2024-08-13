@@ -23,10 +23,11 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { PrinterDataProps } from "@/schemas/printerSchema";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Label } from "@/components/ui/label";
 
 const CartridgeFormSchema = z.object({
-  printerId: z.string().min(1, "Select a printer"),
+  printerId: z.number().min("Select a printer"),
   assetPrinterCartridgeMessage: z.string().min(1, "Please enter a message"),
 });
 
@@ -34,27 +35,37 @@ interface CartridgeFormProps {
   printers: PrinterDataProps[];
 }
 
-type CartridgeKeys = "blackCartridge" | "cyanCartridge" | "magentaCartridge" | "yellowCartridge";
-
 const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
   const token = Cookies.get('token');
   const form = useForm<z.infer<typeof CartridgeFormSchema>>({
     resolver: zodResolver(CartridgeFormSchema),
     defaultValues: {
-      printerId: "1",
+      printerId: -1,
       assetPrinterCartridgeMessage: "",
     },
   });
 
-  const [selectedPrinterId, setSelectedPrinterId] = useState<string | undefined>(form.getValues().printerId);
-  const selectedPrinter = printers.find(printer => printer.assetBatchId.toString() === selectedPrinterId);
-  const [catrdiDoeID, setCatrodgeValue]= useState([]);// for each catridgeId and catridgeValue set the response for the selected printer
+  const [selectedPrinterId, setSelectedPrinterId] = useState<number | undefined>(form.getValues().printerId);
+  const [catrdiDoeID, setCatrdiDoeID] = useState<Record<number, boolean>>({});
+
+  useEffect(() => {
+    const selectedPrinter = printers.find(printer => printer.assetBatchId === selectedPrinterId);
+    if (selectedPrinter) {
+      const initialCartridgesState = selectedPrinter.cartridges.reduce((acc, cartridge) => {
+        acc[cartridge.cartridgeId] = false;
+        return acc;
+      }, {} as Record<number, boolean>);
+      setCatrdiDoeID(initialCartridgesState);
+    }
+  }, [selectedPrinterId, printers]);
 
   const onSubmit = async (values: z.infer<typeof CartridgeFormSchema>) => {
     try {
       const data = {
         printerId: values.printerId,
-        catridges:[selectedIdValue]
+        cartridges: Object.entries(catrdiDoeID)
+          .filter(([_, isChecked]) => isChecked)
+          .map(([cartridgeId]) => ({ cartridgeId })),
         assetPrinterCartridgeMessage: values.assetPrinterCartridgeMessage,
       };
 
@@ -66,8 +77,6 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
       // });
       toast.success("Data Added Successfully!");
 
-      // Optional page reload or redirect
-      // setTimeout(() => window.location.reload(), 3000);
     } catch (error) {
       console.error("Error adding asset:", error);
       toast.error("Failed to add asset. Please try again.");
@@ -79,17 +88,18 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         <FormField
           control={form.control}
-          name="printerId"
+          name="printerId" // Ensure this matches the schema
           render={({ field }) => (
             <FormItem>
               <FormLabel>Select A Printer</FormLabel>
               <FormControl>
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    setSelectedPrinterId(value);
+                    const valueAsNumber = Number(value); // Convert to number
+                    field.onChange(valueAsNumber);
+                    setSelectedPrinterId(valueAsNumber);
                   }}
-                  value={field.value}
+                  value={field.value.toString()} // Convert to string for Select component
                 >
                   <SelectTrigger className="bg-background">
                     <SelectValue placeholder="Select a printer..." />
@@ -97,7 +107,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
                       {printers.map(printer => (
                         <SelectItem
                           key={printer.assetBatchId}
-                          value={printer.assetBatchId.toString()}
+                          value={printer.assetBatchId.toString()} // Convert to string
                         >
                           {printer.assetModel}
                         </SelectItem>
@@ -111,39 +121,30 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
           )}
         />
 
-        {selectedPrinter && (
+        {selectedPrinterId !== undefined && (
           <>
             <div className="grid grid-cols-2 gap-6 justify-around">
-              {selectedPrinter.cartridges.map(cartridge => (
-                <FormField
-                  key={cartridge.cartridgeId}
-                  control={form.control}
-                  name={`${cartridge.cartridgeId}Cartridge` as CartridgeKeys}
-                  render={({ field }) => (
-                    <FormItem>
-                      <div className="flex items-center space-x-3">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value}
-                            onCheckedChange={(value) => field.onChange(value === true)}
-                          />
-                        </FormControl>
-                        <div className="flex-1 space-x-2">
-                          <FormLabel className="inline">{cartridge.cartridgeDescription}</FormLabel>
-                          <span className="text-sm text-gray-500">({cartridge.stock})</span>
-                        </div>
-                      </div>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
+                <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
+                  <Checkbox
+                    checked={catrdiDoeID[cartridge.cartridgeId] || false}
+                    onCheckedChange={(value) => setCatrdiDoeID(prevState => ({
+                      ...prevState,
+                      [cartridge.cartridgeId]: value === true
+                    }))}
+                  />
+                  <div className="flex-1 space-x-2">
+                    <Label className="inline">{cartridge.cartridgeDescription}</Label>
+                    <span className="text-sm text-gray-500">({cartridge.stock})</span>
+                  </div>
+                </div>
               ))}
             </div>
 
             <div className="space-y-2">
               <FormField
                 control={form.control}
-                name="assetPrinterCartridgeMessage"
+                name="assetPrinterCartridgeMessage" // Ensure this matches the schema
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Reason for Request</FormLabel>
