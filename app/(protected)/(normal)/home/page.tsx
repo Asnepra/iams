@@ -1,4 +1,7 @@
-"use client";
+"use client"
+
+
+
 import {
   ComputerIcon,
   LaptopIcon,
@@ -16,18 +19,17 @@ import FormError from "@/components/form-error";
 import toast from "react-hot-toast";
 
 interface Asset {
-  category: string;
-  locationName: string;
-  assetModalName: string;
-  status: string;
+  assetBatchId: number;
+  assetMake: string;
+  assetModel: string;
+  categoryName: string;
 }
 
 interface UserData {
   userId: string;
   userName: string;
-  isAdmin:string;
+  isAdmin: string;
   userMail: string;
-  // Add other fields as needed
 }
 
 export default function Dashboard() {
@@ -35,9 +37,7 @@ export default function Dashboard() {
   const [assets, setAssets] = useState<Asset[]>([]);
   const [computerCount, setComputerCount] = useState<number>(0);
   const [printerCount, setPrinterCount] = useState<number>(0);
-  const [laptopCount, setLaptopCount] = useState<number>(0);
-  const [serverCount, setServerCount] = useState<number>(0);
-  const [userData, setUserData] = useState<UserData | null>(null); // State for user data
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   const router = useRouter();
 
@@ -61,48 +61,35 @@ export default function Dashboard() {
     try {
       const token = Cookies.get('token');
       if (!token) {
-        toast.error("Token Error")
+        toast.error("Token Error");
         router.push("/");
         throw new Error('Token not found in cookies');
       }
 
       const parsedToken = parseToken(token);
       if (!parsedToken) {
-        toast.error("Token Error")
+        toast.error("Token Error");
         router.push("/");
-        //throw new Error('Unable to parse token');
+        return;
       }
 
-      setUserData(parsedToken); // Set user data in state
+      setUserData(parsedToken);
 
       const body = { token: token };
       const response = await axios.post('/api/getassets', body);
-
+      
       if (response.data && Array.isArray(response.data)) {
-        const assetData = response.data;
+        const assetData: Asset[] = response.data;
         setAssets(assetData);
 
-        // Calculate counts for each category
-        let compCount = 0;
-        let printCount = 0;
-        let lapCount = 0;
-        let servCount = 0;
+        // Count the number of computers and printers
+        const computerCount = assetData.filter(asset => asset.categoryName === "COMPUTER").length;
+        const printerCount = assetData.filter(asset => asset.categoryName === "PRINTER").length;
 
-        assetData.forEach((asset: Asset) => {
-          if (asset.category === "Computer") compCount++;
-          else if (asset.category === "Printer") printCount++;
-          else if (asset.category === "Laptop") lapCount++;
-          else if (asset.category === "Server") servCount++;
-        });
-
-        // Set counts
-        setComputerCount(compCount);
-        setPrinterCount(printCount);
-        setLaptopCount(lapCount);
-        setServerCount(servCount);
+        setComputerCount(computerCount);
+        setPrinterCount(printerCount);
       } else {
-        setError("Inavlid Details from Server");
-        //throw new Error('Invalid response from server');
+        setError("Invalid details from server");
       }
     } catch (error) {
       console.error('Error fetching assets:', error);
@@ -111,19 +98,16 @@ export default function Dashboard() {
     }
   };
 
-  // Map categories to respective icon components
   const imageCategoryMap: Record<string, JSX.Element> = {
     Computer: <ComputerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-    Laptop: <LaptopIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
     Printer: <PrinterIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
+    Laptop: <LaptopIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
     Server: <ServerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
   };
 
   return (
     <div className="h-auto flex flex-col bg-muted/40">
-        
-        
-         <div className="text-2xl rounded-md px-4 text-white/90 
+      <div className="text-2xl rounded-md px-4 text-white/90 
          bg-gradient-to-r from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90%">
         My Assets
         {userData && (
@@ -131,11 +115,9 @@ export default function Dashboard() {
             <span className="font-bold">Name: &nbsp;{userData.userName}  </span>
             <span className="font-bold">Employee Number:  &nbsp;{userData.userId} </span> 
             <span className="font-bold">Email: &nbsp;{userData.userMail.toLowerCase()} </span>
-            
           </p>
         )}
       </div>
-      
 
       <div className="flex">
         <FormError message={error} />
@@ -159,18 +141,16 @@ export default function Dashboard() {
                 <div className="text-2xl font-bold text-[#6D28D9]">{printerCount}</div>
               </CardContent>
             </Card>
-            
           </div>
-          <div className="mt-4 md:mt-6">
-            <Card>
+          <div className="flex items-center justify-around m-8">
+            <Card className="w-full">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Device</TableHead>
+                    <TableHead>Device Id</TableHead>
                     <TableHead>Type</TableHead>
-                    <TableHead>Location</TableHead>
+                    <TableHead>Make</TableHead>
                     <TableHead>Asset Model Name</TableHead>
-                    <TableHead>Status</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -178,14 +158,13 @@ export default function Dashboard() {
                     <TableRow key={index}>
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
-                          {imageCategoryMap[asset.category]}
-                          {asset.category}
+                          {imageCategoryMap[asset.categoryName] || null}
+                          #0000{asset.assetBatchId}
                         </div>
                       </TableCell>
-                      <TableCell>{asset.category}</TableCell>
-                      <TableCell>{asset.locationName}</TableCell>
-                      <TableCell>{asset.assetModalName}</TableCell>
-                      <TableCell>{asset.status}</TableCell>
+                      <TableCell>{asset.categoryName}</TableCell>
+                      <TableCell>{asset.assetMake}</TableCell>
+                      <TableCell>{asset.assetModel}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
