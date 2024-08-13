@@ -88,15 +88,21 @@ export const CartridgeSchemaStockUpdate = z.object({
 
 export interface CartridgeProps {
   cartridgeId: string;
-  cartridgeName: string;
-  quantity: number;
+  cartridgeNo: string; // Updated from cartridgeName to cartridgeNo based on your details
+  cartridgeDescription: string;
+  stock: number;
 }
 
 export interface PrinterDataProps {
-  printerId: string;
-  printerName: string;
+  assetId: string; // Added based on your requirements
+  assetBatchId: string;
+  categoryName: string;
+  subCategoryName: string;
+  assetMake: string;
+  assetModel: string;
   cartridges: CartridgeProps[];
 }
+
 
 
 export interface IAMS_CATRIDGE{

@@ -58,7 +58,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
 
   const { watch, handleSubmit, setValue, control } = form;
   const selectedPrinterId = watch("printerId");
-  const selectedPrinter = printers.find(printer => printer.printerId === selectedPrinterId);
+  const selectedPrinter = printers.find(printer => printer.assetModel === selectedPrinterId);
 
   const onSubmit = async (values: z.infer<typeof CartridgeFormSchema>) => {
     try {
@@ -109,10 +109,10 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
                     <SelectContent>
                       {printers.map(printer => (
                         <SelectItem
-                          key={printer.printerId}
-                          value={printer.printerId}
+                          key={printer.assetModel}
+                          value={printer.assetModel}
                         >
-                          {printer.printerName}
+                          {printer.assetModel}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -142,8 +142,8 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
                           />
                         </FormControl>
                         <div className="flex-1 space-x-2">
-                          <FormLabel className="inline">{cartridge.cartridgeName}</FormLabel>
-                          <span className="text-sm text-gray-500">({cartridge.quantity})</span>
+                          <FormLabel className="inline">{cartridge.cartridgeDescription}</FormLabel>
+                          <span className="text-sm text-gray-500">({cartridge.stock})</span>
                         </div>
                       </div>
                       <FormMessage />

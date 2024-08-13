@@ -21,21 +21,7 @@ import CatridgeForm from "./_components/catridge-form";
 
 
 
-  // Mock data
-  const printers: PrinterDataProps[] = [
-    { printerId: "1", printerName: "Printer A", cartridges: [
-      { cartridgeId: "cyan", cartridgeName: "Cyan", quantity: 10 },
-      { cartridgeId: "magenta", cartridgeName: "Magenta", quantity: 15 },
-      { cartridgeId: "yellow", cartridgeName: "Yellow", quantity: 5 },
-      { cartridgeId: "black", cartridgeName: "Black", quantity: 20 },
-    ] },
-    { printerId: "2", printerName: "Printer B", cartridges: [
-      { cartridgeId: "cyan", cartridgeName: "Cyan", quantity: 8 },
-      { cartridgeId: "magenta", cartridgeName: "Magenta", quantity: 12 },
-      { cartridgeId: "yellow", cartridgeName: "Yellow", quantity: 6 },
-      { cartridgeId: "black", cartridgeName: "Black", quantity: 18 },
-    ] }
-  ];
+
 function parseToken(token: string): UserData | null {
   try {
     const [, payloadBase64] = token.split('.');
@@ -50,7 +36,7 @@ function parseToken(token: string): UserData | null {
 
 export default function Home() {
   const [error, setError] = useState<string>(""); // State for error message
-  const [assetData, setAssetData] = useState<any[]>([]); // State for asset data
+  const [assetData, setAssetData] = useState<PrinterDataProps[]>([]); // State for asset data
   const [userData, setUserData] = useState<UserData | null>(null); // State for user data
   const [isLoading, setIsLoading] = useState<boolean>(false); // State for loading indicator
 
@@ -70,6 +56,7 @@ export default function Home() {
     axios.post('/api/requestcatridge', { token: Cookies.get('token') })
       .then(response => {
         const data = response.data;
+        console.log("data", data);
         setAssetData(data);
       })
       .catch(error => {
@@ -131,9 +118,9 @@ export default function Home() {
     <div className="grid min-h-screen w-full ">
         <div className="flex flex-col">
           <main className="flex flex-1 flex-col gap-2 p-4 md:p-6">
-            <div className="flex flex-row justify-aroundn space-x-2 gap-2">
+            <div className="flex flex-row justify-around space-x-2 gap-2">
               <Card className="w-1/2">
-          <div className="h-full p-2 space-y-2 max-w-3xl mx-auto">
+            <div className="h-full p-2 space-y-2 max-w-4xl">
             {error && <FormError message={error} />}
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
@@ -156,15 +143,15 @@ export default function Home() {
                       </div>
                     </div>
             {/* <RequestCatridgeForm assetData={assetData} userData={userData} /> */}
-            <CatridgeForm printers={printers}/>
+            <CatridgeForm printers={assetData}/>
           </div>
           </Card>
-          <Card className="w-1/2">
-          <ApprovalTimeline filteredRequests={cartridgeHistory}/>
-              </Card>
+          {/* <Card className="w-1/2">
+            <ApprovalTimeline filteredRequests={cartridgeHistory}/>
+          </Card> */}
         </div>
         </main>
-        <div className="flex items-center justify-around m-8">
+        {/* <div className="flex items-center justify-around m-8">
             <Card className="w-full">
               <CardHeader>
                 <CardTitle>Catridge History</CardTitle>
@@ -175,9 +162,7 @@ export default function Home() {
                 <DataTable columns={columns} data={cartridgeHistory} filterKey={PRINTER_MODAL_STRING} filterString={"Printer Modal"}/>
               </div>
             </Card>
-
-        
-    </div>
+        </div> */}
     </div>
     </div>
     
