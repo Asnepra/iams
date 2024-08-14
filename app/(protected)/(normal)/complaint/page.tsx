@@ -31,9 +31,10 @@ import { FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import ComplaintForm from "@/components/complaintForm";
-import { DataTable } from "./_components/data-table";
+
 import { columns } from "./_components/columns";
-import ApprovalTimeline from "./_components/data-timeline";
+import { DataTable } from "@/components/table/data-table";
+
 
 interface Asset {
     assetId:string;
@@ -201,7 +202,7 @@ export default function ComplaintPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                  <ApprovalTimeline filteredRequests={priorityList}/>
+                  {/* <ApprovalTimeline filteredRequests={priorityList}/> */}
 
                   </div>
                 </CardContent>
@@ -215,7 +216,7 @@ export default function ComplaintPage() {
                 <CardDescription>View the status of your previously raised tickets.</CardDescription>
               </CardHeader>
               <CardContent>
-                <DataTable columns={columns} data={ticketData}/>
+                <DataTable columns={columns} data={ticketData} filterKey={""}/>
               </CardContent>
             </Card>
           </div>

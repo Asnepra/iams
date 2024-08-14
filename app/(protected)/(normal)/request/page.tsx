@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { UserData } from "@/schemas";
 
 import { columns } from "./_components/columns";
-import ApprovalTimeline from "./_components/data-timeline";
+
 import { DataTable } from "@/components/table/data-table";
 import { PRINTER_MODAL_STRING, PrinterDataProps } from "@/schemas/printerSchema";
 import CatridgeForm from "./_components/catridge-form";
