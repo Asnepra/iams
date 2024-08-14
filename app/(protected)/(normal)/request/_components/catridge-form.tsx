@@ -9,6 +9,8 @@ import { PrinterDataProps } from "@/schemas/printerSchema";
 import { useState, useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
+import Cookies from 'js-cookie';
+import axios from "axios";
 
 
 const CartridgeFormSchema = z.object({
@@ -44,9 +46,11 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
   }, [selectedPrinterId, printers]);
 
   const onSubmit = async (values: z.infer<typeof CartridgeFormSchema>) => {
+    const token = Cookies.get('token');
     // Implement form submission logic here
     try {
       const data = {
+        token:token,
         printerId: values.printerId,
         cartridges: Object.entries(catrdiDoeID)
           .filter(([_, isChecked]) => isChecked)
@@ -55,12 +59,21 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
       };
 
       console.log("data", data);
-
-      // Uncomment to make the API request
-      // await axios.post(`/api/assetmaster`, data, {
-      //   headers: { Authorization: `Bearer ${token}` }
-      // });
-      toast.success("Data Added Successfully!");
+      axios.post('/api/requestedCatridges', data )
+      .then(response => {
+        const data = response.data;
+        console.log("data", data);
+        //setAssetData(data);
+        toast.success("Data Added Successfully!");
+      })
+      .catch(error => {
+        //console.error('Error fetching asset data:', error);
+        //setError("Failed to fetch asset data.");
+      })
+      .finally(() => {
+        //setIsLoading(false);
+      });
+      
 
     } catch (error) {
       console.error("Error adding asset:", error);
