@@ -69,6 +69,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
       .catch(error => {
         //console.error('Error fetching asset data:', error);
         //setError("Failed to fetch asset data.");
+        toast.error("Some issue please try again")
       })
       .finally(() => {
         //setIsLoading(false);
