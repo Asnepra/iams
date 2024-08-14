@@ -3,50 +3,42 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Loader2, Plus } from "lucide-react";
 
 import { columns } from "./columns";
 
 
-import { Skeleton } from "@/components/ui/skeleton";
+
 
 import { DataTable } from "@/components/table/data-table";
-import { useNewAccount } from "@/hooks/use-new-accounts";
+
 import axios from "axios";
 import { UserData } from "@/schemas";
-import { CARTRIDGE_DESCRIPTION_STRING, CartridgeApprovalProps, CartridgeType, IAMS_CATRIDGE } from "@/schemas/printerSchema";
+import { IAMS_CATRIDGE } from "@/schemas/printerSchema";
 
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
 import { UpdateDialog } from "@/components/update-dialog";
+import { parseToken } from "@/lib/parseToken";
+import { useRouter } from "next/navigation";
 
 
 const AccountsPage = () => {
-  const newAccount = useNewAccount();
+  //const newAccount = useNewAccount();
   //const deleteAccounts = useBulkDeleteAccounts()
   //const accountsQuery = useGetAccounts();
   const [error, setError] = useState<string | undefined>("");
     const [assets, setAssets] = useState<IAMS_CATRIDGE[]>([]);
     const [userData, setUserData] = useState<UserData | null>(null); // State for user data
     const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
     
 
     useEffect(() => {
       getData();
     }, []);
   
-    function parseToken(token: string): UserData | null {
-      try {
-        const [, payloadBase64] = token.split('.');
-        const decodedPayload = Buffer.from(payloadBase64, 'base64').toString('utf-8');
-        const parsedPayload = JSON.parse(decodedPayload);
-        return parsedPayload;
-      } catch (error) {
-        console.error('Error parsing token:', error);
-        return null;
-      }
-    }
+    
 
     const getData = async () => {
         try {
@@ -60,7 +52,7 @@ const AccountsPage = () => {
           const parsedToken = parseToken(token);
           if (!parsedToken) {
             toast.error("Token Error")
-           // router.push("/");
+            router.push("/");
             //throw new Error('Unable to parse token');
           }
           setUserData(parsedToken); // Set user data in state
@@ -77,12 +69,20 @@ const AccountsPage = () => {
           })
           .catch(error => {
             console.error('Error fetching assets:', error);
-            setError("Error fetching assets. Please try again.");
+            //setError("Error fetching assets. Please try again.");
             //router.push("/");
+            toast.error("Error fetching assets");
+            setTimeout(() => {
+              window.location.reload();
+            }, 3000);
           });
         }catch(error) {
           console.error('Error fetching assets:', error);
-          setError("Error fetching assets. Please try again.");
+          toast.error("Error fetching assets");
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
+          //setError("Error fetching assets. Please try again.");
           //router.push("/");
         }
       }

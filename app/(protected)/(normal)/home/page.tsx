@@ -90,11 +90,17 @@ export default function Dashboard() {
         setPrinterCount(printerCount);
       } else {
         setError("Invalid details from server");
+        toast.error("Invalid response from server");
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error) {
       console.error('Error fetching assets:', error);
-      setError("Error fetching assets. Please try again.");
-      router.push("/");
+      toast.error("Error, Please try again");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     }
   };
 

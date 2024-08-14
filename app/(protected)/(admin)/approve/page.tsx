@@ -46,7 +46,7 @@ export default function CatridgeScreen() {
       const response = await axios.post('/api/pendingRequest', { token });
       setPendingRequests(response.data);
     } catch (error) {
-      console.error('Error fetching pending requests:', error);
+      //console.error('Error fetching pending requests:', error);
       toast.error("Error fetching pending requests");
     }
   };
@@ -75,17 +75,23 @@ export default function CatridgeScreen() {
         getData(); // Refresh pending requests
       } else {
         toast.error("Failed to approve request");
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error) {
-      console.error('Error approving request:', error);
+      //console.error('Error approving request:', error);
       toast.error("Error approving request");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     }
   };
 
   const handleReject = async (id: string, reason: string) => {
     try {
 
-      console.log("id and then reason",id, reason);
+      //console.log("id and then reason",id, reason);
       const token = getToken();
       if (!token) {
         toast.error("Token Error");
@@ -107,7 +113,7 @@ export default function CatridgeScreen() {
         toast.error("Failed to reject request");
       }
     } catch (error) {
-      console.error('Error rejecting request:', error);
+      //console.error('Error rejecting request:', error);
       toast.error("Error rejecting request");
     }
   };

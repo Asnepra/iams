@@ -12,6 +12,7 @@ import LineChartComponent from './_components/line-chart';
 import { EMPLOYEENAME_STRING } from '@/schemas';
 import { useRouter } from 'next/navigation';
 import { DataTable } from '@/components/table/data-table';
+import toast from 'react-hot-toast';
 
 
 
@@ -43,6 +44,10 @@ const UsersPage = () => {
       } catch (error) {
         console.error('Error fetching data:', error);
         // Handle error, e.g., redirect to home page
+        toast.error("Error, try again");
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
          router.push('/home');
       }
     };

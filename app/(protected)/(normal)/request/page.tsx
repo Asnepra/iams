@@ -68,51 +68,10 @@ export default function Home() {
       });
   }, [userData]); // Fetch data whenever userData changes
 
-  const [cartridgeHistory, setCartridgeHistory] = useState([
-    {
-      id: "1",
-      printerModel: "HP LaserJet Pro",
-      quantity: "2",
-      reason: "Printer ran out of ink",
-      requestedOn: "2023-05-15",
-      status: "Fulfilled",
-    },
-    {
-      id: "2",
-      printerModel: "Canon PIXMA",
-      quantity: "1",
-      reason: "Printer cartridge is low",
-      requestedOn: "2023-03-20",
-      status: "Fulfilled",
-    },
-    {
-      id:"3",
-      printerModel: "Epson WorkForce",
-      quantity: "4",
-      reason: "Printer cartridge is empty",
-      requestedOn: "2023-01-10",
-      status: "Pending",
-    },
-    {
-      id: "4",
-      printerModel: "Brother MFC",
-      quantity: "1",
-      reason: "Printer cartridge is low",
-      requestedOn: "2022-11-05",
-      status: "Fulfilled",
-    },
-  ]);
 
 
-  const [selectedStatus, setSelectedStatus] = useState("Fulfilled")
 
-  const filteredRequests = useMemo(() => {
-    if (selectedStatus === "Fuldilled") {
-      return cartridgeHistory
-    } else {
-      return cartridgeHistory.filter((request) => request.status === selectedStatus)
-    }
-  }, [selectedStatus, cartridgeHistory])
+
 
   return (
     <div className="grid min-h-screen w-full ">
