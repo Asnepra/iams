@@ -113,6 +113,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
                     ...prevState,
                     [cartridge.cartridgeId]: value === true
                   }))}
+                  disabled={cartridge.stock === 0}  // Disable checkbox if stock is 0
                 />
                 <div className="flex-1 space-x-2">
                   <Label>{cartridge.cartridgeDescription}</Label>
