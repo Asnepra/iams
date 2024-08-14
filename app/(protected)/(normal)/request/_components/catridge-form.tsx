@@ -64,10 +64,10 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
         const data = response.data;
         console.log("data", data);
         //setAssetData(data);
-        toast.success("Data Added Successfully!");
+        toast.success("Request raised Successfully!");
         setTimeout(() => {
           window.location.reload();
-        }, 3000);
+        }, 2000);
       })
       .catch(error => {
         //console.error('Error fetching asset data:', error);
@@ -75,7 +75,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
         toast.error("Some issue please try again")
         setTimeout(() => {
           window.location.reload();
-        }, 3000);
+        }, 2000);
       })
       .finally(() => {
         //setIsLoading(false);
