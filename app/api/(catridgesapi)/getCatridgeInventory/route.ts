@@ -69,29 +69,31 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         // Query to retrieve cartridge details and insert into history
         const query = await transaction.request()
           .query(`
-                      SELECT
+                  SELECT
+                    CI.[CARTRIDGE_ID],
+                    CI.[QTY],
+                    CI.[UPDATED_ON] ,
 
-                      CI.[CARTRIDGE_ID],
-                      CI.[QTY],
-                      CI.[UPDATED_ON],
+                    C.[CARTRIDGE_DESC],
+                    C.[UPDATE_BY_USERID],
 
-                      C.[CARTRIDGE_DESC],
-                      C.[UPDATE_BY_USERID],
-                      C.[ASSET_BATCH_ID]
-                  FROM 
-                      [IAMS].[dbo].[IAMS_M_CARTRIDGE_INVENTORY] CI
-                  JOIN
-                      [IAMS].[dbo].[IAMS_M_CARTRIDGE] C ON CI.[CARTRIDGE_ID] = C.[CARTRIDGE_ID];
+                    -- User details
+                    U.[EMPLOYEE_NAME],
+                    U.[EMAIL],
+                    U.[DESIGNATION],
+                    U.[DESIGNATION_NAME]
+                    
+                FROM 
+                    [IAMS].[dbo].[IAMS_M_CARTRIDGE_INVENTORY] CI
+                JOIN
+                    [IAMS].[dbo].[IAMS_M_CARTRIDGE] C 
+                    ON CI.[CARTRIDGE_ID] = C.[CARTRIDGE_ID]
+                JOIN
+                    [IAMS].[dbo].[IAMS_M_USER] U
+                    ON C.[UPDATE_BY_USERID] = U.[PERSONAL_NO];
           `);
     
-        // Check if insertion into history was successful or handle accordingly
-        if (query.rowsAffected[0] === 0) {
-          console.log("no insertion");
-          // Rollback the transaction and return an error response if no rows were inserted
-          await transaction.rollback();
-          return new NextResponse(JSON.stringify({ message: 'No rows inserted into history' }), { status: 404 });
-        }
-
+       
 
 
         // Map the result to a JSON format
@@ -101,9 +103,11 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
           stock: record.QTY,
           updatedOn:record.UPDATED_ON,
           updatedBy:record.UPDATE_BY_USERID,
+          updatedByName:record.EMPLOYEE_NAME,
           assetBatchId:record.ASSET_BATCH_ID
           // Add more fields as needed
         }));
+        //console.log(countryData)
 
         // Commit the transaction if everything is successful
         await transaction.commit();
