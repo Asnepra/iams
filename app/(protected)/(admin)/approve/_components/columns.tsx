@@ -36,7 +36,7 @@ export const columns: ColumnDef<PendingCatridgeRequestProps>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Transaction ID" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('transId')}</div>,
+    cell: ({ row }) => <div className="text-sm md:text-base">{row.getValue('transId')}</div>,
   },
 
 
@@ -45,34 +45,34 @@ export const columns: ColumnDef<PendingCatridgeRequestProps>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Requested By" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue('requestedBy')}</div>,
+    cell: ({ row }) => <div className="w-10">{row.getValue('requestedBy')}</div>,
   },
   {
     accessorKey: 'requestedOn',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Requested On" />
     ),
-    cell: ({ row }) => <div className="w-[150px]">{row.getValue('requestedOn')}</div>,
+    cell: ({ row }) => <div className="w-32">{row.getValue('requestedOn')}</div>,
   },
   {
     accessorKey: 'assetName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Asset Name" />
     ),
-    cell: ({ row }) => <div className="w-[150px]">{row.getValue('assetName')}</div>,
+    cell: ({ row }) => <div className="w-32">{row.getValue('assetName')}</div>,
   },
   {
     accessorKey: 'cartridgeDescription',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Cartridge Description" />
     ),
-    cell: ({ row }) => <div className="w-[150px]">{row.getValue('cartridgeDescription')}</div>,
+    cell: ({ row }) => <div className="w-28">{row.getValue('cartridgeDescription')}</div>,
   },
   {
     accessorKey: 'requesterName',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Requester Name" />
     ),
-    cell: ({ row }) => <div className="w-[150px]">{row.getValue('requesterName')}</div>,
+    cell: ({ row }) => <div className="w-28">{row.getValue('requesterName')}</div>,
   },
 ];

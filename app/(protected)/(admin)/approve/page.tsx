@@ -144,8 +144,8 @@ export default function CatridgeScreen() {
                 </CardHeader>
                 <CardContent>
 
-                  {/* <DataTable columns={columns} data={pendingRequests} filterKey={"requesterName"} filterString="By Name"/> */}
-                  <Table>
+                  <DataTable columns={columns} data={pendingRequests} filterKey={"requesterName"} filterString="By Name"/>
+                  {/* <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Pending ID</TableHead>
@@ -161,7 +161,7 @@ export default function CatridgeScreen() {
                       {pendingRequests?.map((request) => (
                         <TableRow key={request.transId}>
                           <TableCell className="font-medium">P#0000{request.transId}</TableCell>
-                          <TableCell>{request.assetName}</TableCell>
+                          <TableCell>{request.assetId}</TableCell>
                           <TableCell>{request.cartridgeDescription}</TableCell>
                           <TableCell>{request.requestedQty}</TableCell>
                           <TableCell className="flex items-center p-3 font-semibold">
@@ -193,7 +193,7 @@ export default function CatridgeScreen() {
                         </TableRow>
                       ))}
                     </TableBody>
-                  </Table>
+                  </Table> */}
                 </CardContent>
               </Card>
               
