@@ -54,9 +54,8 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         // Query to fetch records with STATUS_ID = 201
         const result = await transaction.request()
           .query(`
-            	SELECT 
+            	 SELECT 
                 r.[TRANS_ID],
-                r.[ASSET_ID],
                 r.[CARTRIDGE_ID],
                 r.[REQUESTED_QTY],
                 r.[APPROVED_QTY],
@@ -66,21 +65,24 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                 r.[APPROVED_BY],
                 r.[APPROVED_ON],
                 u.[EMPLOYEE_NAME] AS RequesterName,
-                c.[CARTRIDGE_DESC] AS CartridgeDescription
-            FROM 
+                c.[CARTRIDGE_DESC] AS CartridgeDescription,
+                a.[ASSET_MODEL]  -- Ensure this field is selected
+              FROM 
                 [IAMS].[dbo].[IAMS_X_CARTRIDGE] r
                 INNER JOIN [IAMS].[dbo].[IAMS_M_USER] u 
-                    ON r.[REQUESTED_BY] = u.[PERSONAL_NO]
+                  ON r.[REQUESTED_BY] = u.[PERSONAL_NO]
                 INNER JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE] c 
-                    ON r.[CARTRIDGE_ID] = c.[CARTRIDGE_ID]
-            WHERE 
+                  ON r.[CARTRIDGE_ID] = c.[CARTRIDGE_ID]
+                INNER JOIN [IAMS].[dbo].[IAMS_M_ASSET] a 
+                  ON r.[ASSET_ID] = a.[ASSET_BATCH_ID]
+              WHERE 
                 r.[STATUS_ID] = 201;
           `);
     
         // Map the result to JSON format
         const data = result.recordset.map((record:any) => ({
           transId: record.TRANS_ID,
-          assetId: record.ASSET_ID,
+          assetName: record.ASSET_MODEL,
           cartridgeId: record.CARTRIDGE_ID,
           requestedQty: record.REQUESTED_QTY,
           approvedQty: record.APPROVED_QTY,

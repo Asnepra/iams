@@ -1,6 +1,6 @@
 export interface PendingCatridgeRequestProps {
     transId: string;
-    assetId: string;
+    assetName: string;
     cartridgeId: string;
     requestedQty: string;
     approvedQty: string;

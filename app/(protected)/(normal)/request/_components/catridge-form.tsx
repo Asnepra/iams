@@ -151,7 +151,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
                 <div>
                   <label>Reason for Request</label>
                   <Textarea
-                    placeholder="Explain why you need a new cartridge"
+                    placeholder="Request for a new cartridge"
                     {...field}
                   />
                 </div>

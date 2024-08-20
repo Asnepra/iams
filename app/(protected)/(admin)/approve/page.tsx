@@ -13,11 +13,15 @@ import axios from "axios";
 import { PendingCatridgeRequestProps } from "@/schemas/requests";
 import { DialogButton } from "./_components/custom-dialog";
 import { formatDate } from "@/lib/utils";
+import { DataTable } from "@/components/table/data-table";
+import { columns } from "./_components/columns";
 
 export default function CatridgeScreen() {
   const router = useRouter();
   const [userData, setUserData] = useState<UserDataType | null>(null);
-  const [pendingRequests, setPendingRequests] = useState<PendingCatridgeRequestProps[] | null>([]);
+
+
+  const [pendingRequests, setPendingRequests] = useState<PendingCatridgeRequestProps[]>([]);
 
   const getToken = (): string | null => {
     const token = Cookies.get('token');
@@ -44,6 +48,7 @@ export default function CatridgeScreen() {
       setUserData(parsedToken); // Set user data in state
 
       const response = await axios.post('/api/pendingRequest', { token });
+      console.log("Response", response);
       setPendingRequests(response.data);
     } catch (error) {
       //console.error('Error fetching pending requests:', error);
@@ -138,7 +143,9 @@ export default function CatridgeScreen() {
                   <CardTitle>Pending Requests</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Table>
+
+                  <DataTable columns={columns} data={pendingRequests} filterKey={"requesterName"} filterString="By Name"/>
+                  {/* <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead>Pending ID</TableHead>
@@ -186,7 +193,7 @@ export default function CatridgeScreen() {
                         </TableRow>
                       ))}
                     </TableBody>
-                  </Table>
+                  </Table> */}
                 </CardContent>
               </Card>
               
