@@ -29,7 +29,7 @@ const LoginForm = () => {
 
   const [isPending, startTransition] = useTransition();
   const router= useRouter();
-  const [isTwoFactor, setTwoFactor] = useState(false); // TODO: ADD 2FA
+  const [isAuthenticated , setisAuthented] = useState(false); // TODO: ADD 2FA
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -42,52 +42,48 @@ const LoginForm = () => {
   
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-  startTransition(async() => {
-    var isAuthenticated=false;
+  startTransition(() => {
 
-    try {
-      const response = await axios.post("http://10.14.84.38:9001/api/loginauth2", {
-        username: values.email,
-        password: values.password,
+    axios.post("http://10.14.84.38:9001/api/loginauth2",{
+      username:values.email,
+    password:values.password
+
+    }).then((response)=>{
+      console.log("login auth response", response.data[0]);
+      const d=response.data[0];
+      console.log("auth status", d.auth_status);
+      setisAuthented(d.auth_status);
+
+        axios.post('/api/login', values)
+      .then(async (response:any) => {
+        const data = response.data;
+        //console.log("data --------",data)
+        if(data.message==='Login Failed'){
+          setError("Login Failed");
+          return;
+        }
+        
+          const { token } = data;
+        document.cookie = `token=${token}; path=/`
+        //console.log("lgoin success", token);
+        router.push('/home')
+          // Handle successful login
+          // Uncomment this section and implement the logic as needed
+          // form.reset(); // Optionally reset the form
+          // setSuccess("Login successful");
+          // Redirect user, update UI, etc.
+        
+      })
+      .catch((err:any) => {
+        // Handle other errors (e.g., network errors)
+        setError("Something went wrong.");
       });
       
-      console.log("LDAP response:", response.data); // Log the response for debugging
-  
-      // Return the authentication status based on the LDAP response
-      //return response.data.auth_status;
-      isAuthenticated=response.data.auth_status;
-    } catch (error) {
-      setError("Login Failed, try again")
-      //console.error("LDAP authentication error:", error);
-      //return false; // Return false for failed login attempt
-    }
-  
-  if(isAuthenticated){
-      axios.post('/api/login', values)
-    .then(async (response:any) => {
-      const data = response.data;
-      //console.log("data --------",data)
-      if(data.message==='Login Failed'){
-        setError("Login Failed");
-        return;
-      }
-      
-        const { token } = data;
-      document.cookie = `token=${token}; path=/`
-      //console.log("lgoin success", token);
-      router.push('/home')
-        // Handle successful login
-        // Uncomment this section and implement the logic as needed
-        // form.reset(); // Optionally reset the form
-        // setSuccess("Login successful");
-        // Redirect user, update UI, etc.
-      
     })
-    .catch((err:any) => {
-      // Handle other errors (e.g., network errors)
-      setError("Something went wrong.");
-    });
-  }
+   
+
+    
+  
   });
 };
 
@@ -95,7 +91,7 @@ const LoginForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        {!isTwoFactor && (
+
           <>
             <FormField
               control={form.control}
@@ -135,11 +131,11 @@ const LoginForm = () => {
               )}
             />
           </>
-        )}
+        
         
         <FormError message={error} />
         <Button type="submit" className="w-full" disabled={isPending}>
-          {isTwoFactor ? "Confirm" : "Login"}
+          {"Login"}
         </Button>
       </form>
     </Form>
