@@ -1,6 +1,7 @@
 import mssqlconnect from "@/lib/mssqlconnect";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from 'jsonwebtoken'
+import { PendingCatridgeRequestProps } from "@/schemas/requests";
 
 const sql = require('mssql')
 
@@ -77,14 +78,51 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
      //console.log("Asset Model Id received ------------------ ",assetModelId);
      //console.log("guarantee Id received ------------------ ",guaranteeStatus);
      const cartridgeHistory=await sql.query`
-                SELECT c.[TRANS_ID], c.[ASSET_ID], c.[CARTRIDGE_ID], c.[REQUESTED_QTY], c.[APPROVED_QTY],
-             c.[STATUS_ID], s.[STATUS_DESC], c.[REQUESTED_BY], c.[REQUESTED_ON], c.[APPROVED_BY], c.[APPROVED_ON]
-      FROM [dbo].[IAMS_X_CARTRIDGE] c
-      LEFT JOIN [dbo].[IAMS_P_ASSET_STATUS] s ON c.[STATUS_ID] = s.[STATUS_ID]
-      WHERE c.[REQUESTED_BY] = ${user};
+                SELECT 
+                r.[TRANS_ID],
+                r.[CARTRIDGE_ID],
+                r.[REQUESTED_QTY],
+                r.[APPROVED_QTY],
+                r.[STATUS_ID],
+                r.[REQUESTED_BY],
+                r.[REQUESTED_ON],
+                r.[APPROVED_BY],
+                r.[APPROVED_ON],
+                u.[EMPLOYEE_NAME] AS RequesterName,
+                c.[CARTRIDGE_DESC] AS CartridgeDescription,
+                a.[ASSET_MODEL] AS AssetName  -- Ensure this field is selected
+            FROM 
+                [IAMS].[dbo].[IAMS_X_CARTRIDGE] r
+                INNER JOIN [IAMS].[dbo].[IAMS_M_USER] u 
+                    ON r.[REQUESTED_BY] = u.[PERSONAL_NO]
+                INNER JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE] c 
+                    ON r.[CARTRIDGE_ID] = c.[CARTRIDGE_ID]
+                INNER JOIN [IAMS].[dbo].[IAMS_M_ASSET] a 
+                    ON r.[ASSET_ID] = a.[ASSET_BATCH_ID]
+            WHERE 
+                r.[STATUS_ID] = 201
+                AND r.[REQUESTED_BY] = ${user};
+
     
      `;
-     return new NextResponse(JSON.stringify(cartridgeHistory), { status: 500 });
+     // Transform the result to match the interface
+    const c: PendingCatridgeRequestProps[] = cartridgeHistory.recordset.map((item: any) => ({
+      transId: item.TRANS_ID,
+      assetName: item.AssetName,
+      cartridgeId: item.CARTRIDGE_ID,
+      requestedQty: item.REQUESTED_QTY,
+      approvedQty: item.APPROVED_QTY,
+      statusId: item.STATUS_ID,
+      requestedBy: item.REQUESTED_BY,
+      requestedOn: item.REQUESTED_ON,
+      approvedBy: item.APPROVED_BY,
+      approvedOn: item.APPROVED_ON,
+      requesterName: item.RequesterName,
+      cartridgeDescription: item.CartridgeDescription
+    }));
+
+    return new NextResponse(JSON.stringify(c), { status: 200 });
+     //return new NextResponse(JSON.stringify(cartridgeHistory), { status: 200 });
     
   } catch (error) {
     // Handle errors and send an error response with status code 500
