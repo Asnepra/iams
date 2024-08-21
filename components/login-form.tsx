@@ -55,7 +55,7 @@ const LoginForm = () => {
       setisAuthented(d.auth_status);
 
         axios.post('/api/login', values)
-      .then(async (response:any) => {
+        .then(async (response:any) => {
         const data = response.data;
         //console.log("data --------",data)
         if(data.message==='Login Failed'){
@@ -79,6 +79,9 @@ const LoginForm = () => {
         setError("Something went wrong.");
       });
       
+    }).catch((error)=>{
+      setError("Login Failed, try again");
+      console.log("error login", error);
     })
    
 
