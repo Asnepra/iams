@@ -42,8 +42,28 @@ const LoginForm = () => {
   
 
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
-  startTransition(() => {
-  axios.post('/api/login', values)
+  startTransition(async() => {
+    var isAuthenticated=false;
+
+    try {
+      const response = await axios.post("http://10.14.84.38:9001/api/loginauth2", {
+        username: values.email,
+        password: values.password,
+      });
+      
+      console.log("LDAP response:", response.data); // Log the response for debugging
+  
+      // Return the authentication status based on the LDAP response
+      //return response.data.auth_status;
+      isAuthenticated=response.data.auth_status;
+    } catch (error) {
+      setError("Login Failed, try again")
+      //console.error("LDAP authentication error:", error);
+      //return false; // Return false for failed login attempt
+    }
+  
+  if(isAuthenticated){
+      axios.post('/api/login', values)
     .then(async (response:any) => {
       const data = response.data;
       //console.log("data --------",data)
@@ -67,6 +87,7 @@ const LoginForm = () => {
       // Handle other errors (e.g., network errors)
       setError("Something went wrong.");
     });
+  }
   });
 };
 

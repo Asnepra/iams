@@ -94,19 +94,15 @@ export const POST = async (req: Request, res: Response) => {
       });
     }
 
-    const { email, password } = validatedFields.data;
-    let isAuthenticated=false;
+    const { email} = validatedFields.data;
+    
 
-    try{
-      isAuthenticated = await empLogin(email, password);
-    }catch(errror){
-      console.log("auth error");
-    }
+    
 
-        console.log(isAuthenticated ? "Login successful" : "Login failed");
+        
         //console.log("user ",isAuthenticated);
         let user;
-        if(isAuthenticated){
+        
             user = await hasAdminPrivilages(email);
         
         let userName;
@@ -133,16 +129,11 @@ export const POST = async (req: Request, res: Response) => {
     return NextResponse.json({
       Message: "Authentication successful",
       status: 200,
-      user: isAuthenticated,
       userNumber:email,
       userName:userName,
       hasAdminPrivilages:userRole,
       token:token // Sending authenticated user ID in response
     });
-  }
-  else{
-    return NextResponse.json({message:"Login Failed",status:200});
-  }
   } catch (error) {
     console.error("API endpoint error:", error);
     return NextResponse.json({
