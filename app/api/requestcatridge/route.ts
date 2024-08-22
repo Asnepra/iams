@@ -103,7 +103,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         // Check if any rows were returned
         if (result.recordset.length === 0) {
           await transaction.rollback();
-          return new NextResponse(JSON.stringify({ message: 'No records found' }), { status: 404 });
+          return new NextResponse(JSON.stringify({ message: 'No data found' }), { status: 200 });
         }
 
         // Reconstruct JSON response by grouping details by ASSET_BATCH_ID
@@ -140,7 +140,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
         await transaction.commit();
 
         // Send response with data
-        return new NextResponse(JSON.stringify( data ), { status: 200 });
+        return new NextResponse(JSON.stringify( { message: 'Success' ,data}), { status: 200 });
 
       } catch (error) {
         // Rollback the transaction in case of error

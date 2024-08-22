@@ -89,7 +89,7 @@ export default function Dashboard() {
         setPrinterCount(printerCount);
         }
         else{
-          toast("There is not asset assigned to you");
+          toast("There is no asset assigned to you");
         }
       })
       //console.log("response", response);

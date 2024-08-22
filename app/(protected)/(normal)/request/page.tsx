@@ -17,18 +17,8 @@ import { DataTable } from "@/components/table/data-table";
 import { CartridgeApprovalProps, PRINTER_MODAL_STRING, PrinterDataProps } from "@/schemas/printerSchema";
 import CatridgeForm from "./_components/catridge-form";
 import { PendingCatridgeRequestProps } from "@/schemas/requests";
+import { parseToken } from "@/lib/parseToken";
 
-function parseToken(token: string): UserData | null {
-  try {
-    const [, payloadBase64] = token.split('.');
-    const decodedPayload = Buffer.from(payloadBase64, 'base64').toString('utf-8');
-    const parsedPayload = JSON.parse(decodedPayload);
-    return parsedPayload;
-  } catch (error) {
-    console.error('Error parsing token:', error);
-    return null;
-  }
-}
 
 export default function Home() {
   const [error, setError] = useState<string>(""); // State for error message
@@ -54,9 +44,16 @@ export default function Home() {
       setIsLoading(true);
       try {
         const assetResponse = await axios.post('/api/requestcatridge', { token: Cookies.get('token') });
-        setAssetData(assetResponse.data);
+        if (assetResponse.data.message === 'Success') {
+
+          setAssetData(assetResponse.data);
+        } else {
+          console.log(assetResponse);
+          setError(`Error ${assetResponse.status}: ${assetResponse.data.message || 'No asset data'}`);
+        }
+        //setAssetData(assetResponse.data);
       } catch (error) {
-        console.error('Error fetching asset data:', error);
+        //console.error('Error fetching asset data:', error);
         setError("Failed to fetch asset data, Please reload again");
       }
 

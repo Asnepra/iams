@@ -100,8 +100,8 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                 INNER JOIN [IAMS].[dbo].[IAMS_M_ASSET] a 
                     ON r.[ASSET_ID] = a.[ASSET_BATCH_ID]
             WHERE 
-                r.[STATUS_ID] = 201
-                AND r.[REQUESTED_BY] = ${user};
+               
+                 r.[REQUESTED_BY] = ${user};
 
     
      `;
