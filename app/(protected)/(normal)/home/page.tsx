@@ -91,16 +91,12 @@ export default function Dashboard() {
       } else {
         setError("Invalid details from server");
         toast.error("Invalid response from server");
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        
       }
     } catch (error) {
       console.error('Error fetching assets:', error);
       toast.error("Error, Please try again");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      
     }
   };
 

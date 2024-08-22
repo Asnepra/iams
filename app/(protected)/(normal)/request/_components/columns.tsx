@@ -22,12 +22,20 @@ import {
 } from "@/schemas/requests"
 import { formatDate } from "@/lib/utils"
 
-// Define status mapping
+// Define status mapping with descriptions
 const STATUS_DESCRIPTIONS: Record<number, string> = {
   102: "Assigned",
   201: "Pending",
   202: "Issued",
   203: "Rejected",
+}
+
+// Define status color mapping using Tailwind CSS classes
+const STATUS_COLORS: Record<number, string> = {
+  102: "bg-gray-200 text-gray-800", // Assigned
+  201: "bg-yellow-200 text-yellow-800", // Pending
+  202: "bg-green-200 text-green-800", // Issued
+  203: "bg-red-200 text-red-800", // Rejected
 }
 
 export const columns: ColumnDef<PendingCatridgeRequestProps>[] = [
@@ -58,7 +66,7 @@ export const columns: ColumnDef<PendingCatridgeRequestProps>[] = [
   {
     accessorKey: CARTRIDGE_DESCRIPTION,
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Catridge" />
+      <DataTableColumnHeader column={column} title="Cartridge" />
     ),
     cell: ({ row }) => (
       <div className="flex space-x-2">
@@ -89,26 +97,13 @@ export const columns: ColumnDef<PendingCatridgeRequestProps>[] = [
     cell: ({ row }) => {
       const statusId = row.getValue(STATUS_ID) as number;
       const statusDescription = STATUS_DESCRIPTIONS[statusId] || "Unknown";
-      
-      let badgeVariant: "default" | "secondary" | "destructive" = "default";
-
-      switch (statusId) {
-        case 201:
-          badgeVariant = "secondary"; // Pending
-          break;
-        case 202:
-          badgeVariant = "default"; // Issued
-          break;
-        case 203:
-          badgeVariant = "destructive"; // Rejected
-          break;
-        default:
-          badgeVariant = "default"; // Assigned or Unknown
-      }
+      const badgeColorClass = STATUS_COLORS[statusId] || "bg-gray-200 text-gray-800";
 
       return (
         <div className="flex items-center">
-          <Badge variant={badgeVariant}>{statusDescription}</Badge>
+          <Badge className={`inline-flex items-center px-2 py-1 rounded text-sm font-medium ${badgeColorClass}`}>
+            {statusDescription}
+          </Badge>
         </div>
       );
     },
