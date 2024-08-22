@@ -76,23 +76,23 @@ export default function Dashboard() {
       setUserData(parsedToken);
 
       const body = { token: token };
-      const response = await axios.post('/api/getassets', body);
-      
-      if (response.data && Array.isArray(response.data)) {
-        const assetData: Asset[] = response.data;
-        setAssets(assetData);
-
+      const response = await axios.post('/api/getassets', body)
+      .then((response)=>{
+        if(response.data.length>0){
+        const assetData=response.data;
+        //console.log("resopnse", response.data);
+        setAssets(response.data);
         // Count the number of computers and printers
-        const computerCount = assetData.filter(asset => asset.categoryName === "COMPUTER").length;
-        const printerCount = assetData.filter(asset => asset.categoryName === "PRINTER").length;
-
+        const computerCount = assetData.filter((asset: { categoryName: string; }) => asset.categoryName === "COMPUTER").length;
+        const printerCount = assetData.filter((asset: { categoryName: string; }) => asset.categoryName === "PRINTER").length;
         setComputerCount(computerCount);
         setPrinterCount(printerCount);
-      } else {
-        setError("Invalid details from server");
-        toast.error("Invalid response from server");
-        
-      }
+        }
+        else{
+          toast("There is not asset assigned to you");
+        }
+      })
+      //console.log("response", response);
     } catch (error) {
       console.error('Error fetching assets:', error);
       toast.error("Error, Please try again");

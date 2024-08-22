@@ -77,10 +77,9 @@ export const POST = async (req: NextRequest) => {
 
             return NextResponse.json(assetData, { status: 200 });
         } else {
-            return new NextResponse(
-                JSON.stringify({ message: 'No assets found for the user' }),
-                { status: 404 }
-            );
+            const assetData: any[]=[];
+            return NextResponse.json(assetData, { status: 200 });
+
         }
 
     } catch (error) {

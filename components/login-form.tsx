@@ -49,9 +49,9 @@ const LoginForm = () => {
     password:values.password
 
     }).then((response)=>{
-      console.log("login auth response", response.data[0]);
+      //console.log("login auth response", response.data[0]);
       const d=response.data[0];
-      console.log("auth status", d.auth_status);
+      //console.log("auth status", d.auth_status);
       setisAuthented(d.auth_status);
 
         axios.post('/api/login', values)
@@ -81,7 +81,7 @@ const LoginForm = () => {
       
     }).catch((error)=>{
       setError("Login Failed, try again");
-      console.log("error login", error);
+      //console.log("error login", error);
     })
    
 

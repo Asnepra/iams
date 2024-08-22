@@ -20,7 +20,7 @@ export default function Login() {
           </div>
           <div className="grid gap-2 text-center">
             <h1 className="text-2xl sm:text-2xl lg:text-4xl font-bold text-[#398ef0]">
-              IT Asset Management
+              Catridge Request Portal
             </h1>
           </div>
           <LoginForm />
