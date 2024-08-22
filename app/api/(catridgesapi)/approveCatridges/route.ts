@@ -8,7 +8,7 @@ export const POST = async (req: NextRequest) => {
     // Extract token and data from request body
     const body = await req.json();
     const { token, transId, reason, rejected } = body;
-    console.log(rejected, reason);
+    //console.log(rejected, reason);
 
     // Check if token or transId is missing
     if (!token || !transId) {

@@ -9,7 +9,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     const body = await req.json();
     const { token } = body;
     
-    console.log("Received token:", token);
+    //console.log("Received token:", token);
     
     // Check if token is missing
     if (!token) {
