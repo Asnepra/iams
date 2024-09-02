@@ -1,24 +1,20 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from 'js-cookie';
-import RequestCatridgeForm from "@/components/requestcatridge";
 import FormError from "@/components/form-error";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { UserData } from "@/schemas";
 import { columns } from "./_components/columns";
 import { DataTable } from "@/components/table/data-table";
-import { CartridgeApprovalProps, PRINTER_MODAL_STRING, PrinterDataProps } from "@/schemas/printerSchema";
+import { PrinterDataProps } from "@/schemas/printerSchema";
 import CatridgeForm from "./_components/catridge-form";
 import { PendingCatridgeRequestProps } from "@/schemas/requests";
 import { parseToken } from "@/lib/parseToken";
-
 
 export default function Home() {
   const [error, setError] = useState<string>(""); // State for error message
@@ -28,12 +24,16 @@ export default function Home() {
   const [cartridgeHistory, setCartridgeHistory] = useState<PendingCatridgeRequestProps[]>([]);
 
   useEffect(() => {
+    console.log('Fetching token...');
     const token = Cookies.get('token');
     if (!token) {
       setError("Token is missing or expired.");
+      console.error("Token is missing or expired.");
       return;
     }
+    console.log("Token found:", token);
     const parsedUserData = parseToken(token);
+    console.log("Parsed user data:", parsedUserData); // Log parsed user data
     setUserData(parsedUserData);
   }, []);
 
@@ -43,25 +43,27 @@ export default function Home() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
+        console.log('Fetching asset data...');
         const assetResponse = await axios.post('/api/requestcatridge', { token: Cookies.get('token') });
+        console.log("Asset response:", assetResponse); // Log full asset response
         if (assetResponse.data.message === 'Success') {
-
-          setAssetData(assetResponse.data);
+          setAssetData(assetResponse.data.data);
         } else {
-          console.log(assetResponse);
+          console.error(`Error ${assetResponse.status}:`, assetResponse.data.message || 'No asset data'); // Log error response
           setError(`Error ${assetResponse.status}: ${assetResponse.data.message || 'No asset data'}`);
         }
-        //setAssetData(assetResponse.data);
       } catch (error) {
-        //console.error('Error fetching asset data:', error);
+        console.error('Error fetching asset data:', error); // Log error if any
         setError("Failed to fetch asset data, Please reload again");
       }
 
       try {
+        console.log('Fetching cartridge history...');
         const historyResponse = await axios.post('/api/cartridgehistory', { token: Cookies.get('token') });
+        console.log("Cartridge history response:", historyResponse); // Log full history response
         setCartridgeHistory(historyResponse.data);
       } catch (error) {
-        console.error('Error fetching history data:', error);
+        console.error('Error fetching history data:', error); // Log error if any
         setError("Failed to fetch history data.");
       } finally {
         setIsLoading(false);
