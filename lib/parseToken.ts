@@ -1,6 +1,6 @@
-import { UserDataType } from "@/schemas";
+import { UserData } from "@/schemas";
 
-export function parseToken(token: string): UserDataType | null {
+export function parseToken(token: string): UserData | null {
     try {
       const [, payloadBase64] = token.split('.');
       const decodedPayload = Buffer.from(payloadBase64, 'base64').toString('utf-8');

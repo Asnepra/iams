@@ -73,6 +73,7 @@ async function hasAdminPrivilages(email:string){
         userName:record.EmployeeName,
       userRole: record.UserRole,
       userEmail:record.EmpMail,
+      userDesignation:record.DESIGNATION_NAME,
       userDepartment:record.EmpDepartment,
       userPic:record.EmpProfilePic
       // Add more fields as needed
@@ -112,6 +113,7 @@ export const POST = async (req: Request, res: Response) => {
         let userName;
         let userRole;
         let userDepartment;
+        let userDesignation;
 
         let mail;
         let userProfilePic;
@@ -120,12 +122,14 @@ export const POST = async (req: Request, res: Response) => {
         userRole = user[0].userRole;
         userDepartment=user[0].userDepartment; // Assign user role
         mail=user[0].userEmail;
+        userDesignation=user[0].userDesignation;
         userProfilePic=user[0].userPic;
         //console.log("mail", mail);
         }
         const { JWT_SECRET } = process.env;
 
-        const token = jwt.sign({ userId: email, userRole:userRole, userName:userName,userMail:mail, userDepartment:userDepartment, userProfilePic }, `${JWT_SECRET}`, {
+        const token = jwt.sign({ userId: email, userRole:userRole, userName:userName,userMail:mail,
+           userDepartment:userDepartment, userProfilePic, userDesignation:userDesignation }, `${JWT_SECRET}`, {
           expiresIn: '10m',
         })
     

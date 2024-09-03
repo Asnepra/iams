@@ -33,7 +33,7 @@ export default function Home() {
     }
     console.log("Token found:", token);
     const parsedUserData = parseToken(token);
-    console.log("Parsed user data:", parsedUserData); // Log parsed user data
+    //console.log("Parsed user data:", parsedUserData); // Log parsed user data
     setUserData(parsedUserData);
   }, []);
 
@@ -94,7 +94,7 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="designation">Designation</Label>
-                    <Input id="designation" defaultValue={userData?.userName} disabled />
+                    <Input id="designation" defaultValue={userData?.userDesignation} disabled />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="department">Department</Label>

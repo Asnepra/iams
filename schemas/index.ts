@@ -17,6 +17,7 @@ export interface UserData {
   userMail: string;
   userProfilePic: string;
   userDepartment:string;
+  userDesignation:string;
   // Add other fields as needed
 }
 
@@ -83,6 +84,7 @@ export interface UserDataType{
   userName: string;
   userMail: string;
   userDepartment: string;
+  userDesignation:string;
 }
 
 
