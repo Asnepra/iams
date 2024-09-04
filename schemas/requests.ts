@@ -1,18 +1,18 @@
 // Define the TypeScript interface for PendingCatridgeRequestProps
 export interface PendingCatridgeRequestProps {
-    transId: string;
+    transId: number;
     assetName: string;
-    cartridgeId: string;
+    cartridgeId: number;
     requestedQty: string;
     approvedQty: string;
-    statusId: string;
+    statusId: number;
     requestedBy: string;
     requestedOn: string;
     approvedBy: string;
     approvedOn: string;
     requesterName: string;
     cartridgeDescription: string;
-    availableQuantity:string;
+    availableQuantity:number;
 }
 
 // Define constants for the property names

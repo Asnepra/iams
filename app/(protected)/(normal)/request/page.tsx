@@ -16,6 +16,27 @@ import CatridgeForm from "./_components/catridge-form";
 import { PendingCatridgeRequestProps } from "@/schemas/requests";
 import { parseToken } from "@/lib/parseToken";
 
+// Function to update the display property based on transactions
+function updateCartridgeDisplay(
+  transactions: PendingCatridgeRequestProps[],
+  printerData: PrinterDataProps[]
+): PrinterDataProps[] {
+  // Step 1: Create a Set of cartridge IDs with statusId 202
+  const cartridgeIdsWithStatus202 = new Set(
+    transactions
+      .filter(transaction => transaction.statusId === 201) // statusId as string
+      .map(transaction => transaction.cartridgeId) // cartridgeId as number
+  );
+
+  // Step 2: Map through each printer and update cartridges
+  return printerData.map(printer => ({
+    ...printer,
+    cartridges: printer.cartridges.map(cartridge => ({
+      ...cartridge,
+      display: cartridgeIdsWithStatus202.has(cartridge.cartridgeId) ? false : true
+    }))
+  }));
+}
 export default function Home() {
   const [error, setError] = useState<string>(""); // State for error message
   const [assetData, setAssetData] = useState<PrinterDataProps[]>([]); // State for asset data
@@ -72,6 +93,8 @@ export default function Home() {
 
     fetchData();
   }, [userData]); // Only re-run when userData changes
+  const filteredData=updateCartridgeDisplay(cartridgeHistory, assetData);
+  //console.log("filtered data", filteredData);
 
   return (
     <div className="grid min-h-screen w-full">
@@ -101,7 +124,7 @@ export default function Home() {
                     <Input id="department" type="text" defaultValue={userData?.userDepartment} disabled />
                   </div>
                 </div>
-                <CatridgeForm printers={assetData} />
+                <CatridgeForm printers={filteredData} />
               </div>
             </Card>
           </div>

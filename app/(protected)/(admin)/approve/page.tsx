@@ -48,7 +48,7 @@ export default function CatridgeScreen() {
     }
   };
 
-  const handleApprove = async (id: string) => {
+  const handleApprove = async (id: number) => {
     try {
       const token = getToken();
       if (!token) {
@@ -81,7 +81,7 @@ export default function CatridgeScreen() {
     }
   };
 
-  const handleReject = async (id: string, reason: string) => {
+  const handleReject = async (id: number, reason: string) => {
     try {
       const token = getToken();
       if (!token) {

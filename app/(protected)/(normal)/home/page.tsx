@@ -125,7 +125,7 @@ export default function Dashboard() {
         <FormError message={error} />
         <main className="flex-1 p-4">
           <div className="grid gap-2 md:grid-cols-3 lg:grid-cols-6">
-            {/* <Card>
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">PCs</CardTitle>
                 <ComputerIcon className="w-10 h-10 text-gray-500 dark:text-gray-400" />
@@ -133,7 +133,7 @@ export default function Dashboard() {
               <CardContent>
                 <div className="text-2xl font-bold text-[#4338CA]">{computerCount}</div>
               </CardContent>
-            </Card> */}
+            </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between pb-2">
                 <CardTitle className="text-sm font-medium">Printers</CardTitle>

@@ -7,6 +7,8 @@ export function cn(...inputs: ClassValue[]) {
 
 
 import { format } from 'date-fns';
+import { PendingCatridgeRequestProps } from "@/schemas/requests";
+import { CartridgeProps, PrinterDataProps } from "@/schemas/printerSchema";
 
 // Function to format lastUpdated date
 export const formatDate = (lastUpdated: string | number | Date) => {

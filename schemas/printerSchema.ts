@@ -91,6 +91,7 @@ export interface CartridgeProps {
   cartridgeNo: string; // Updated from cartridgeName to cartridgeNo based on your details
   cartridgeDescription: string;
   stock: number;
+  display?:boolean;
 }
 
 export interface PrinterDataProps {
@@ -101,6 +102,7 @@ export interface PrinterDataProps {
   assetMake: string;
   assetModel: string;
   cartridges: CartridgeProps[];
+  display?:boolean;
 }
 
 

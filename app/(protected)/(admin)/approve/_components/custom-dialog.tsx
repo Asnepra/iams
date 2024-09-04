@@ -18,8 +18,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 interface DialogButtonProps {
   title: string;
   description: string;
-  onClose: (id: string, reason: string) => void;
-  id: string;
+  onClose: (id: number, reason: string) => void;
+  id: number;
 }
 
 const schema = z.object({
