@@ -151,7 +151,7 @@ export default function CatridgeScreen() {
                         <TableHead>Pending ID</TableHead>
                         <TableHead>Asset Name</TableHead>
                         <TableHead>Cartridge</TableHead>
-                        <TableHead>Requested Qty</TableHead>
+                        <TableHead>Available Qty</TableHead>
                         <TableHead>Requested By</TableHead>
                         <TableHead>Requested On</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
@@ -163,7 +163,7 @@ export default function CatridgeScreen() {
                           <TableCell className="font-medium">P#0000{request.transId}</TableCell>
                           <TableCell>{request.assetName}</TableCell>
                           <TableCell>{request.cartridgeDescription}</TableCell>
-                          <TableCell>{request.requestedQty}</TableCell>
+                          <TableCell>{request.availableQuantity}</TableCell>
                           <TableCell className="flex items-center p-3 font-semibold">
                             <img
                               alt="employee Pic"
@@ -175,7 +175,7 @@ export default function CatridgeScreen() {
                             {request.requesterName}
                           </TableCell>
                           <TableCell>{formatDate(request.requestedOn)}</TableCell>
-                          <TableCell className="text-right space-x-2">
+                          <TableCell className="space-x-2">
                             
                              <DialogButton
                               title={'Approve'}

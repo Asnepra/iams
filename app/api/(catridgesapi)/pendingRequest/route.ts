@@ -3,13 +3,11 @@ import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 const sql = require('mssql');
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
+export const POST = async (req: NextRequest) => {
   try {
     // Extract token from request body
     const body = await req.json();
     const { token } = body;
-    
-    //console.log("Received token:", token);
     
     // Check if token is missing
     if (!token) {
@@ -51,32 +49,35 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
       await transaction.begin();
     
       try {
-        // Query to fetch records with STATUS_ID = 201
+        // Query to fetch records with STATUS_ID = 201 and include quantity
         const result = await transaction.request()
           .query(`
-            	 SELECT 
-                r.[TRANS_ID],
-                r.[CARTRIDGE_ID],
-                r.[REQUESTED_QTY],
-                r.[APPROVED_QTY],
-                r.[STATUS_ID],
-                r.[REQUESTED_BY],
-                r.[REQUESTED_ON],
-                r.[APPROVED_BY],
-                r.[APPROVED_ON],
-                u.[EMPLOYEE_NAME] AS RequesterName,
-                c.[CARTRIDGE_DESC] AS CartridgeDescription,
-                a.[ASSET_MODEL]  -- Ensure this field is selected
-              FROM 
-                [IAMS].[dbo].[IAMS_X_CARTRIDGE] r
-                INNER JOIN [IAMS].[dbo].[IAMS_M_USER] u 
-                  ON r.[REQUESTED_BY] = u.[PERSONAL_NO]
-                INNER JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE] c 
-                  ON r.[CARTRIDGE_ID] = c.[CARTRIDGE_ID]
-                INNER JOIN [IAMS].[dbo].[IAMS_M_ASSET] a 
-                  ON r.[ASSET_ID] = a.[ASSET_BATCH_ID]
-              WHERE 
-                r.[STATUS_ID] = 201;
+            SELECT 
+              r.[TRANS_ID],
+              r.[CARTRIDGE_ID],
+              r.[REQUESTED_QTY],
+              r.[APPROVED_QTY],
+              r.[STATUS_ID],
+              r.[REQUESTED_BY],
+              r.[REQUESTED_ON],
+              r.[APPROVED_BY],
+              r.[APPROVED_ON],
+              u.[EMPLOYEE_NAME] AS RequesterName,
+              c.[CARTRIDGE_DESC] AS CartridgeDescription,
+              a.[ASSET_MODEL],
+              i.[QTY] AS AvailableQuantity  -- Include available quantity
+            FROM 
+              [IAMS].[dbo].[IAMS_X_CARTRIDGE] r
+              INNER JOIN [IAMS].[dbo].[IAMS_M_USER] u 
+                ON r.[REQUESTED_BY] = u.[PERSONAL_NO]
+              INNER JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE] c 
+                ON r.[CARTRIDGE_ID] = c.[CARTRIDGE_ID]
+              INNER JOIN [IAMS].[dbo].[IAMS_M_ASSET] a 
+                ON r.[ASSET_ID] = a.[ASSET_BATCH_ID]
+              INNER JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE_INVENTORY] i
+                ON r.[CARTRIDGE_ID] = i.[CARTRIDGE_ID]
+            WHERE 
+              r.[STATUS_ID] = 201;
           `);
     
         // Map the result to JSON format
@@ -92,7 +93,8 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
           approvedBy: record.APPROVED_BY,
           approvedOn: record.APPROVED_ON,
           requesterName: record.RequesterName,
-          cartridgeDescription: record.CartridgeDescription
+          cartridgeDescription: record.CartridgeDescription,
+          availableQuantity: record.AvailableQuantity  // Include available quantity
         }));
     
         // Commit the transaction
