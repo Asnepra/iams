@@ -164,9 +164,10 @@ export default function CatridgeScreen() {
                           title="Reject"
                           id={request.transId}
                           description="Please provide a reason"
-                          onClose={(reason) => handleReject(request.transId, reason)}
+                          onClose={ handleReject}
                           
                         />
+                        
                       </TableCell>
                     </TableRow>
                   ))}
