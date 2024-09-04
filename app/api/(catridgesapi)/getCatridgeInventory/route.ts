@@ -77,20 +77,20 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
                     C.[CARTRIDGE_DESC],
                     C.[UPDATE_BY_USERID],
 
-                    -- User details
-                    U.[EMPLOYEE_NAME],
-                    U.[EMAIL],
+                    -- User details 
+                    U.[EmployeeName],
+                    U.[EmpMail],
                     U.[DESIGNATION],
                     U.[DESIGNATION_NAME]
-                    
+
                 FROM 
                     [IAMS].[dbo].[IAMS_M_CARTRIDGE_INVENTORY] CI
                 JOIN
                     [IAMS].[dbo].[IAMS_M_CARTRIDGE] C 
                     ON CI.[CARTRIDGE_ID] = C.[CARTRIDGE_ID]
                 JOIN
-                    [IAMS].[dbo].[IAMS_M_USER] U
-                    ON C.[UPDATE_BY_USERID] = U.[PERSONAL_NO];
+                    [IAMS].[dbo].[UserMaster] U
+                    ON C.[UPDATE_BY_USERID] = U.[EmployeeNumber];
           `);
     
        
@@ -103,7 +103,7 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
           stock: record.QTY,
           updatedOn:record.UPDATED_ON,
           updatedBy:record.UPDATE_BY_USERID,
-          updatedByName:record.EMPLOYEE_NAME,
+          updatedByName:record.EmployeeName,
           assetBatchId:record.ASSET_BATCH_ID
           // Add more fields as needed
         }));
