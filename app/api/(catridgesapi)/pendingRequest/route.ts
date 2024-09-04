@@ -62,14 +62,14 @@ export const POST = async (req: NextRequest) => {
               r.[REQUESTED_ON],
               r.[APPROVED_BY],
               r.[APPROVED_ON],
-              u.[EMPLOYEE_NAME] AS RequesterName,
+              u.[EmployeeName] AS RequesterName,
               c.[CARTRIDGE_DESC] AS CartridgeDescription,
               a.[ASSET_MODEL],
               i.[QTY] AS AvailableQuantity  -- Include available quantity
             FROM 
               [IAMS].[dbo].[IAMS_X_CARTRIDGE] r
-              INNER JOIN [IAMS].[dbo].[IAMS_M_USER] u 
-                ON r.[REQUESTED_BY] = u.[PERSONAL_NO]
+              INNER JOIN [IAMS].[dbo].[UserMaster] u 
+                ON r.[REQUESTED_BY] = u.[EmployeeNumber]
               INNER JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE] c 
                 ON r.[CARTRIDGE_ID] = c.[CARTRIDGE_ID]
               INNER JOIN [IAMS].[dbo].[IAMS_M_ASSET] a 

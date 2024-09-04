@@ -51,7 +51,7 @@ export function DialogButton({ title, description, onClose, id }: DialogButtonPr
       <DialogTrigger asChild>
         <Button variant="outline">{title}</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md ">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>

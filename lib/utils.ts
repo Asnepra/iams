@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 // Function to format lastUpdated date
 export const formatDate = (lastUpdated: string | number | Date) => {
   if (lastUpdated) {
-    return format(new Date(lastUpdated), "d MMMM, yyyy h:mm a");
+    return format(new Date(lastUpdated), "d MMM, yyyy");
   } else {
     return "N/A";
   }

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { CartridgeApprovalProps } from "@/schemas/printerSchema";
 import { getFullProfileUrl, parseToken } from "@/lib/parseToken";
 import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
@@ -13,21 +12,16 @@ import axios from "axios";
 import { PendingCatridgeRequestProps } from "@/schemas/requests";
 import { DialogButton } from "./_components/custom-dialog";
 import { formatDate } from "@/lib/utils";
-import { DataTable } from "@/components/table/data-table";
-import { columns } from "./_components/columns";
 
 export default function CatridgeScreen() {
   const router = useRouter();
   const [userData, setUserData] = useState<UserDataType | null>(null);
-
-
   const [pendingRequests, setPendingRequests] = useState<PendingCatridgeRequestProps[]>([]);
 
   const getToken = (): string | null => {
     const token = Cookies.get('token');
     return token ?? null; // Return null if token is undefined
   };
-  
 
   const getData = async () => {
     try {
@@ -48,19 +42,14 @@ export default function CatridgeScreen() {
       setUserData(parsedToken); // Set user data in state
 
       const response = await axios.post('/api/pendingRequest', { token });
-      console.log("Response", response);
       setPendingRequests(response.data);
     } catch (error) {
-      //console.error('Error fetching pending requests:', error);
       toast.error("Error fetching pending requests");
     }
   };
-  
 
-  const handleApprove = async (id: string, reason: string) => {
+  const handleApprove = async (id: string) => {
     try {
-      //console.log("id and then reason",id, reason);
-
       const token = getToken();
       if (!token) {
         toast.error("Token Error");
@@ -71,7 +60,7 @@ export default function CatridgeScreen() {
       const response = await axios.post('/api/approveCatridges', {
         token,
         transId: id,
-        reason,
+        reason: "Approved",
         rejected: false // Indicating this is an approval request
       });
 
@@ -85,7 +74,6 @@ export default function CatridgeScreen() {
         }, 3000);
       }
     } catch (error) {
-      //console.error('Error approving request:', error);
       toast.error("Error approving request");
       setTimeout(() => {
         window.location.reload();
@@ -95,8 +83,6 @@ export default function CatridgeScreen() {
 
   const handleReject = async (id: string, reason: string) => {
     try {
-
-      //console.log("id and then reason",id, reason);
       const token = getToken();
       if (!token) {
         toast.error("Token Error");
@@ -118,7 +104,6 @@ export default function CatridgeScreen() {
         toast.error("Failed to reject request");
       }
     } catch (error) {
-      //console.error('Error rejecting request:', error);
       toast.error("Error rejecting request");
     }
   };
@@ -128,79 +113,69 @@ export default function CatridgeScreen() {
   }, []);
 
   return (
-    <div className="">
-      <div>
-        <main className="flex flex-1 flex-col gap-2 p-4 md:gap-8 md:p-6">
-          <div className="flex items-center gap-2">
-            <div className="font-bold text-2xl">
-              {userData?.userName}
-            </div>
-          </div>
-          <div className="md:col-span-4 lg:col-span-3 xl:col-span-4 flex flex-col gap-4">
-            <div className="md:col-span-2 lg:col-span-3 xl:col-span-2 flex flex-col gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Pending Requests</CardTitle>
-                </CardHeader>
-                <CardContent>
-
-                  {/* <DataTable columns={columns} data={pendingRequests} filterKey={"requesterName"} filterString="By Name"/> */}
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Pending ID</TableHead>
-                        <TableHead>Asset Name</TableHead>
-                        <TableHead>Cartridge</TableHead>
-                        <TableHead>Available Qty</TableHead>
-                        <TableHead>Requested By</TableHead>
-                        <TableHead>Requested On</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {pendingRequests?.map((request) => (
-                        <TableRow key={request.transId}>
-                          <TableCell className="font-medium">P#0000{request.transId}</TableCell>
-                          <TableCell>{request.assetName}</TableCell>
-                          <TableCell>{request.cartridgeDescription}</TableCell>
-                          <TableCell>{request.availableQuantity}</TableCell>
-                          <TableCell className="flex items-center p-3 font-semibold">
-                            <img
-                              alt="employee Pic"
-                              src={getFullProfileUrl(request.requestedBy)}
-                              width={40}
-                              height={40}
-                              className="w-12 h-12 rounded-full"
-                            />
-                            {request.requesterName}
-                          </TableCell>
-                          <TableCell>{formatDate(request.requestedOn)}</TableCell>
-                          <TableCell className="space-x-2">
-                            
-                             <DialogButton
-                              title={'Approve'}
-                              id={request.transId}
-                              description={`Please provide a reason`}
-                              onClose={handleApprove}
-                            />
-                            <DialogButton
-                              title={'Reject'}
-                              id={request.transId}
-                              description={`Please provide a reason`}
-                              onClose={handleReject}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-              
-            </div>
-          </div>
-        </main>
-      </div>
+    <div className="p-4 md:p-6 lg:p-8">
+      <main className="flex flex-col gap-4">
+        <div className="text-xl font-bold md:text-2xl">{userData?.userName}</div>
+        <div className="flex flex-col gap-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Pending Requests</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Pending ID</TableHead>
+                    <TableHead>Asset Name</TableHead>
+                    <TableHead>Cartridge</TableHead>
+                    <TableHead>Available Qty</TableHead>
+                    <TableHead>Requested By</TableHead>
+                    <TableHead>Requested On</TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pendingRequests.map((request) => (
+                    <TableRow key={request.transId}>
+                      <TableCell className="text-sm md:text-sm font-medium">P#00{request.transId}</TableCell>
+                      <TableCell className="text-sm md:text-sm">{request.assetName}</TableCell>
+                      <TableCell className="text-sm md:text-sm">{request.cartridgeDescription}</TableCell>
+                      <TableCell className="text-sm md:text-sm">{request.availableQuantity}</TableCell>
+                      <TableCell className="flex items-center space-x-2">
+                        <img
+                          alt="employee Pic"
+                          src={getFullProfileUrl(request.requestedBy)}
+                          width={40}
+                          height={40}
+                          className="w-10 h-10 rounded-full"
+                        />
+                        <span className="hidden sm:inline">{request.requesterName}</span>
+                      </TableCell>
+                      <TableCell className="text-sm md:text-sm">{formatDate(request.requestedOn)}</TableCell>
+                      <TableCell className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        <Button
+                          title="Approve"
+                          onClick={() => handleApprove(request.transId)}
+                          className="w-full sm:w-auto"
+                        >
+                          Approve
+                        </Button>
+                        <DialogButton
+                          title="Reject"
+                          id={request.transId}
+                          description="Please provide a reason"
+                          onClose={(reason) => handleReject(request.transId, reason)}
+                          
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
     </div>
   );
 }
