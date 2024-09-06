@@ -1,7 +1,6 @@
 import mssqlconnect from "@/lib/mssqlconnect";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from 'jsonwebtoken';
-
 const sql = require('mssql');
 
 export const POST = async (req: NextRequest) => {
@@ -20,38 +19,38 @@ export const POST = async (req: NextRequest) => {
 
     // Initialize response object
     let response = {
-        message: 'Failure',
-        isAdmin: 'False',
-        userId: 'Dummy',
-        userName: 'Name',
-        mail: 'abc@gmail.com',
-        data: [],
-        maxPages: 0
-      };
-      let user = null;
-      let isAdmin = false; // Assuming isAdmin is a boolean
-  
-      try {
-        // Verify JWT token
-        const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`) as JwtPayload;
-  
-        // Check token expiration
-        if (typeof decoded.exp === 'number' && decoded.exp < Math.floor(Date.now() / 1000)) {
-          response.message = 'Token expired';
-          console.log("Token expired");
-          return new NextResponse(JSON.stringify(response), { status: 401 });
-        }
-      
-        // Token is valid
-        user = decoded.userId;
-        isAdmin = decoded.isAdmin;
-      } catch (err) {
-        // Token verification failed
-        return new NextResponse(
-          JSON.stringify({ message: 'Invalid Token' }),
-          { status: 401 }
-        );
+      message: 'Failure',
+      isAdmin: 'False',
+      userId: 'Dummy',
+      userName: 'Name',
+      mail: 'abc@gmail.com',
+      data: [],
+      maxPages: 0
+    };
+    let user = null;
+    let isAdmin = false; // Assuming isAdmin is a boolean
+
+    try {
+      // Verify JWT token
+      const decoded = jwt.verify(token, `${process.env.JWT_SECRET}`) as JwtPayload;
+
+      // Check token expiration
+      if (typeof decoded.exp === 'number' && decoded.exp < Math.floor(Date.now() / 1000)) {
+        response.message = 'Token expired';
+        console.log("Token expired");
+        return new NextResponse(JSON.stringify(response), { status: 401 });
       }
+    
+      // Token is valid
+      user = decoded.userId;
+      isAdmin = decoded.isAdmin;
+    } catch (err) {
+      // Token verification failed
+      return new NextResponse(
+        JSON.stringify({ message: 'Invalid Token' }),
+        { status: 401 }
+      );
+    }
 
     try {
       await mssqlconnect(); // Ensure MSSQL connection is correctly established
@@ -66,22 +65,25 @@ export const POST = async (req: NextRequest) => {
           .input('UserId', sql.VarChar, user) // Pass userId as input parameter
           .query(`
             SELECT
-              [TRANS_ID],
-              [ASSET_ID],
-              [CARTRIDGE_ID],
-              [REQUESTED_QTY],
-              [APPROVED_QTY],
-              [STATUS_ID],
-              [REQUESTED_BY],
-              [REQUESTED_ON],
-              [APPROVED_BY],
-              [APPROVED_ON],
-              [APPROVING_REASON],
-              [CARTRIDGE_RETURNED]
-            FROM [IAMS].[dbo].[IAMS_X_CARTRIDGE]
-            WHERE [STATUS_ID] = 202
-              AND [CARTRIDGE_RETURNED] = 0
-              AND [REQUESTED_BY] = @UserId;
+              x.[TRANS_ID],
+              x.[ASSET_ID],
+              x.[CARTRIDGE_ID],
+              x.[REQUESTED_QTY],
+              x.[APPROVED_QTY],
+              x.[STATUS_ID],
+              x.[REQUESTED_BY],
+              x.[REQUESTED_ON],
+              x.[APPROVED_BY],
+              x.[APPROVED_ON],
+              x.[APPROVING_REASON],
+              x.[CARTRIDGE_RETURNED],
+              c.[CARTRIDGE_DESC] -- Include cartridge description
+            FROM [IAMS].[dbo].[IAMS_X_CARTRIDGE] x
+            JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE] c
+              ON x.[CARTRIDGE_ID] = c.[CARTRIDGE_ID]
+            WHERE x.[STATUS_ID] = 202
+              AND x.[CARTRIDGE_RETURNED] = 0
+              AND x.[REQUESTED_BY] = @UserId;
           `);
 
         // Map the result to a JSON format
@@ -89,6 +91,7 @@ export const POST = async (req: NextRequest) => {
           transId: record.TRANS_ID,
           assetId: record.ASSET_ID,
           cartridgeId: record.CARTRIDGE_ID,
+          cartridgeDesc: record.CARTRIDGE_DESC, // Include cartridge description
           requestedQty: record.REQUESTED_QTY,
           approvedQty: record.APPROVED_QTY,
           statusId: record.STATUS_ID,

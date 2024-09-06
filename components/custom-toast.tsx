@@ -15,6 +15,7 @@ interface ToastData {
   approvedOn: string;
   approvingReason: string;
   cartridgeReturned: boolean;
+  cartridgeDesc:string;
 }
 
 const showCustomToast = (data: ToastData) => {
@@ -27,8 +28,8 @@ const showCustomToast = (data: ToastData) => {
         <div className="flex-1 w-0 p-4">
           <div className="flex items-start">
             <div className="ml-3 flex-1">
-              <p className="text-sm font-medium text-gray-900">
-                Please return the old Cartridge having
+              <p className="text-sm font-medium text-rose-500">
+                Please return the old Cartridge {data.cartridgeDesc}
               </p>
               <p className="mt-1 text-sm text-gray-500">
                 Approved On: {formatDate(data.approvedOn)}

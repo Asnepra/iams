@@ -109,7 +109,7 @@ export default function Dashboard() {
         //get the api data and trigger the toast for each item
         console.log("catridgeretunr toast", response.data);
         // Trigger the toast for each item
-      showToastsWithDelay(response.data)
+        showToastsWithDelay(response.data)
       }).catch((error)=>{
         console.log("error", error);
       })
