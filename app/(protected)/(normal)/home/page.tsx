@@ -17,7 +17,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import FormError from "@/components/form-error";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import showCustomToast from "@/components/custom-toast";
 
+const showToastsWithDelay = async (data: any[]) => {
+  const delay = 2000; // Delay in milliseconds (2 seconds in this example)
+
+  for (let i = 0; i < data.length; i++) {
+    setTimeout(() => {
+      showCustomToast(data[i]);
+    }, i * delay); // Delay each toast based on its index
+  }
+};
 interface Asset {
   assetBatchId: number;
   assetMake: string;
@@ -92,6 +103,17 @@ export default function Dashboard() {
           toast("There is no asset assigned to you");
         }
       })
+      
+      const response1 = await axios.post('/api/catridgeReturned', body)
+      .then((response)=>{
+        //get the api data and trigger the toast for each item
+        console.log("catridgeretunr toast", response.data);
+        // Trigger the toast for each item
+      showToastsWithDelay(response.data)
+      }).catch((error)=>{
+        console.log("error", error);
+      })
+      
       //console.log("response", response);
     } catch (error) {
       console.error('Error fetching assets:', error);

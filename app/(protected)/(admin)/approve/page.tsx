@@ -128,7 +128,7 @@ export default function CatridgeScreen() {
                     <TableHead>Pending ID</TableHead>
                     <TableHead>Asset Name</TableHead>
                     <TableHead>Cartridge</TableHead>
-                    <TableHead>Available Qty</TableHead>
+                    <TableHead>Qty</TableHead>
                     <TableHead>Requested By</TableHead>
                     <TableHead>Requested On</TableHead>
                     <TableHead className="text-center">Actions</TableHead>
