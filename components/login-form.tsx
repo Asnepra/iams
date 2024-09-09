@@ -44,7 +44,7 @@ const LoginForm = () => {
   const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
   startTransition(() => {
 
-    axios.post("http://10.14.84.38:9001/api/loginauth2",{
+    axios.post("https://bdintranet.indianoil.in/LoginAPI/api/loginauth2",{
       username:values.email,
     password:values.password
 
