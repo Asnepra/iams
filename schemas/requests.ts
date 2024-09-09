@@ -13,6 +13,7 @@ export interface PendingCatridgeRequestProps {
     requesterName: string;
     cartridgeDescription: string;
     availableQuantity:number;
+    cartridgeReturned:number;
 }
 
 // Define constants for the property names

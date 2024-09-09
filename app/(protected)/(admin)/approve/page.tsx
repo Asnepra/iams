@@ -12,6 +12,10 @@ import axios from "axios";
 import { PendingCatridgeRequestProps } from "@/schemas/requests";
 import { DialogButton } from "./_components/custom-dialog";
 import { formatDate } from "@/lib/utils";
+import { DropdownMenu, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export default function CatridgeScreen() {
   const router = useRouter();
@@ -42,6 +46,10 @@ export default function CatridgeScreen() {
       setUserData(parsedToken); // Set user data in state
 
       const response = await axios.post('/api/pendingRequest', { token });
+
+      //console.log
+
+      console.log("pending", response.data);
       setPendingRequests(response.data);
     } catch (error) {
       toast.error("Error fetching pending requests");
@@ -107,6 +115,39 @@ export default function CatridgeScreen() {
       toast.error("Error rejecting request");
     }
   };
+  const handleChangeStatus = async (id: number) => {
+    try {
+      const token = getToken();
+      if (!token) {
+        toast.error("Token Error");
+        router.push("/");
+        return;
+      }
+
+      const response = await axios.post('/api/catridgeReturnedYes', {
+        token,
+        transId: id,
+      });
+
+      if (response.status === 200) {
+        toast.success("Status Changed successfully");
+        //getData(); // Refresh pending requests
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      } else {
+        toast.error("Failed to change Status");
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+      }
+    } catch (error) {
+      toast.error("Error changing status");
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    }
+  };
 
   useEffect(() => {
     getData();
@@ -126,11 +167,12 @@ export default function CatridgeScreen() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Pending ID</TableHead>
-                    <TableHead>Asset Name</TableHead>
+                    <TableHead>Printer</TableHead>
                     <TableHead>Cartridge</TableHead>
-                    <TableHead>Qty</TableHead>
+                    <TableHead>Avl. Qty</TableHead>
                     <TableHead>Requested By</TableHead>
                     <TableHead>Requested On</TableHead>
+                    <TableHead>Returned Old</TableHead>
                     <TableHead className="text-center">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -152,6 +194,16 @@ export default function CatridgeScreen() {
                         <span className="hidden sm:inline">{request.requesterName}</span>
                       </TableCell>
                       <TableCell className="text-sm md:text-sm">{formatDate(request.requestedOn)}</TableCell>
+                      <TableCell className="text-sm md:text-sm mr-1 space-x-1">{request.cartridgeReturned ?"Yes": "No"}
+                      <Badge
+                          
+                          onClick={() => handleChangeStatus(request.transId)}
+                          className="ml-1"
+                          variant="outline"
+                        >
+                          Change status
+                        </Badge>
+                      </TableCell>
                       <TableCell className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                         <Button
                           title="Approve"
@@ -167,6 +219,25 @@ export default function CatridgeScreen() {
                           onClose={ handleReject}
                           
                         />
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <span className="sr-only">Open menu</span>
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-white border border-gray-200 shadow-md">
+                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem
+                            >
+                              Copy payment ID
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>View customer</DropdownMenuItem>
+                            <DropdownMenuItem>View payment details</DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        
                         
                       </TableCell>
                     </TableRow>

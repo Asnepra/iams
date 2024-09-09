@@ -65,7 +65,8 @@ export const POST = async (req: NextRequest) => {
               u.[EmployeeName] AS RequesterName,
               c.[CARTRIDGE_DESC] AS CartridgeDescription,
               a.[ASSET_MODEL],
-              i.[QTY] AS AvailableQuantity  -- Include available quantity
+              i.[QTY] AS AvailableQuantity,  -- Include available quantity
+              r.[CARTRIDGE_RETURNED]  -- Include cartridge returned status
             FROM 
               [IAMS].[dbo].[IAMS_X_CARTRIDGE] r
               INNER JOIN [IAMS].[dbo].[UserMaster] u 
@@ -79,9 +80,9 @@ export const POST = async (req: NextRequest) => {
             WHERE 
               r.[STATUS_ID] = 201;
           `);
-    
+
         // Map the result to JSON format
-        const data = result.recordset.map((record:any) => ({
+        const data = result.recordset.map((record: any) => ({
           transId: record.TRANS_ID,
           assetName: record.ASSET_MODEL,
           cartridgeId: record.CARTRIDGE_ID,
@@ -94,7 +95,8 @@ export const POST = async (req: NextRequest) => {
           approvedOn: record.APPROVED_ON,
           requesterName: record.RequesterName,
           cartridgeDescription: record.CartridgeDescription,
-          availableQuantity: record.AvailableQuantity  // Include available quantity
+          availableQuantity: record.AvailableQuantity,  // Include available quantity
+          cartridgeReturned: record.CARTRIDGE_RETURNED,  // Convert to boolean
         }));
     
         // Commit the transaction
