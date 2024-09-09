@@ -53,6 +53,7 @@ const LoginForm = () => {
       const d=response.data[0];
       //console.log("auth status", d.auth_status);
       setisAuthented(d.auth_status);
+      if(d.auth_status){
 
         axios.post('/api/login', values)
         .then(async (response:any) => {
@@ -78,6 +79,10 @@ const LoginForm = () => {
         // Handle other errors (e.g., network errors)
         setError("Something went wrong.");
       });
+    }
+    else{
+      setError("Incorrect credentials");
+    }
       
     }).catch((error)=>{
       setError("Login Failed, try again");
