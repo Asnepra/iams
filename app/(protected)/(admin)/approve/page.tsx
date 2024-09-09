@@ -195,14 +195,15 @@ export default function CatridgeScreen() {
                       </TableCell>
                       <TableCell className="text-sm md:text-sm">{formatDate(request.requestedOn)}</TableCell>
                       <TableCell className="text-sm md:text-sm mr-1 space-x-1">{request.cartridgeReturned ?"Yes": "No"}
-                      <Badge
+                      {!request.cartridgeReturned && <Badge
                           
-                          onClick={() => handleChangeStatus(request.transId)}
-                          className="ml-1"
-                          variant="outline"
-                        >
-                          Change status
-                        </Badge>
+                            onClick={() => handleChangeStatus(request.transId)}
+                            className="ml-1 text-primary cursor-pointer"
+                            variant="outline"
+                          >
+                            Change status
+                          </Badge>
+                        }
                       </TableCell>
                       <TableCell className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                         <Button
