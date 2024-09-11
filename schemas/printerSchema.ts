@@ -123,6 +123,30 @@ export interface DialogProps{
   
 }
 
+//Reports Schema
+
+export interface CartridgeDataReport {
+  TRANS_ID: string;
+  ASSET_ID: string;
+  CARTRIDGE_ID: string;
+  REQUESTED_QTY: number;
+  APPROVED_QTY: number;
+  STATUS_ID: string;
+  REQUESTED_BY: string;
+  REQUESTED_ON: string; // ISO date string
+  APPROVED_BY: string;
+  APPROVED_ON: string | null; // ISO date string or null
+  APPROVING_REASON: string;
+  CARTRIDGE_RETURNED: boolean;
+  EmployeeName: string;
+  Department: string; // Ensure this matches the alias used in your SQL query
+  UserRole: string;
+  DESIGNATION: string;
+  DESIGNATION_NAME: string;
+  StatusDescription:string;
+  CartridgeDescription:string;
+}
+
 
 
 

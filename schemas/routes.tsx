@@ -1,6 +1,6 @@
 // Normal user routes
 import { CheckCircledIcon, CrossCircledIcon, CubeIcon, QuestionMarkCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
-import { Box, CheckCheck, Home, Kanban, LineChart, Package, Printer, Settings, UploadCloudIcon, Users2, BoxesIcon, CircleIcon } from "lucide-react";
+import { Box, CheckCheck, Home, Kanban, LineChart, Package, Printer, Settings, UploadCloudIcon, Users2, BoxesIcon, CircleIcon, Album } from "lucide-react";
 export const normalRoutes = [
     {
       icon: Home,
@@ -22,11 +22,11 @@ export const normalRoutes = [
   // HR Admin routes
   export const hrAdminRoutes = [
     ...normalRoutes,
-    // {
-    //   icon: BoxesIcon,
-    //   href: "/addstock",
-    //   label: "Add Stocks",
-    // },
+    {
+      icon: BoxesIcon,
+      href: "/reports",
+      label: "Reports",
+    },
     {
       icon: CheckCheck,
       href: "/approve",
@@ -46,6 +46,11 @@ export const normalRoutes = [
       icon: CheckCheck,
       href: "/approve",
       label: "Approve Cartridge",
+    },
+    {
+      icon: Album,
+      href: "/reports",
+      label: "Reports",
     },
     // {
     //   icon: Package,
