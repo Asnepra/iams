@@ -19,9 +19,8 @@ import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 
 import { columns } from './_components/columns';
-import  {DataTable}  from '@/components/table/data-table';
+import { DataTable } from './_components/data-table';
 import { CartridgeDataReport } from '@/schemas/printerSchema';
-import { labels, statuses } from './_components/data/meta-data';
 
 const COLORS: { [key: string]: string } = {
   requested: "#8884d8",
@@ -292,7 +291,7 @@ export default function ComprehensiveCartridgeReports() {
               ))}
             </TableBody>
           </Table> */}
-          <DataTable data={data} columns={columns} department={labels} status={statuses} filterKey='EmployeeName' filterString='Employee Name'/>
+          <DataTable data={data} columns={columns} />
         </CardContent>
       </Card>
     </div>
