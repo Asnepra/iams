@@ -37,6 +37,16 @@ interface DataTableProps<TData, TValue> {
 
   disabled?: boolean;
   filterString?:string;
+  department?: {
+    label: string
+    value: string
+    icon?: React.ComponentType<{ className?: string }>
+  }[]
+  status?: {
+    label: string
+    value: string
+    icon?: React.ComponentType<{ className?: string }>
+  }[]
 }
 
 export function DataTable<TData, TValue>({
@@ -45,6 +55,8 @@ export function DataTable<TData, TValue>({
   data,
   filterKey,
   filterString,
+  department,
+  status
 
   
 }: DataTableProps<TData, TValue>) {
@@ -77,7 +89,7 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       
       
-      <DataTableToolbar table={table} filterKey={filterKey} filterString={filterString}/>
+      <DataTableToolbar table={table} filterKey={filterKey} filterString={filterString} department={department} statusFilter={status}/>
     
 
 
