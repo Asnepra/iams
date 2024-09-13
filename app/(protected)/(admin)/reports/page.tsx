@@ -21,6 +21,7 @@ import { formatDate } from '@/lib/utils';
 import { columns } from './_components/columns';
 import { DataTable } from './_components/data-table';
 import { CartridgeDataReport } from '@/schemas/printerSchema';
+import { labels, statuses } from './_components/data/meta-data';
 
 const COLORS: { [key: string]: string } = {
   requested: "#8884d8",
@@ -42,25 +43,14 @@ const monthToNumber = (month: string) => {
   return index >= 0 ? index + 1 : 0; // Months are 1-based
 };
 
-interface CartridgeData {
-  TRANS_ID: string;
-  ASSET_ID: string;
-  CARTRIDGE_ID: string;
-  REQUESTED_QTY: number;
-  APPROVED_QTY: number;
-  STATUS_ID: string;
-  REQUESTED_BY: string;
-  REQUESTED_ON: string; // ISO date string
-  APPROVED_BY: string;
-  APPROVED_ON: string | null; // ISO date string or null
-  APPROVING_REASON: string;
-  CARTRIDGE_RETURNED: boolean;
-  EmployeeName: string;
-  Department: string; // Ensure this matches the alias used in your SQL query
-  UserRole: string;
-  DESIGNATION: string;
-  DESIGNATION_NAME: string;
-}
+
+const filter=
+  [labels,
+  statuses,
+  ]
+
+
+
 
 export default function ComprehensiveCartridgeReports() {
   const [data, setData] = useState<CartridgeDataReport[]>([]);

@@ -1,24 +1,32 @@
-"use client"
+"use client";
 
-import { Cross2Icon } from "@radix-ui/react-icons"
-import { Table } from "@tanstack/react-table"
+import { Cross2Icon } from "@radix-ui/react-icons";
+import { Table } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DataTableViewOptions } from "./data-table-view-options";
+import { DataTableFacetedFilter } from "@/components/table/data-table-faceted-filter";
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { DataTableViewOptions } from "./data-table-view-options"
+interface FilterOption {
+  value: string;
+  label: string;
+}
 
-import { statuses, labels } from "./data/meta-data"
-import { DataTableFacetedFilter } from "./data-table-faceted-filter"
+interface FilterOptions {
+  [key: string]: FilterOption[];
+}
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
+  filterOptions?: FilterOptions;
 }
 
 export function DataTableToolbar<TData>({
   table,
+  filterOptions = {},
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
-  
+  const isFiltered = table.getState().columnFilters.length > 0;
+  console.log("filter options", filterOptions)
 
   return (
     <div className="flex items-center justify-between">
@@ -31,21 +39,28 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("Department") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("Department")}
-            title="Department"
-            options={labels}
-          />
-        )}
-        {table.getColumn("StatusDescription") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("StatusDescription")}
-            title="Status"
-            options={statuses}
-          />
-        )}
-        
+        {Object.keys(filterOptions).map((key) => {
+          const column = table.getColumn(key);
+          console.log("Column for key:", key, column); // Added debug log
+          const options = filterOptions[key];
+          console.log("Options for key:", key, options); // Added debug log
+          
+
+          return column ? (
+            <DataTableFacetedFilter<TData, any> // Replace 'any' with the appropriate type for the second argument
+              key={key}
+              column={column}
+              title={key}
+              options={options.map(option => ({
+                label: option.label,
+                value: option.value,
+                // Render the icon if needed
+              }))}
+            />
+          ) : (
+            <div key={key}>Column not found for {key}</div> // Added error handling
+          );
+        })}
         {isFiltered && (
           <Button
             variant="ghost"
@@ -59,5 +74,5 @@ export function DataTableToolbar<TData>({
       </div>
       <DataTableViewOptions table={table} />
     </div>
-  )
+  );
 }

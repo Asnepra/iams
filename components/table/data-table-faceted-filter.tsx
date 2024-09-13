@@ -22,7 +22,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 interface DataTableFacetedFilterProps<TData, TValue> {
-  displayFilterMenu?:boolean
+  displayFilterMenu?: boolean
   column?: Column<TData, TValue>
   title?: string
   options: {
@@ -37,9 +37,20 @@ export function DataTableFacetedFilter<TData, TValue>({
   title,
   options,
 }: DataTableFacetedFilterProps<TData, TValue>) {
+  // Get the unique values for faceting and the currently selected values
   const facets = column?.getFacetedUniqueValues()
   const selectedValues = new Set(column?.getFilterValue() as string[])
-  console.log("filter values", selectedValues, facets)
+
+  // Toggle selection of an option
+  const handleSelect = (value: string) => {
+    const updatedSelection = new Set(selectedValues)
+    if (updatedSelection.has(value)) {
+      updatedSelection.delete(value)
+    } else {
+      updatedSelection.add(value)
+    }
+    column?.setFilterValue(updatedSelection.size ? Array.from(updatedSelection) : undefined)
+  }
 
   return (
     <Popover>
@@ -47,7 +58,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Button variant="outline" size="sm" className="h-8 border-dashed">
           <PlusCircledIcon className="mr-2 h-4 w-4" />
           {title}
-          {selectedValues?.size > 0 && (
+          {selectedValues.size > 0 && (
             <>
               <Separator orientation="vertical" className="mx-2 h-4" />
               <Badge
@@ -84,7 +95,7 @@ export function DataTableFacetedFilter<TData, TValue>({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
-          <CommandInput placeholder={title} />
+          <CommandInput placeholder={`Search ${title}`} />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup>
@@ -93,17 +104,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                 return (
                   <CommandItem
                     key={option.value}
-                    onSelect={() => {
-                      if (isSelected) {
-                        selectedValues.delete(option.value)
-                      } else {
-                        selectedValues.add(option.value)
-                      }
-                      const filterValues = Array.from(selectedValues)
-                      column?.setFilterValue(
-                        filterValues.length ? filterValues : undefined
-                      )
-                    }}
+                    onSelect={() => handleSelect(option.value)}
                   >
                     <div
                       className={cn(

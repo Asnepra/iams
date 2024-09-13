@@ -32,11 +32,15 @@ import { DataTablePagination } from "@/components/table/data-table-pagination"
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  
+  filterOptions?: [];
+
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  filterOptions
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
