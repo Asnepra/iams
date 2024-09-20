@@ -41,16 +41,16 @@ export function DataTableToolbar<TData>({
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
-        {table.getColumn("Department") && (
+        {table.getColumn("department") && (
           <DataTableFacetedFilter
-            column={table.getColumn("Department")}
+            column={table.getColumn("department")}
             title="Department"
             options={labels}
           />
         )}
-        {table.getColumn("StatusDescription") && (
+        {table.getColumn("statusDescription") && (
           <DataTableFacetedFilter
-            column={table.getColumn("StatusDescription")}
+            column={table.getColumn("statusDescription")}
             title="Status"
             options={statuses}
           />

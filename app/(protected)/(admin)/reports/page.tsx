@@ -86,7 +86,7 @@ export default function ComprehensiveCartridgeReports() {
           year: selectedYear
         });
         console.log("data", response.data);
-        setData(response.data.data); // Assuming the API returns { data: CartridgeData[] }
+        setData(response.data.detailedData); // Assuming the API returns { data: CartridgeData[] }
       } catch (error) {
         toast.error("Error fetching data");
       } finally {
@@ -98,14 +98,14 @@ export default function ComprehensiveCartridgeReports() {
   }, [selectedMonth, selectedYear, router]);
 
   // Filter data by status codes
-  const filterDataByStatus = (status: string) => data.filter(item => item.STATUS_ID === status);
+  const filterDataByStatus = (status: string) => data.filter(item => item.statusId === status);
 
   const requestedData = filterDataByStatus("201");  // Pending
   const approvedData = filterDataByStatus("202");  // Approved
   const rejectedData = filterDataByStatus("203");  // Rejected
 
-  const totalRequested = requestedData.reduce((sum, item) => sum + item.REQUESTED_QTY, 0);
-  const totalApproved = approvedData.reduce((sum, item) => sum + item.APPROVED_QTY, 0);
+  const totalRequested = requestedData.reduce((sum, item) => sum + item.requestedQty, 0);
+  const totalApproved = approvedData.reduce((sum, item) => sum + item.approvedQty, 0);
   const totalRejected = rejectedData.length;  // Count of rejected items
 
   const pieData = [
@@ -115,11 +115,11 @@ export default function ComprehensiveCartridgeReports() {
   ];
 
   const departmentData = data.reduce((acc: { name: string; value: number }[], item) => {
-    const existingDept = acc.find(d => d.name === item.Department); // Change to Department
+    const existingDept = acc.find(d => d.name === item.department); // Change to Department
     if (existingDept) {
-      existingDept.value += item.REQUESTED_QTY;
+      existingDept.value += item.requestedQty;
     } else {
-      acc.push({ name: item.Department, value: item.REQUESTED_QTY }); // Change to Department
+      acc.push({ name: item.department, value: item.requestedQty }); // Change to Department
     }
     return acc;
   }, []);
