@@ -1,6 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { labels} from "./data/meta-data";
+import { labels } from "./data/meta-data";
 import { CartridgeDataReport } from "@/schemas/printerSchema";
 import { formatDate } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
@@ -90,9 +89,9 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status Description" />,
     cell: ({ row }) => {
       const status = statuses.find(label => label.label === row.getValue("statusDescription"));
-      //console.log("statuvs value ghjnk", status?.value)
       const badgeColorClass = status ? STATUS_COLORS_S[status.value] : "bg-gray-200 text-gray-800";
 
+      //console.log("Status: ", status, "Badge Color Class: ", badgeColorClass); // Debugging
 
       return (
         <div className="flex items-center">

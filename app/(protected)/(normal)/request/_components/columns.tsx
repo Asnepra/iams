@@ -24,7 +24,6 @@ import { formatDate } from "@/lib/utils"
 import { STATUS_COLORS, STATUS_DESCRIPTIONS } from "@/schemas/meta-data"
 
 
-
 export const columns: ColumnDef<PendingCatridgeRequestProps>[] = [
   {
     accessorKey: TRANS_ID,
