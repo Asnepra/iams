@@ -140,40 +140,46 @@ export const statuses = [
   {
     value: "Pending",
     label: "Pending",
-    icon: CircleHelp, // Represents pending or awaiting action
+    icon: CircleHelp,
+    color: "bg-yellow-200 text-yellow-800", // Yellow for pending
   },
   {
     value: "Issued",
     label: "Issued",
-    icon: CheckCheck, // Represents issued or distributed items
+    icon: CheckCheck,
+    color: "bg-green-200 text-green-800", // Green for issued
   },
   {
     value: "Rejected",
     label: "Rejected",
-    icon: GitPullRequestClosed, // Represents rejected or problematic status
+    icon: GitPullRequestClosed,
+    color: "bg-red-200 text-red-800", // Red for rejected
   },
   {
     value: "In IS Store",
     label: "In IS Store",
-    icon: Store, // Represents items in store or inventory
+    icon: Store,
+    color: "bg-blue-200 text-blue-800", // Blue for in store
   },
   {
     value: "Assigned",
     label: "Assigned",
-    icon: FileSignature, // Represents tasks or items that are assigned
+    icon: FileSignature,
+    color: "bg-indigo-200 text-indigo-800", // Indigo for assigned
   },
   {
     value: "Under Maint.",
     label: "Under Maint.",
-    icon: ServerCog, // Represents maintenance status
+    icon: ServerCog,
+    color: "bg-orange-200 text-orange-800", // Orange for under maintenance
   },
   {
     value: "Condemned",
     label: "Condemned",
-    icon: Columns2, // Represents items that are condemned or disposed
+    icon: Columns2,
+    color: "bg-gray-200 text-gray-800", // Gray for condemned
   },
-  
-]
+];
 
 
 export const priorities = [

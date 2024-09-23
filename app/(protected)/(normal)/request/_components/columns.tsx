@@ -21,8 +21,22 @@ import {
   CARTRIDGE_DESCRIPTION
 } from "@/schemas/requests"
 import { formatDate } from "@/lib/utils"
-import { STATUS_COLORS, STATUS_DESCRIPTIONS } from "@/schemas/meta-data"
 
+// Define status mapping with descriptions
+const STATUS_DESCRIPTIONS: Record<number, string> = {
+  102: "Assigned",
+  201: "Pending",
+  202: "Issued",
+  203: "Rejected",
+}
+
+// Define status color mapping using Tailwind CSS classes
+const STATUS_COLORS: Record<number, string> = {
+  102: "bg-gray-200 text-gray-800", // Assigned
+  201: "bg-yellow-200 text-yellow-800", // Pending
+  202: "bg-green-200 text-green-800", // Issued
+  203: "bg-red-200 text-red-800", // Rejected
+}
 
 export const columns: ColumnDef<PendingCatridgeRequestProps>[] = [
   {
