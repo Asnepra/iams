@@ -1,10 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { labels, statuses } from "./data/meta-data";
+import { labels} from "./data/meta-data";
 import { CartridgeDataReport } from "@/schemas/printerSchema";
 import { formatDate } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
+import { STATUS_COLORS_S, statuses } from "@/schemas/meta-data";
+import { Badge } from "@/components/ui/badge";
 
+// Column Definitions
 export const columns: ColumnDef<CartridgeDataReport>[] = [
   {
     accessorKey: "transId",
@@ -35,11 +38,11 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     accessorKey: "department",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Department" />,
     cell: ({ row }) => {
-      const status = labels.find(label => label.label === row.getValue("department"));
+      const department = labels.find(label => label.label === row.getValue("department"));
       return (
         <div className="flex items-center max-w-[100px] text-sm truncate">
-          {status?.icon && <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
-          <span>{status?.label}</span>
+          {department?.icon && <department.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
+          <span>{department?.label}</span>
         </div>
       );
     },
@@ -87,14 +90,18 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status Description" />,
     cell: ({ row }) => {
       const status = statuses.find(label => label.label === row.getValue("statusDescription"));
+      //console.log("statuvs value ghjnk", status?.value)
+      const badgeColorClass = status ? STATUS_COLORS_S[status.value] : "bg-gray-200 text-gray-800";
+
+
       return (
-        <div className="flex items-center max-w-[100px] text-sm truncate">
-          {status?.icon && <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
-          <span>{status?.label}</span>
+        <div className="flex items-center">
+          <Badge className={`inline-flex items-center px-2 py-1 rounded text-sm font-medium ${badgeColorClass}`}>
+            {status?.label}
+          </Badge>
         </div>
       );
     },
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
-  // Other column definitions...
 ];
