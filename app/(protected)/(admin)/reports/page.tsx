@@ -15,7 +15,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import Papa from 'papaparse'
+import Papa from "papaparse"
 
 import { formatDate } from '@/lib/utils';
 
