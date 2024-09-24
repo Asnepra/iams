@@ -42,12 +42,24 @@ const monthToNumber = (month: string) => {
   return index >= 0 ? index + 1 : 0; // Months are 1-based
 };
 
+const startYear = 2020;
+const yearList = Array.from({ length: 101 }, (_, i) => (startYear + i).toString());
+
+// In your component
+
+
 
 
 export default function ComprehensiveCartridgeReports() {
+  const currentDate = new Date();
+const currentMonth = months[currentDate.getMonth()]; // Get current month
+const currentYear = currentDate.getFullYear().toString(); // Get current year
+
   const [data, setData] = useState<CartridgeDataReport[]>([]);
-  const [selectedMonth, setSelectedMonth] = useState<string>("Aug");
-  const [selectedYear, setSelectedYear] = useState<string>("2024");
+  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
+  
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear); // Set default to 2024
+
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
@@ -138,7 +150,7 @@ export default function ComprehensiveCartridgeReports() {
               <SelectValue placeholder="Select Year" />
             </SelectTrigger>
             <SelectContent>
-              {years.map((year) => (
+              {yearList.map((year) => (
                 <SelectItem key={year} value={year}>
                   {year}
                 </SelectItem>

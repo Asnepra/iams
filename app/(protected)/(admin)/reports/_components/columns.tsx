@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { labels, statuses } from "@/schemas/meta-data";
+import { departments, statuses } from "@/schemas/meta-data";
 import { CartridgeDataReport } from "@/schemas/printerSchema";
 import { formatDate } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
@@ -36,7 +36,7 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     accessorKey: "department",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Department" />,
     cell: ({ row }) => {
-      const status = labels.find(label => label.label === row.getValue("department"));
+      const status = departments.find(label => label.label === row.getValue("department"));
       return (
         <div className="flex items-center max-w-[100px] text-sm truncate">
           {status?.icon && <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
@@ -52,6 +52,26 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     cell: ({ row }) => (
       <div className="max-w-[120px] text-sm truncate">{formatDate(row.getValue("requestedOn"))}</div>
     ),
+  },
+  
+  {
+    accessorKey: "statusDescription",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Current Status" />,
+    cell: ({ row }) => {
+      const status = statuses.find(label => label.label === row.getValue("statusDescription"));
+    const badgeColorClass = status ? status.color : "bg-gray-200 text-gray-800"; 
+      return (
+        <div className="flex items-center max-w-[100px] text-sm truncate">
+          <Badge className={`inline-flex items-center px-2 py-1 rounded text-sm font-medium ${badgeColorClass}`}>
+          
+        
+          {status?.icon && <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
+          <span>{status?.label}</span>
+          </Badge>
+        </div>
+      );
+    },
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
     accessorKey: "approvedByName",
@@ -70,13 +90,6 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     ),
   },
   {
-    accessorKey: "approvingReason",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Action Reason" />,
-    cell: ({ row }) => (
-      <div className="max-w-[150px] text-sm truncate">{row.getValue("approvingReason")}</div>
-    ),
-  },
-  {
     accessorKey: "cartridgeReturned",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Old Returned" />,
     cell: ({ row }) => (
@@ -84,23 +97,11 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     ),
   },
   {
-    accessorKey: "statusDescription",
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status Description" />,
-    cell: ({ row }) => {
-      const status = statuses.find(label => label.label === row.getValue("statusDescription"));
-    const badgeColorClass = status ? status.color : "bg-gray-200 text-gray-800"; 
-      return (
-        <div className="flex items-center max-w-[100px] text-sm truncate">
-          <Badge className={`inline-flex items-center px-2 py-1 rounded text-sm font-medium ${badgeColorClass}`}>
-          
-        
-          {status?.icon && <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />}
-          <span>{status?.label}</span>
-          </Badge>
-        </div>
-      );
-    },
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
+    accessorKey: "approvingReason",
+    header: ({ column }) => <DataTableColumnHeader column={column} title="Action Reason" />,
+    cell: ({ row }) => (
+      <div className="max-w-[150px] text-sm truncate">{row.getValue("approvingReason")}</div>
+    ),
   },
   // Other column definitions...
 ];
