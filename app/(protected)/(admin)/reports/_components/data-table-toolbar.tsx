@@ -22,24 +22,35 @@ interface DataTableToolbarProps<TData> {
     value: string
     icon?: React.ComponentType<{ className?: string }>
   }[]
+  filterKey:string,
+  filterString?:string // Accept filterKey as a prop
 }
 
 export function DataTableToolbar<TData>({
   table,
+  filterKey,
+  filterString // Accept filterKey as a prop
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
+  const column = table.getColumn(filterKey)
   
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
-        <Input
+        {/* <Input
           placeholder="Filter name..."
           value={(table.getColumn("EmployeeName")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("EmployeeName")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
+        /> */}
+        <Input
+          placeholder={`Filter ${filterString}...`}
+          value={(column?.getFilterValue() as string) ?? ""}
+          onChange={(event) => column?.setFilterValue(event.target.value)}
+          className="w-full rounded-lg bg-background md:w-[200px] lg:w-[336px]"
         />
         {table.getColumn("department") && (
           <DataTableFacetedFilter

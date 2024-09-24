@@ -19,8 +19,8 @@ import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 
 import { columns } from './_components/columns';
-import { DataTable } from './_components/data-table';
 import { CartridgeDataReport } from '@/schemas/printerSchema';
+import { DataTable } from './_components/data-table';
 
 const COLORS: { [key: string]: string } = {
   requested: "#8884d8",
@@ -207,22 +207,7 @@ export default function ComprehensiveCartridgeReports() {
         </Card>
       </div>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Monthly Overview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={data}>
-              <XAxis dataKey="REQUESTED_BY" />
-              <YAxis />
-              <Bar dataKey="REQUESTED_QTY" fill={COLORS.requested} name="Requested" />
-              <Bar dataKey="APPROVED_QTY" fill={COLORS.approved} name="Approved" />
-              <Legend />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+     
 
       <Card>
         <CardHeader>
@@ -275,7 +260,7 @@ export default function ComprehensiveCartridgeReports() {
               ))}
             </TableBody>
           </Table> */}
-          <DataTable data={data} columns={columns} />
+          <DataTable data={data} columns={columns} filterKey='employeeName' filterString='Name'/>
         </CardContent>
       </Card>
     </div>
