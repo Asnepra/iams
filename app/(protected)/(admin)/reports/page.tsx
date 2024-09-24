@@ -15,6 +15,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import Papa from 'papaparse'
 
 import { formatDate } from '@/lib/utils';
 
@@ -120,9 +121,46 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
     return acc;
   }, []);
 
+
   const exportToExcel = () => {
-    // to be implemented
+    const csvData = data.map(item => ({
+      TransactionID: item.transId,
+      AssetID: item.assetId,
+      CartridgeID: item.cartridgeId,
+      RequestedQty: item.requestedQty,
+      ApprovedQty: item.approvedQty,
+      StatusID: item.statusId,
+      RequestedBy: item.requestedBy,
+      RequestedOn: formatDate(item.requestedOn), // Format the date as needed
+      ApprovedBy: item.approvedBy,
+      ApprovedOn: item.approvedOn ? formatDate(item.approvedOn) : '-', // Handle null
+      ApprovingReason: item.approvingReason,
+      CartridgeReturned: item.cartridgeReturned ? 'Yes' : 'No',
+      EmployeeName: item.employeeName,
+      Department: item.department,
+      UserRole: item.userRole,
+      Designation: item.designation,
+      DesignationName: item.designationName,
+      StatusDescription: item.statusDescription,
+      CartridgeDescription: item.cartridgeDescription,
+      ApprovedByName: item.approvedByName,
+      RequestedByName: item.requestedByName,
+    }));
+  
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `Cartridge_Reports_${selectedMonth}_${selectedYear}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
+  
+  
 
   if (loading) {
     return <div className='container mx-auto p-1'>Loading...</div>;
