@@ -70,7 +70,7 @@ export default function ComprehensiveCartridgeReports() {
         console.log("data", response.data);
         setData(response.data.detailedData); // Assuming the API returns { data: CartridgeData[] }
       } catch (error) {
-        toast.error("Error fetching data");
+        toast.error("Error fetching data, Please reload");
       } finally {
         setLoading(false);
       }
@@ -80,22 +80,23 @@ export default function ComprehensiveCartridgeReports() {
   }, [selectedMonth, selectedYear, router]);
 
   // Filter data by status codes
-  const filterDataByStatus = (status: string) => data.filter(item => item.statusId === status);
+  const filterDataByStatus = (status: string) => data.filter(item => item.statusDescription === status);
 
-  const requestedData = filterDataByStatus("201");  // Pending
-  const approvedData = filterDataByStatus("202");  // Approved
-  const rejectedData = filterDataByStatus("203");  // Rejected
+  const requestedData = filterDataByStatus("Pending");  // Pending
+  const approvedData = filterDataByStatus("Issued");  // Approved
+  const rejectedData = filterDataByStatus("Rejected");  // Rejected
 
-  const totalRequested = requestedData.reduce((sum, item) => sum + item.requestedQty, 0);
-  const totalApproved = approvedData.reduce((sum, item) => sum + item.approvedQty, 0);
+  const totalPending = requestedData.length;
+  const totalApproved = approvedData.length;
   const totalRejected = rejectedData.length;  // Count of rejected items
-  console.log("re", totalApproved, approvedData, rejectedData);
+  
 
   const pieData = [
-    { name: "Requested", value: totalRequested },
+    {name:"Pending", value:totalPending},
     { name: "Approved", value: totalApproved },
     { name: "Rejected", value: totalRejected }
   ];
+  console.log("re", pieData);
 
   const departmentData = data.reduce((acc: { name: string; value: number }[], item) => {
     const existingDept = acc.find(d => d.name === item.department); // Change to Department
@@ -118,7 +119,7 @@ export default function ComprehensiveCartridgeReports() {
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Cartridge Request Reports</h1>
+        <h1 className="text-3xl font-bold">Cartridge Request Reports for {selectedMonth}, {selectedYear}</h1>
         <div className="flex items-center space-x-4">
           <Select value={selectedMonth} onValueChange={setSelectedMonth}>
             <SelectTrigger className="w-[120px]">
