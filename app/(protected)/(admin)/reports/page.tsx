@@ -89,6 +89,7 @@ export default function ComprehensiveCartridgeReports() {
   const totalRequested = requestedData.reduce((sum, item) => sum + item.requestedQty, 0);
   const totalApproved = approvedData.reduce((sum, item) => sum + item.approvedQty, 0);
   const totalRejected = rejectedData.length;  // Count of rejected items
+  console.log("re", totalApproved, approvedData, rejectedData);
 
   const pieData = [
     { name: "Requested", value: totalRequested },

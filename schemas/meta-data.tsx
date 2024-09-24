@@ -31,6 +31,9 @@ import {
   ArrowUpIcon,
   AudioLinesIcon,
   Columns2,
+  X,
+  SquareXIcon,
+  CircleXIcon,
 } from "lucide-react"
 
 export const labels = [
@@ -152,7 +155,7 @@ export const statuses = [
   {
     value: "Rejected",
     label: "Rejected",
-    icon: GitPullRequestClosed,
+    icon: CircleXIcon,
     color: "bg-red-200 text-red-800", // Red for rejected
   },
   {

@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
-import { labels, statuses } from "./data/meta-data";
+import { labels, statuses } from "@/schemas/meta-data";
 import { CartridgeDataReport } from "@/schemas/printerSchema";
 import { formatDate } from "@/lib/utils";
 import { DataTableColumnHeader } from "@/components/table/data-table-column-header";
