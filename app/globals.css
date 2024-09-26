@@ -6,6 +6,81 @@ body,
 :root{
    height: 100%; 
 }
+.quill-editor {
+  min-height: 200px; /* Adjust this value as needed */
+}
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  html,
+  body,
+  :root {
+    @apply h-full;
+  }
+}
+
+.ql-toolbar {
+  border: none !important;
+  background-color: #f8f8f8 !important;
+}
+
+.ql-toolbar .ql-formats:not(:last-child) {
+  border-right: 1px solid #dcdcdc !important;
+  padding-right: 12px !important;
+}
+
+.ql-container {
+  font-family: 'Lato', sans-serif !important;
+  border: none !important;
+  height: unset !important;
+}
+
+.ql-editor {
+  line-height: 22px !important;
+  padding: 8px 12px !important;
+  color: #1d1c1d !important;
+  font-weight: 400 !important;
+  font-family: 'Lato', sans-serif !important;
+  font-size: 14px !important;
+}
+
+.ql-editor a {
+  color: #1264a3 !important;
+}
+
+.ql-editor a:hover {
+  text-decoration: underline !important;
+}
+
+.ql-editor:before {
+  left: 12px !important;
+  font-family: 'Lato', sans-serif !important;
+  color: #8d8d8d !important;
+  font-style: normal !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+
+  @apply !truncate;
+}
+
+.ql-renderer {
+  @apply !p-0;
+}
+
+@layer utilities {
+  .messages-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #dcdcdc #f8f8f8;
+  }
+}
 
 @layer base {
   :root {
@@ -96,3 +171,5 @@ body,
       top: 80px;
       opacity: 0.15;
     }
+
+    

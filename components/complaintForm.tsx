@@ -1,202 +1,157 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import axios from 'axios';
+"use client";
 
-import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ComputerIcon, LaptopIcon, PrinterIcon, ServerIcon } from "lucide-react";
 import { useState } from "react";
-import Cookies from 'js-cookie';
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
-import { Textarea } from "./ui/textarea";
+import Cookies from 'js-cookie';
+import axios from "axios";
+import { ChatInput } from "@/components/chat-input";
+import { TicketCatProps, USER_ASSET } from "@/schemas/ticket";
 
-interface Asset {
-  assetId: string;
-  assetModalId:string;
-  assetModalName: string;
-  categoryName: string;
-}
-
-interface TicketFormData {
-  assetModalId: string; // Correct type for assetId
-  ticketPriority: string;
-  ticketDetails: string;
-}
-
-const ticketSchema = z.object({
-  assetModalId: z.string().min(1,{
-    message: "Please select a device.",
-  }),
-  ticketPriority: z.string().min(1,{
-    message: "Please select the priority",
-  }),
-  ticketDetails: z.string().min(10, {
-    message: "Please enter details of your concern, atleast 10 characters",
-  }),
-});
-
-interface Priority {
-  priorityId: number;
-  priorityName: string;
-  priorityIcon: JSX.Element;
-  priorityColor: string; // Add priority color type
-}
+const MAX_FILE_SIZE = 1000000; // 1 MB
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 interface ComplaintFormProps {
-  assets: Asset[];
-  priorityList: Priority[];
+  assets: USER_ASSET[];
+  ticketCat: TicketCatProps[];
 }
 
-const imageCategoryMap: Record<string, JSX.Element> = {
-  Computer: <ComputerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-  Laptop: <LaptopIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-  Printer: <PrinterIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-  Server: <ServerIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />,
-};
+const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
+  const [mainCatId, setMainCatId] = useState<number>(-1);
+  const [subCatId, setSubCatId] = useState<number>(-1);
+  const [ticketId, setTicketId] = useState<number | null>(null);
+  const [assetComplaintMessage, setAssetComplaintMessage] = useState<string>("");
+  const [assetImage, setAssetImage] = useState<File | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, priorityList }) => {
-  const token = Cookies.get('token');
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-
-  const form = useForm<TicketFormData>({
-    resolver: zodResolver(ticketSchema),
-    defaultValues: {
-      assetModalId:"",
-      ticketPriority: "",
-      ticketDetails: "",
-    },
-  });
-
-  const findIdFromAssetName = (assetName: string): string => {
-    const foundAsset = assets.find(asset => asset.assetModalName === assetName);
-    return foundAsset ? foundAsset.assetModalId : '';
+  const organizeTickets = (data: TicketCatProps[]) => {
+    const organized: { [key: number]: { mainCatName: string; subCategories: { subCatId: number; subCatName: string; ticketCatId: number; }[]; } } = {};
+    data.forEach(item => {
+      const { mainCatId, mainCatName, subCatId, subCatName, ticketCatId } = item;
+      if (!organized[mainCatId]) {
+        organized[mainCatId] = { mainCatName, subCategories: [] };
+      }
+      organized[mainCatId].subCategories.push({ subCatId, subCatName, ticketCatId });
+    });
+    return organized;
   };
 
-  const onSubmit = async (values: TicketFormData) => {
-    setIsPending(true);
-    try {
-      const assetIds = findIdFromAssetName(values.assetModalId); // Find assetId from asset name
-      const data = {
-        token: token,
-        assetModalId: assetIds, // Correctly submit assetId from form values
-        ticketPriority: values.ticketPriority || "Low",
-        ticketDetails: values.ticketDetails || "Null"
-      };
+  const organizedTicketData = organizeTickets(ticketCat);
+  const specificComplaints = mainCatId && organizedTicketData[mainCatId]
+    ? organizedTicketData[mainCatId].subCategories
+    : [];
 
-      //const response = await axios.post(`/api/assetmaster`, data);
-      
-      console.log("Success!", data);
-
-      await axios.post(`/api/raiseticket`,data)
-     .then(response => {
-      toast.success("Ticket Raised Successfully!");
-      console.log("Success!", response);
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000); // 3000 milliseconds = 3 seconds
-    }).catch(error=>{
-      console.log("Error ", error)
-    })
-      //Optionally, you can reload the page after successful submission
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    } catch (error) {
-      console.error("Error adding ticket:", error);
-      toast.error("Failed to raise ticket. Please try again.");
-      setError("Failed to raise ticket. Please try again.");
-    } finally {
-      setIsPending(false);
+  const validateInputs = () => {
+    if (mainCatId < 1) {
+      toast.error("Please select a complaint type.");
+      return false;
     }
+    if (subCatId < 1 || ticketId === null) {
+      toast.error("Please select a specific complaint.");
+      return false;
+    }
+    if (!assetComplaintMessage.trim()) {
+      toast.error("Please enter a message.");
+      return false;
+    }
+    if (assetImage && (assetImage.size > MAX_FILE_SIZE || !ACCEPTED_IMAGE_TYPES.includes(assetImage.type))) {
+      toast.error("Image size must be less than 1 MB and in .jpg, .jpeg, .png, or .webp format.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleComplaint = async () => {
+    if (!validateInputs()) return;
+    console.log("data",mainCatId, subCatId, assetComplaintMessage, assetImage);
+
+    // setLoading(true);
+    // const token = Cookies.get('token');
+    // const formData = new FormData();
+    // formData.append('token', token);
+    // formData.append('mainCatId', mainCatId.toString());
+    // formData.append('subCatId', subCatId.toString());
+    // formData.append('ticketID', ticketId?.toString() || "");
+    // formData.append('assetComplaintMessage', assetComplaintMessage);
+    // if (assetImage) {
+    //   formData.append('assetImage', assetImage);
+    // }
+
+    // try {
+    //   await axios.post('/api/requestedComplaints', formData, {
+    //     headers: {
+    //       'Content-Type': 'multipart/form-data',
+    //     },
+    //   });
+    //   toast.success("Request raised successfully!");
+    //   setTimeout(() => window.location.reload(), 2000);
+    // } catch (error) {
+    //   toast.error("Error submitting the complaint");
+    //   console.error("Submission Error:", error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <div className="grid grid-cols-2 gap-x-8 gap-y-4">
-          <FormField
-            control={form.control}
-            name="assetModalId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Select Asset</FormLabel>
-                <Select
-                  onValueChange={(value) => field.onChange(value)}
-                  value={field.value}
-                >
-                  <SelectTrigger className="bg-background">
-                    <SelectValue placeholder="Select an asset..." />
-                    <SelectContent>
-                      {assets?.map((asset) => (
-                        <SelectItem key={asset.assetModalId} value={asset.assetModalName}>
-                          <div className="flex items-center gap-2">
-                            {imageCategoryMap[asset.categoryName]}
-                            <span>{asset.assetModalName}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </SelectTrigger>
-                </Select>
-                <FormMessage/>
-              </FormItem>
-            )}
-          />
+    <div>
+      <div>
+        <Label>Complaint Type</Label>
+        <Select onValueChange={(value) => {
+          setMainCatId(Number(value));
+          setSubCatId(-1); // Reset specific complaint
+          setTicketId(null); // Reset ticketID
+        }}>
+          <SelectTrigger aria-label="Select Complaint Type">
+            <SelectValue placeholder="Select a complaint type..." />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(organizedTicketData).map(([mainCatId, { mainCatName }]) => (
+              <SelectItem key={mainCatId} value={mainCatId}>
+                {mainCatName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-          <FormField
-            control={form.control}
-            name="ticketPriority"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Select Priority</FormLabel>
-                <Select
-                  onValueChange={(value) => field.onChange(value)}
-                  value={field.value}
-                >
-                  <SelectTrigger className="bg-background">
-                    <SelectValue placeholder="Select priority..." defaultValue={field.value || ""} />
-                    <SelectContent>
-                      {priorityList.map((priority) => (
-                        <SelectItem key={priority.priorityId} value={priority.priorityName}>
-                          <div className={`flex items-center gap-4 `}>
-                            {priority.priorityIcon}
-                            <span>{priority.priorityName}</span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </SelectTrigger>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+      <div>
+        <Label>Specific Complaint</Label>
+        <Select onValueChange={(value) => {
+          const selectedComplaint = specificComplaints.find(c => c.subCatId.toString() === value);
+          if (selectedComplaint) {
+            setSubCatId(selectedComplaint.subCatId);
+            setTicketId(selectedComplaint.ticketCatId);
+          }
+        }}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select a specific complaint..." />
+          </SelectTrigger>
+          <SelectContent>
+            {specificComplaints.map(complaint => (
+              <SelectItem key={complaint.subCatId} value={complaint.subCatId.toString()}>
+                {complaint.subCatName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-        <FormField
-          control={form.control}
-          name="ticketDetails"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <Textarea
-                {...field} // Register the textarea field with react-hook-form
-                placeholder="Provide details about your request"
-                className="min-h-[150px]"
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" className="w-full" disabled={isPending}>
-          {isPending ? 'Submitting...' : 'Submit Query'}
-        </Button>
-      </form>
-    </Form>
+      <ChatInput 
+        placeholder="Enter your message in detail, you can attach a maximum of 1 image" 
+        onSubmit={handleComplaint} 
+      />
+      
+      
+    </div>
   );
 };
 

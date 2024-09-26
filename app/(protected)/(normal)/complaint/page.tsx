@@ -34,23 +34,10 @@ import ComplaintForm from "@/components/complaintForm";
 
 import { columns } from "./_components/columns";
 import { DataTable } from "@/components/table/data-table";
+import { UserData } from "@/schemas";
+import { TicketCatProps, USER_ASSET } from "@/schemas/ticket";
 
 
-interface Asset {
-    assetId:string;
-    assetModalId:string;
-  assetModalName: string;
-  categoryName: string;
-}
-
-interface UserData {
-  userId: string;
-  userName: string;
-  isAdmin: string;
-  userMail: string;
-  userDepartment:string;
-  // Add other fields as needed
-}
 
 function parseToken(token: string): UserData | null {
   try {
@@ -64,24 +51,7 @@ function parseToken(token: string): UserData | null {
   }
 }
 
-interface TicketFormData {
-  assetId: string;
-  assetModalName:string;
-  ticketPriority: string;
-  ticketDetails: string;
-}
 
-const ticketSchema = z.object({
-  assetId: z.string({
-    message: "Please select a device.",
-  }),
-  ticketPriority: z.string({
-    message: "Please select the priority",
-  }),
-  ticketDetails: z.string().min(10, {
-    message: "Please enter details of your concern",
-  }),
-});
 
 interface Priority {
   priorityId: number;
@@ -99,19 +69,13 @@ const priorityList: Priority[] = [
 
 export default function ComplaintPage() {
   const [error, setError] = useState<string>(""); // State for error message
-  const [ticketData, setTicketData] = useState<any[]>([]); // State for ticket data
+  const [ticketData, setTicketData] = useState<TicketCatProps[]>([]); // State for ticket data
   const [userData, setUserData] = useState<UserData | null>(null); // State for user data
   const [isLoading, setIsLoading] = useState<boolean>(false); // State for loading indicator
-  const [assets, setAssets] = useState<Asset[]>([]); // State for user assets
+  const [assets, setAssets] = useState<USER_ASSET[]>([]); // State for user assets
+  //const [ticketData, setTicketData] = useState<{ hardware: any[]; software: any[]; network: any[] }>({ hardware: [], software: [], network: [] });
 
-  const form = useForm<TicketFormData>({
-    resolver: zodResolver(ticketSchema),
-    defaultValues: {
-      assetId: "",
-      ticketPriority: "",
-      ticketDetails: "",
-    },
-  });
+
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -130,7 +94,7 @@ export default function ComplaintPage() {
   const getUserAssets = async (token: string) => {
     try {
       const response = await axios.post("/api/getassets", { token });
-      const data: Asset[] = response.data;
+      const data: USER_ASSET[] = response.data;
       setAssets(data);
       console.log("User asset data:", data);
     } catch (error) {
@@ -142,18 +106,22 @@ export default function ComplaintPage() {
   };
 
   const getTicketData = async (token: string) => {
+    setIsLoading(true); // Set loading state
+
     try {
-      const response = await axios.post(`/api/gettickets`, { token });
-      const data: any[] = response.data; // Update with your TicketData type
-      setTicketData(data);
-      console.log("Ticket data:", data);
+        const response = await axios.post(`/api/getTicketCat`, { token });
+        const data = response.data;
+        setTicketData(data);
+        console.log("ticket", data);
     } catch (error) {
-      console.error("Error fetching ticket data:", error);
-      setError("Error fetching ticket data.");
+        console.error("Error fetching ticket data:", error);
+        setError("Error fetching ticket data.");
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
+
 
 
   return (
@@ -167,7 +135,7 @@ export default function ComplaintPage() {
                   <CardTitle>Raise a Complaint</CardTitle>
                   <CardDescription>Fill out the form below to register you complain regarding the asset.</CardDescription>
                 </CardHeader>
-                <CardContent className="grid gap-4">
+                <CardContent className="grid gap-2">
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
@@ -182,7 +150,7 @@ export default function ComplaintPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Designation</Label>
-                        <Input id="name" defaultValue={userData?.userName} disabled />
+                        <Input id="name" defaultValue={userData?.userDesignation} disabled />
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email">Department</Label>
@@ -190,7 +158,7 @@ export default function ComplaintPage() {
                       </div>
                     </div>
                   
-                  <ComplaintForm assets={assets} priorityList={priorityList}/>
+                  <ComplaintForm assets={assets} ticketCat={ticketData} />
                   
                 </CardContent>
                
@@ -216,7 +184,7 @@ export default function ComplaintPage() {
                 <CardDescription>View the status of your previously raised tickets.</CardDescription>
               </CardHeader>
               <CardContent>
-                <DataTable columns={columns} data={ticketData} filterKey={""}/>
+                {/* <DataTable columns={columns} data={ticketData} filterKey={""}/> */}
               </CardContent>
             </Card>
           </div>
