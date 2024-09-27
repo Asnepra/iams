@@ -18,22 +18,27 @@ const Editor = dynamic(() => import('@/components/editor'), {
 
 interface ChatInputProps {
   placeholder?: string;
-  onSubmit: ({body, image}:{body:string,image:File | null})=> void
+  onSubmit: ({ body, image }: { body: string; image: File | null }) => void; // Added onSubmit prop
 }
 
 type CreateMessageValues = {
+  // channelId: Id<'channels'>;
+  // workspaceId: Id<'workspaces'>;
   body: string;
-  image?: File | null;
+  image?: File | null
 };
 
-export const ChatInput = ({ placeholder }: ChatInputProps) => {
+export const ChatInput = ({ placeholder, onSubmit }: ChatInputProps) => {
   const [editorKey, setEditorKey] = useState(0);
   const [isPending, setIsPending] = useState(false);
 
   const innerRef = useRef<Quill | null>(null);
 
+  // const workspaceId = useWorkspaceId();
+  // const channelId = useChannelId();
 
-
+  // const { mutate: createMessage } = useCreateMessage();
+  // const { mutate: generateUploadUrl } = useGenerateUploadUrl();
 
   const handleSubmit = async ({ body, image }: { body: string; image: File | null }) => {
     try {
@@ -41,12 +46,41 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
       innerRef.current?.enable(false);
 
       const values: CreateMessageValues = {
-
+        // channelId,
+        // workspaceId,
         body,
         image: undefined,
       };
 
-      
+      if (image) {
+        image=image
+      }//console.log("values formc hat iunut", values);
+      onSubmit({body, image});
+      //   const url = await generateUploadUrl(
+      //     {},
+      //     {
+      //       throwError: true,
+      //     },
+      //   );
+
+      //   if (!url) throw new Error('URL not found.');
+
+      //   const result = await fetch(url, {
+      //     method: 'POST',
+      //     headers: { 'Content-type': image.type },
+      //     body: image,
+      //   });
+
+      //   if (!result.ok) throw new Error('Failed to upload image.');
+
+      //   const { storageId } = await result.json();
+
+      //   values.image = storageId;
+      // }
+
+      // await createMessage(values, { throwError: true });
+
+      setEditorKey((prevKey) => prevKey + 1);
     } catch (error) {
       toast.error('Failed to send message.');
     } finally {
@@ -56,7 +90,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full ">
       <Editor placeholder={placeholder} key={editorKey} onSubmit={handleSubmit} disabled={isPending} innerRef={innerRef} />
     </div>
   );

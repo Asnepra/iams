@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import { ChatInput } from "@/components/chat-input";
+import FormError from "@/components/form-error"; // Import the FormError component
 import { TicketCatProps, USER_ASSET } from "@/schemas/ticket";
 
 const MAX_FILE_SIZE = 1000000; // 1 MB
@@ -27,13 +28,23 @@ interface ComplaintFormProps {
 const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
   const [mainCatId, setMainCatId] = useState<number>(-1);
   const [subCatId, setSubCatId] = useState<number>(-1);
-  const [ticketId, setTicketId] = useState<number | null>(null);
-  const [assetComplaintMessage, setAssetComplaintMessage] = useState<string>("");
+  const [ticketId, setTicketId] = useState<number | null>(-1);
   const [assetImage, setAssetImage] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const organizeTickets = (data: TicketCatProps[]) => {
-    const organized: { [key: number]: { mainCatName: string; subCategories: { subCatId: number; subCatName: string; ticketCatId: number; }[]; } } = {};
+    const organized: {
+      [key: number]: {
+        mainCatName: string;
+        subCategories: {
+          subCatId: number;
+          subCatName: string;
+          ticketCatId: number;
+        }[];
+      };
+    } = {};
+
     data.forEach(item => {
       const { mainCatId, mainCatName, subCatId, subCatName, ticketCatId } = item;
       if (!organized[mainCatId]) {
@@ -50,107 +61,133 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
     : [];
 
   const validateInputs = () => {
+    setErrorMessage(null); // Reset error message
     if (mainCatId < 1) {
-      toast.error("Please select a complaint type.");
+      setErrorMessage("Please select a complaint type.");
       return false;
     }
     if (subCatId < 1 || ticketId === null) {
-      toast.error("Please select a specific complaint.");
-      return false;
-    }
-    if (!assetComplaintMessage.trim()) {
-      toast.error("Please enter a message.");
+      setErrorMessage("Please select a specific complaint.");
       return false;
     }
     if (assetImage && (assetImage.size > MAX_FILE_SIZE || !ACCEPTED_IMAGE_TYPES.includes(assetImage.type))) {
-      toast.error("Image size must be less than 1 MB and in .jpg, .jpeg, .png, or .webp format.");
+      setErrorMessage("Image size must be less than 1 MB and in .jpg, .jpeg, .png, or .webp format.");
       return false;
     }
     return true;
   };
 
-  const handleComplaint = async () => {
+  const handleComplaint = async ({ body, image }: { body: string; image: File | null }) => {
     if (!validateInputs()) return;
-    console.log("data",mainCatId, subCatId, assetComplaintMessage, assetImage);
 
-    // setLoading(true);
-    // const token = Cookies.get('token');
-    // const formData = new FormData();
-    // formData.append('token', token);
-    // formData.append('mainCatId', mainCatId.toString());
-    // formData.append('subCatId', subCatId.toString());
-    // formData.append('ticketID', ticketId?.toString() || "");
-    // formData.append('assetComplaintMessage', assetComplaintMessage);
-    // if (assetImage) {
-    //   formData.append('assetImage', assetImage);
-    // }
+    setLoading(true);
+    const token = Cookies.get('token');
+  
+    const formData = new FormData();
+    formData.append("token", token ?? "");
+    formData.append("mainCatId", mainCatId.toString());
+    formData.append("subCatId", subCatId.toString());
+    formData.append("assetComplaintMessage", body);
+    if (image) {
+      formData.append("assetImage", image); // Append the image if it exists
+    }
 
-    // try {
-    //   await axios.post('/api/requestedComplaints', formData, {
-    //     headers: {
-    //       'Content-Type': 'multipart/form-data',
-    //     },
-    //   });
-    //   toast.success("Request raised successfully!");
-    //   setTimeout(() => window.location.reload(), 2000);
-    // } catch (error) {
-    //   toast.error("Error submitting the complaint");
-    //   console.error("Submission Error:", error);
-    // } finally {
-    //   setLoading(false);
-    // }
+    console.log("Form data:", Array.from(formData.entries())); // Log the form data for debugging
+  
+    try {
+      await axios.post('/api/raiseTicket', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set the content type for file upload
+        },
+      });
+      toast.success("Request raised successfully!");
+      
+      // Reset form fields
+      setMainCatId(-1);
+      setSubCatId(-1);
+      setTicketId(null);
+      setAssetImage(null); // Clear the image
+    } catch (error) {
+      toast.error("Error submitting the complaint. Please try again.");
+      console.error("Submission Error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div>
-      <div>
-        <Label>Complaint Type</Label>
+    <div className="grid gap-2">
+      <div className="space-y-2">
+        <Label>Select Asset</Label>
         <Select onValueChange={(value) => {
           setMainCatId(Number(value));
           setSubCatId(-1); // Reset specific complaint
           setTicketId(null); // Reset ticketID
         }}>
-          <SelectTrigger aria-label="Select Complaint Type">
-            <SelectValue placeholder="Select a complaint type..." />
+          <SelectTrigger aria-label="Select Asset">
+            <SelectValue placeholder="Select an Asset..." />
           </SelectTrigger>
           <SelectContent>
-            {Object.entries(organizedTicketData).map(([mainCatId, { mainCatName }]) => (
-              <SelectItem key={mainCatId} value={mainCatId}>
-                {mainCatName}
+            {assets.map(complaint => (
+              <SelectItem key={complaint.assetBatchId} value={complaint.assetBatchId.toString()}>
+                {complaint.assetModel}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
+      
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label>Complaint Type</Label>
+          <Select onValueChange={(value) => {
+            setMainCatId(Number(value));
+            setSubCatId(-1); // Reset specific complaint
+            setTicketId(null); // Reset ticketID
+          }}>
+            <SelectTrigger aria-label="Select Complaint Type">
+              <SelectValue placeholder="Select a complaint type..." />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(organizedTicketData).map(([mainCatId, { mainCatName }]) => (
+                <SelectItem key={mainCatId} value={mainCatId}>
+                  {mainCatName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div>
-        <Label>Specific Complaint</Label>
-        <Select onValueChange={(value) => {
-          const selectedComplaint = specificComplaints.find(c => c.subCatId.toString() === value);
-          if (selectedComplaint) {
-            setSubCatId(selectedComplaint.subCatId);
-            setTicketId(selectedComplaint.ticketCatId);
-          }
-        }}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select a specific complaint..." />
-          </SelectTrigger>
-          <SelectContent>
-            {specificComplaints.map(complaint => (
-              <SelectItem key={complaint.subCatId} value={complaint.subCatId.toString()}>
-                {complaint.subCatName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="space-y-2 gap-4">
+          <Label>Specific Complaint</Label>
+          <Select onValueChange={(value) => {
+            const selectedComplaint = specificComplaints.find(c => c.subCatId.toString() === value);
+            if (selectedComplaint) {
+              setSubCatId(selectedComplaint.subCatId);
+              setTicketId(selectedComplaint.ticketCatId);
+            }
+          }}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select a specific complaint..." />
+            </SelectTrigger>
+            <SelectContent>
+              {specificComplaints.map(complaint => (
+                <SelectItem key={complaint.subCatId} value={complaint.subCatId.toString()}>
+                  {complaint.subCatName}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+      <div className="space-y-2 gap-4">
+      <FormError message={errorMessage || undefined} />
 
       <ChatInput 
         placeholder="Enter your message in detail, you can attach a maximum of 1 image" 
         onSubmit={handleComplaint} 
       />
-      
-      
+      </div>
     </div>
   );
 };

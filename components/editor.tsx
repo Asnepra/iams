@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 
 import { EmojiPopover } from '@/components/emoji-popover';
 import { Hint } from '@/components/hint';
+import ImageDialog from './image-dialog';
 
 type EditorValue = {
   image: File | null;
@@ -40,6 +41,8 @@ const Editor = ({
   const [text, setText] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
+  const [dialogImageSrc, setDialogImageSrc] = useState<string | null>(null);
+
 
   const containerRef = useRef<HTMLDivElement>(null);
   const imageElementRef = useRef<HTMLInputElement>(null);
@@ -142,6 +145,13 @@ const Editor = ({
 
     quill.insertText(quill.getSelection()?.index || 0, emoji.native);
   };
+  const openImageDialog = (src: string) => {
+    setDialogImageSrc(src);
+  };
+
+  const closeImageDialog = () => {
+    setDialogImageSrc(null);
+  };
 
   const isIOS = /iPad|iPhone|iPod|Mac/.test(navigator.userAgent);
 
@@ -165,6 +175,7 @@ const Editor = ({
               <Hint label="Remove image">
                 <button
                   onClick={() => {
+                    
                     setImage(null);
 
                     imageElementRef.current!.value = '';
@@ -176,6 +187,7 @@ const Editor = ({
               </Hint>
 
               <Image
+                onClick={() => openImageDialog(URL.createObjectURL(image))}
                 src={URL.createObjectURL(image)}
                 alt="Uploaded image"
                 fill
@@ -219,7 +231,7 @@ const Editor = ({
                   });
                 }}
                 size="sm"
-                className="bg-[#007a5a] text-white hover:bg-[#007a5a]/80"
+                className="bg-primary text-white hover:bg-primary/80"
               >
                 Save
               </Button>
@@ -240,7 +252,7 @@ const Editor = ({
               }}
               className={cn(
                 'ml-auto',
-                isEmpty ? 'bg-white text-muted-foreground hover:bg-white/80' : 'bg-[#007a5a] text-white hover:bg-[#007a5a]/80',
+                isEmpty ? 'border-b-2 bg-white text-muted-foreground hover:bg-white/80' : 'bg-primary text-white hover:bg-primary/80',
               )}
               
             >
@@ -249,6 +261,7 @@ const Editor = ({
           )}
         </div>
       </div>
+      
 
       {variant === 'create' && (
         <div className={cn('flex justify-end p-2 text-xs text-muted-foreground opacity-0 transition', !isEmpty && 'opacity-100')}>
@@ -257,6 +270,8 @@ const Editor = ({
           </p>
         </div>
       )}
+            <ImageDialog imageSrc={dialogImageSrc} onClose={closeImageDialog} />
+
     </div>
   );
 };
