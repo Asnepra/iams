@@ -52,11 +52,11 @@ export const normalRoutes = [
       href: "/reports",
       label: "Reports",
     },
-    // {
-    //   icon: Package,
-    //   href: "/assets",
-    //   label: "Manage Assets",
-    // },
+    {
+      icon: Package,
+      href: "/tickets",
+      label: "Ticket Dashboard",
+    },
     // {
     //   icon: UploadCloudIcon,
     //   href: "/upload",
