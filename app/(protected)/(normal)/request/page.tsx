@@ -113,7 +113,7 @@ export default function Home() {
     }
 
     setOldCartridgeReturned(hasReturned);
-    console.log("Old cartridges returned:", hasReturned);
+    //console.log("Old cartridges returned:", hasReturned);
   }, [cartridgeHistory]);
   //console.log("filtered data", filteredData);
 
