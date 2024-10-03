@@ -44,56 +44,77 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState<boolean>(false); // State for loading indicator
   const [cartridgeHistory, setCartridgeHistory] = useState<PendingCatridgeRequestProps[]>([]);
 
+  const[oldCartrridgeHasReturned, setOldCartridgeReturned]= useState<boolean>(true);
+
   useEffect(() => {
-    console.log('Fetching token...');
+    //console.log('Fetching token...');
     const token = Cookies.get('token');
     if (!token) {
-      setError("Token is missing or expired.");
-      console.error("Token is missing or expired.");
+      setError("Token is missing or expired, Please reload");
+      //console.error("Token is missing or expired.");
       return;
     }
-    console.log("Token found:", token);
+    //console.log("Token found:", token);
     const parsedUserData = parseToken(token);
     //console.log("Parsed user data:", parsedUserData); // Log parsed user data
     setUserData(parsedUserData);
   }, []);
 
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      //console.log('Fetching asset data...');
+      const assetResponse = await axios.post('/api/requestcatridge', { token: Cookies.get('token') });
+      console.log("Asset response:", assetResponse); // Log full asset response
+      if (assetResponse.data.message === 'Success') {
+        setAssetData(assetResponse.data.data);
+      } else {
+        //console.error(`Error ${assetResponse.status}:`, assetResponse.data.message || 'No asset data'); // Log error response
+        setError(`Error ${assetResponse.status}: ${assetResponse.data.message || 'No asset data'}`);
+      }
+    } catch (error) {
+      //console.error('Error fetching asset data:', error); // Log error if any
+      setError("Failed to fetch asset data, Please reload again");
+    }
+
+    try {
+      console.log('Fetching cartridge history...');
+      const historyResponse = await axios.post('/api/cartridgehistory', { token: Cookies.get('token') });
+      console.log("Cartridge history response:", historyResponse); // Log full history response
+      setCartridgeHistory(historyResponse.data);
+      console.log("history", historyResponse.data);
+    } catch (error) {
+      //console.error('Error fetching history data:', error); // Log error if any
+      setError("Failed to fetch history data. Please reload");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (!userData) return; // Skip if user data is not yet fetched
 
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        console.log('Fetching asset data...');
-        const assetResponse = await axios.post('/api/requestcatridge', { token: Cookies.get('token') });
-        console.log("Asset response:", assetResponse); // Log full asset response
-        if (assetResponse.data.message === 'Success') {
-          setAssetData(assetResponse.data.data);
-        } else {
-          console.error(`Error ${assetResponse.status}:`, assetResponse.data.message || 'No asset data'); // Log error response
-          setError(`Error ${assetResponse.status}: ${assetResponse.data.message || 'No asset data'}`);
-        }
-      } catch (error) {
-        console.error('Error fetching asset data:', error); // Log error if any
-        setError("Failed to fetch asset data, Please reload again");
-      }
-
-      try {
-        console.log('Fetching cartridge history...');
-        const historyResponse = await axios.post('/api/cartridgehistory', { token: Cookies.get('token') });
-        console.log("Cartridge history response:", historyResponse); // Log full history response
-        setCartridgeHistory(historyResponse.data);
-      } catch (error) {
-        console.error('Error fetching history data:', error); // Log error if any
-        setError("Failed to fetch history data.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    
 
     fetchData();
   }, [userData]); // Only re-run when userData changes
   const filteredData=updateCartridgeDisplay(cartridgeHistory, assetData);
+  // Check if any entry of cartridgeReturn from the history and set boolean
+  useEffect(() => {
+    let hasReturned = true;
+
+    for (let i = 0; i < cartridgeHistory.length; i++) {
+      console.log("Cartridge Returned:", cartridgeHistory[i].cartridgeReturned);
+      if (cartridgeHistory[i].cartridgeReturned === false) {
+        hasReturned = false;
+        break; // Exit early if a cartridge has been returned
+      }
+    }
+
+    setOldCartridgeReturned(hasReturned);
+    console.log("Old cartridges returned:", hasReturned);
+  }, [cartridgeHistory]);
   //console.log("filtered data", filteredData);
 
   return (
@@ -124,7 +145,7 @@ export default function Home() {
                     <Input id="department" type="text" defaultValue={userData?.userDepartment} disabled />
                   </div>
                 </div>
-                <CatridgeForm printers={filteredData} />
+                <CatridgeForm printers={filteredData} hasReturned={oldCartrridgeHasReturned}/>
               </div>
             </Card>
           </div>

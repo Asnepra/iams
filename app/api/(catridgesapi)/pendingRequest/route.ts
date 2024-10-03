@@ -78,7 +78,7 @@ export const POST = async (req: NextRequest) => {
               INNER JOIN [IAMS].[dbo].[IAMS_M_CARTRIDGE_INVENTORY] i
                 ON r.[CARTRIDGE_ID] = i.[CARTRIDGE_ID]
             WHERE 
-              r.[STATUS_ID] = 201;
+              r.[STATUS_ID] = 201 OR r.[CARTRIDGE_RETURNED] =0;;
           `);
 
         // Map the result to JSON format

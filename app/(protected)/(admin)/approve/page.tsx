@@ -49,10 +49,10 @@ export default function CatridgeScreen() {
 
       //console.log
 
-      console.log("pending", response.data);
+      //console.log("pending", response.data);
       setPendingRequests(response.data);
     } catch (error) {
-      toast.error("Error fetching pending requests");
+      toast.error("Error fetching pending requests, Please reload page");
     }
   };
 
@@ -76,16 +76,16 @@ export default function CatridgeScreen() {
         toast.success("Request approved successfully");
         getData(); // Refresh pending requests
       } else {
-        toast.error("Failed to approve request");
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        toast.error("Failed to approve request, Please reload page");
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
       }
     } catch (error) {
-      toast.error("Error approving request");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      toast.error("Error approving request, Please reload");
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
     }
   };
 
@@ -109,10 +109,10 @@ export default function CatridgeScreen() {
         toast.success("Request rejected successfully");
         getData(); // Refresh pending requests
       } else {
-        toast.error("Failed to reject request");
+        toast.error("Failed to reject request, Please reload");
       }
     } catch (error) {
-      toast.error("Error rejecting request");
+      toast.error("Error rejecting request, please reload");
     }
   };
   const handleChangeStatus = async (id: number) => {
@@ -130,22 +130,22 @@ export default function CatridgeScreen() {
       });
 
       if (response.status === 200) {
-        toast.success("Status Changed successfully");
+        toast.success("Status Changed successfully, Please reload");
         //getData(); // Refresh pending requests
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
       } else {
-        toast.error("Failed to change Status");
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        toast.error("Failed to change Status, please reload");
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
       }
     } catch (error) {
-      toast.error("Error changing status");
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      toast.error("Error changing status, please reload");
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 3000);
     }
   };
 
@@ -155,9 +155,11 @@ export default function CatridgeScreen() {
 
   return (
     <div className="p-4 md:p-6 lg:p-8">
-      <main className="flex flex-col gap-4">
-        <div className="text-xl font-bold md:text-2xl">{userData?.userName}</div>
-        <div className="flex flex-col gap-4">
+      <main className="flex flex-col gap-2">
+        <div className="flex flex-col text-xl font-bold md:text-2xl">{userData?.userName}
+          <span className="font-normal text-lg text-slate-800">Actions Visible only for pending request, rest are for updating the old Cartridge Status</span>
+        </div>
+        <div className="flex flex-col gap-2">
           <Card>
             <CardHeader>
               <CardTitle>Pending Requests</CardTitle>
@@ -194,18 +196,20 @@ export default function CatridgeScreen() {
                         <span className="hidden sm:inline">{request.requesterName}</span>
                       </TableCell>
                       <TableCell className="text-sm md:text-sm">{formatDate(request.requestedOn)}</TableCell>
-                      <TableCell className="text-sm md:text-sm mr-1 space-x-1">{request.cartridgeReturned ?"Yes": "No"}
+                      <TableCell className="text-sm md:text-sm mr-1 space-x-1">
+                        {request.cartridgeReturned ?"Yes": "No"}
                       {!request.cartridgeReturned && <Badge
                           
                             onClick={() => handleChangeStatus(request.transId)}
                             className="ml-1 text-primary cursor-pointer"
                             variant="outline"
                           >
-                            Change status
+                            <span> Change Status</span>
                           </Badge>
                         }
                       </TableCell>
                       <TableCell className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        {request.statusId===201 && <>
                         <Button
                           title="Approve"
                           onClick={() => handleApprove(request.transId)}
@@ -220,6 +224,8 @@ export default function CatridgeScreen() {
                           onClose={ handleReject}
                           
                         />
+                        </>}
+                        
                         
                         
                         

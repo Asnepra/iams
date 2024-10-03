@@ -28,7 +28,7 @@ export const POST = async (req: NextRequest) => {
       data: [],
       maxPages: 0
     };
-    let userId: string | null = null;
+    let userId  = null;
     let isAdmin = false;
 
     try {
@@ -66,12 +66,17 @@ export const POST = async (req: NextRequest) => {
           await transaction.request()
             .input('transId', sql.Int, transId)
             .input('statusId', sql.Int, 203) // Assuming 203 is the status ID for rejected
-            .input('approvingReason', sql.VarChar, reason || null)
+            .input('approvingReason', sql.VarChar, reason || "rejected")
+            .input('approvedBy', sql.VarChar, userId)
+            .input('approvedOn', sql.DateTime, new Date())
             .query(`
               UPDATE [IAMS].[dbo].[IAMS_X_CARTRIDGE]
               SET 
                 [STATUS_ID] = @statusId,
-                [APPROVING_REASON] = @approvingReason
+                [APPROVING_REASON] = @approvingReason,
+                [APPROVED_ON] = @approvedOn,
+            [CARTRIDGE_RETURNED] = 1,
+            [APPROVED_BY]=@approvedBy
               WHERE [TRANS_ID] = @transId;
             `);
         } else {

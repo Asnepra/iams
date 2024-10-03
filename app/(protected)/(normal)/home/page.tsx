@@ -74,7 +74,7 @@ export default function Dashboard() {
       if (!token) {
         toast.error("Token Error");
         router.push("/");
-        throw new Error('Token not found in cookies');
+        return;
       }
 
       const parsedToken = parseToken(token);
@@ -102,22 +102,26 @@ export default function Dashboard() {
         else{
           toast("There is no asset assigned to you");
         }
+      }).catch((error)=>{
+        //console.log("error", error)
+        toast.error("Something did not go right, Please reload");
       })
       
       const response1 = await axios.post('/api/catridgeReturned', body)
       .then((response)=>{
         //get the api data and trigger the toast for each item
-        console.log("catridgeretunr toast", response.data);
+        //console.log("catridgeretunr toast", response.data);
         // Trigger the toast for each item
         showToastsWithDelay(response.data)
       }).catch((error)=>{
-        console.log("error", error);
+        setError("Something did not go right, Please reload again!")
+        toast.error("Something did not go right, Please reload");
       })
       
       //console.log("response", response);
     } catch (error) {
-      console.error('Error fetching assets:', error);
-      toast.error("Error, Please try again");
+      //console.error('Error fetching assets:', error);
+      toast.error("Something did not go right, Please reload");
       
     }
   };

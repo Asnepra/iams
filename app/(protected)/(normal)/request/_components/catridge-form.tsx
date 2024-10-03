@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
 import axios from "axios";
+import FormError from "@/components/form-error";
 
 const CartridgeFormSchema = z.object({
   printerId: z.number().min(1, "Select a printer"),
@@ -19,9 +20,10 @@ const CartridgeFormSchema = z.object({
 
 interface CartridgeFormProps {
   printers: PrinterDataProps[];
+  hasReturned?:boolean;
 }
 
-const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
+const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) => {
   const { control, handleSubmit, setValue, watch } = useForm<z.infer<typeof CartridgeFormSchema>>({
     resolver: zodResolver(CartridgeFormSchema),
     defaultValues: {
@@ -79,7 +81,9 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      <Controller
+      { !hasReturned ?
+      (<FormError message="You have not returned old cartridges , Please return Old first"/>) :
+      (<><Controller
         name="printerId"
         control={control}
         render={({ field }) => (
@@ -136,7 +140,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
               control={control}
               render={({ field }) => (
                 <div>
-                  <Label>Reason for Request</Label>
+                  <Label className="pb-2">Reason for Request</Label>
                   <Textarea
                     placeholder="Request for a new cartridge"
                     {...field}
@@ -147,8 +151,11 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers }) => {
           </div>
         </>
       )}
+      
 
       <Button type="submit">Request Cartridge</Button>
+      </>
+    )}
     </form>
   );
 };
