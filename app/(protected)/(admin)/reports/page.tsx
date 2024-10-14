@@ -22,6 +22,7 @@ import { formatDate } from '@/lib/utils';
 import { columns } from './_components/columns';
 import { CartridgeDataReport } from '@/schemas/printerSchema';
 import { DataTable } from './_components/data-table';
+import { statuses } from '@/schemas/meta-data';
 
 const COLORS: { [key: string]: string } = {
   requested: "#8884d8",
@@ -124,27 +125,18 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
 
   const exportToExcel = () => {
     const csvData = data.map(item => ({
-      TransactionID: item.transId,
-      AssetID: item.assetId,
-      CartridgeID: item.cartridgeId,
-      RequestedQty: item.requestedQty,
-      ApprovedQty: item.approvedQty,
-      StatusID: item.statusId,
-      RequestedBy: item.requestedBy,
-      RequestedOn: formatDate(item.requestedOn), // Format the date as needed
-      ApprovedBy: item.approvedBy,
-      ApprovedOn: item.approvedOn ? formatDate(item.approvedOn) : '-', // Handle null
-      ApprovingReason: item.approvingReason,
-      CartridgeReturned: item.cartridgeReturned ? 'Yes' : 'No',
-      EmployeeName: item.employeeName,
-      Department: item.department,
-      UserRole: item.userRole,
-      Designation: item.designation,
-      DesignationName: item.designationName,
-      StatusDescription: item.statusDescription,
-      CartridgeDescription: item.cartridgeDescription,
-      ApprovedByName: item.approvedByName,
-      RequestedByName: item.requestedByName,
+      TransactionID: item.transId ?? 'N/A',
+      CartridgeID: item.cartridgeId ?? 'N/A',
+      RequestedBy: item.requestedByName ?? 'N/A',
+      Department: item.department ?? 'N/A',
+      RequestedOn: item.requestedOn ? formatDate(item.requestedOn) : 'N/A',
+      StatusID: statuses.find(label => label.label === item.statusId),
+      ActionBy: item.approvedByName ?? 'N/A',
+      ActionOn: item.approvedOn ? formatDate(item.approvedOn) : 'N/A',
+      ActionReason: item.approvingReason ?? 'N/A',
+      OldCartridgeReturned: item.cartridgeReturned ? 'Yes' : 'No',
+      UserRole: item.userRole ?? 'N/A',
+      CartridgeName: item.cartridgeDescription ?? 'N/A',
     }));
   
     const csv = Papa.unparse(csvData);

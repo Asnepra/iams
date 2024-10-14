@@ -77,7 +77,7 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     accessorKey: "approvedByName",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Action By" />,
     cell: ({ row }) => (
-      <div className="max-w-[120px] text-sm truncate">{row.getValue("approvedByName")}</div>
+      <div className="max-w-[120px] text-sm truncate">{row.getValue("approvedByName")? row.getValue("approvedByName") : 'N/A'}</div>
     ),
   },
   {
@@ -100,7 +100,7 @@ export const columns: ColumnDef<CartridgeDataReport>[] = [
     accessorKey: "approvingReason",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Action Reason" />,
     cell: ({ row }) => (
-      <div className="max-w-[150px] text-sm truncate">{row.getValue("approvingReason")}</div>
+      <div className="max-w-[150px] text-sm truncate">{row.getValue("approvingReason")? row.getValue("approvingReason"):'N/A'}</div>
     ),
   },
   // Other column definitions...
