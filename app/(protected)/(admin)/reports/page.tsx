@@ -130,7 +130,7 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
       RequestedBy: item.requestedByName ?? 'N/A',
       Department: item.department ?? 'N/A',
       RequestedOn: item.requestedOn ? formatDate(item.requestedOn) : 'N/A',
-      StatusID: statuses.find(label => label.label === item.statusId),
+      StatusID: statuses.find(label => label.label === item.statusDescription)?.label??'N/A',
       ActionBy: item.approvedByName ?? 'N/A',
       ActionOn: item.approvedOn ? formatDate(item.approvedOn) : 'N/A',
       ActionReason: item.approvingReason ?? 'N/A',
