@@ -6,6 +6,7 @@ import { IAMS_CATRIDGE, STOCK_STRING } from "@/schemas/printerSchema"
 import { formatDate } from "@/lib/utils"
 import FallbackImage from "@/components/fallback-Image"
 import { getFullProfileUrl } from "@/lib/parseToken"
+import { Badge } from "@/components/ui/badge"
 
 export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
   {
@@ -37,8 +38,14 @@ export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
     ),
     cell: ({ row }) => (
       <div className="flex w-[100px] items-center">
-        <span>{row.getValue(STOCK_STRING)}</span>
-      </div>
+        <Badge variant="outline" className={`space-x-2 font-bold ${
+      row.getValue(STOCK_STRING) === 0
+        ? 'bg-red-400 text-zinc-100'
+
+        : ''
+    }`}>
+          {row.getValue(STOCK_STRING)}</Badge></div>
+     
     ),
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
@@ -64,7 +71,7 @@ export const columns: ColumnDef<IAMS_CATRIDGE>[] = [
          <FallbackImage
         src={getFullProfileUrl(row.getValue("updatedBy")) || "/user_profile.jpeg"}
         alt="Profile"
-        className="h-8 w-8 rounded-full mr-2"
+        className="h-10 w-10 rounded-full mr-2"
         width={40}
         height={40}
       />
