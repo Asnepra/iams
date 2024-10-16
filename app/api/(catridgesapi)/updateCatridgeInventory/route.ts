@@ -67,44 +67,44 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
     
       try {
         // Query to retrieve cartridge details and insert into history
-        const query = await transaction.request()
-          .query(`
-            DECLARE @CartridgeDesc NVARCHAR(255);
-            DECLARE @AssetBatchId INT;
+        // const query = await transaction.request()
+        //   .query(`
+        //     DECLARE @CartridgeDesc NVARCHAR(255);
+        //     DECLARE @AssetBatchId INT;
     
-            -- Retrieve Cartridge Description and Asset Batch ID based on Cartridge ID
-            SELECT 
-                @CartridgeDesc = CARTRIDGE_DESC,
-                @AssetBatchId = ASSET_BATCH_ID
-            FROM [IAMS].[dbo].[IAMS_M_CARTRIDGE]
-            WHERE CARTRIDGE_ID = ${catridgeId}; -- Replace ${catridgeId} with the actual cartridge ID you want to query
+        //     -- Retrieve Cartridge Description and Asset Batch ID based on Cartridge ID
+        //     SELECT 
+        //         @CartridgeDesc = CARTRIDGE_DESC
+                
+        //     FROM [IAMS].[dbo].[IAMS_M_CARTRIDGE]
+        //     WHERE CARTRIDGE_ID = ${catridgeId}; -- Replace ${catridgeId} with the actual cartridge ID you want to query
     
-            -- Insert into Cartridge History Table
-            INSERT INTO [IAMS].[dbo].[IAMS_M_CARTRIDGE] (
-                [CARTRIDGE_ID],
-                [CARTRIDGE_DESC],
-                [STOCK],
-                [UPDATED_ON],
-                [UPDATE_BY_USERID],
-                [ASSET_BATCH_ID]
-            )
-            VALUES (
-                ${catridgeId}, -- Replace with the actual cartridge ID you are inserting
-                @CartridgeDesc,
-                ${cartridgeQuantity}, -- Example: Inserting with stock value 0 (adjust as per your requirement)
-                GETDATE(),
-                ${user}, -- Assuming 'user' variable holds the user ID
-                @AssetBatchId
-            );
-          `);
+        //     -- Insert into Cartridge History Table
+        //     INSERT INTO [IAMS].[dbo].[IAMS_M_CARTRIDGE] (
+        //         [CARTRIDGE_ID],
+        //         [CARTRIDGE_DESC],
+        //         [STOCK],
+        //         [UPDATED_ON],
+        //         [UPDATE_BY_USERID]
+                
+        //     )
+        //     VALUES (
+        //         ${catridgeId}, -- Replace with the actual cartridge ID you are inserting
+        //         @CartridgeDesc,
+        //         ${cartridgeQuantity}, -- Example: Inserting with stock value 0 (adjust as per your requirement)
+        //         GETDATE(),
+        //         ${user} -- Assuming 'user' variable holds the user ID
+                
+        //     );
+        //   `);
     
         // Check if insertion into history was successful or handle accordingly
-        if (query.rowsAffected[0] === 0) {
-          console.log("no insertion");
-          // Rollback the transaction and return an error response if no rows were inserted
-          await transaction.rollback();
-          return new NextResponse(JSON.stringify({ message: 'No rows inserted into history' }), { status: 404 });
-        }
+        // if (query.rowsAffected[0] === 0) {
+        //   console.log("no insertion");
+        //   // Rollback the transaction and return an error response if no rows were inserted
+        //   await transaction.rollback();
+        //   return new NextResponse(JSON.stringify({ message: 'No rows inserted into history' }), { status: 404 });
+        // }
         
         // Query to update inventory table
         const updateQuery = await transaction.request()

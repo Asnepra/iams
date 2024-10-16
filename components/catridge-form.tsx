@@ -16,9 +16,10 @@ interface CatridgeFormProps {
   isUpdate: boolean;
   catrdigeName?:string;
   catridgeId?:string;
+  oldValue?:number;
 }
 
-const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId }: CatridgeFormProps) => {
+const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId, oldValue }: CatridgeFormProps) => {
   const router = useRouter();
   const [isPending, setIsPending] = useState(false);
   const [error, setError] = useState<string | undefined>("");
@@ -99,7 +100,7 @@ const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId }: CatridgeFormProps)
                 <FormLabel>Cartridge Quantity</FormLabel>
                 <FormControl>
                   <Input className="md:col-span-3"
-                    placeholder="Enter quantity"
+                    placeholder={`Enter quantity, existing quantity ${oldValue} is going to be added to entered Value`}
                     {...field}
                     type="number"
                     disabled={isPending}

@@ -71,7 +71,7 @@ export function UpdateDialog({ row, title, add }: UpdateDialogProps) {
             </div>
           </div>
           {/* CatridgeForm */}
-          <CatridgeForm isUpdate={!add} catrdigeName={name} catridgeId={id}/>
+          <CatridgeForm isUpdate={!add} catrdigeName={name} catridgeId={id} oldValue={stock}/>
         </div>
       </DialogContent>
     </Dialog>
