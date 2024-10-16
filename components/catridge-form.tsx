@@ -84,11 +84,11 @@ const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId, oldValue }: Catridge
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
         {isUpdate ? (
           <>
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 items-center gap-2 md:gap-4">
 
           <Label>Cartridge Name</Label>
           
-            <Label className="md:col-span-3">{catrdigeName}</Label>
+            <Label className="col-span-2 md:col-span-3">{catrdigeName}</Label>
                        
           </div>
           <FormField
@@ -96,10 +96,10 @@ const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId, oldValue }: Catridge
             name="cartridgeQuantity"
             render={({ field }) => (
               <FormItem>
-                <div className="grid grid-cols-4 items-center gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 items-center gap-4">
                 <FormLabel>Cartridge Quantity</FormLabel>
                 <FormControl>
-                  <Input className="md:col-span-3"
+                  <Input className="col-span-2 md:col-span-3"
                     placeholder={`Enter quantity, existing quantity ${oldValue} is going to be added to entered Value`}
                     {...field}
                     type="number"
@@ -120,11 +120,11 @@ const CatridgeForm = ({ isUpdate, catrdigeName, catridgeId, oldValue }: Catridge
               render={({ field }) => (
 
                 <FormItem>
-                <div className="grid grid-cols-4 items-center gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 items-center gap-2 md:gap-4">
 
                   <FormLabel>Cartridge Name</FormLabel>
                   <FormControl>
-                    <Input className="md:col-span-3"
+                  <Input className="col-span-2 md:col-span-3"
                       placeholder="Enter name"
                       {...field}
                       disabled={isPending}

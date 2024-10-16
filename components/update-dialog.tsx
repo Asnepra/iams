@@ -54,7 +54,7 @@ export function UpdateDialog({ row, title, add }: UpdateDialogProps) {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-3xl">
+      <DialogContent className="rounded-md sm:max-w-3xl">
         <DialogHeader>
           <DialogTitle>{add ? <>{title}</> : <span>{title}</span>}</DialogTitle>
           <DialogDescription>
