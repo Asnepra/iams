@@ -21,6 +21,9 @@ import Cookies from 'js-cookie';
 import { UpdateDialog } from "@/components/update-dialog";
 import { parseToken } from "@/lib/parseToken";
 import { useRouter } from "next/navigation";
+import { DownloadIcon } from "lucide-react";
+import Papa from "papaparse";
+import { formatDate } from "@/lib/utils";
 
 
 const AccountsPage = () => {
@@ -37,6 +40,30 @@ const AccountsPage = () => {
     useEffect(() => {
       getData();
     }, []);
+
+    const exportToExcel = () => {
+      const csvData = assets.map(item => ({
+        CartridgeID: item.id ?? 'N/A',
+        CartridgeName: item.catrdigeDescription ?? 'N/A',
+        Stock: item.stock ?? 'N/A',
+        UpdatedByEmp:item.updatedBy,
+        UpdatedByName: item.updatedByName ?? 'N/A',
+        UpdatedOn: item.updatedOn ? formatDate(item.updatedOn) : 'N/A'
+
+      }));
+    
+      const csv = Papa.unparse(csvData);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      
+      link.setAttribute('href', url);
+      link.setAttribute('download', `Cartridge_Reports.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
   
     
 
@@ -46,10 +73,10 @@ const AccountsPage = () => {
           if (!token) {
             toast.error("Token Error")
             //router.push("/");
-            throw new Error('Token not found in cookies');
+            //throw new Error('Token not found in cookies');
           }
     
-          const parsedToken = parseToken(token);
+          const parsedToken = parseToken(token as string);
           if (!parsedToken) {
             toast.error("Token Error")
             router.push("/");
@@ -86,6 +113,7 @@ const AccountsPage = () => {
           //router.push("/");
         }
       }
+      
 
 
  
@@ -97,7 +125,11 @@ const AccountsPage = () => {
           <CardTitle className="text-xl line-clamp-1">Add Catridge Stock page</CardTitle>
           <div className="flex items-center space-x-2">
             <UpdateDialog title={"Add Catridge"} add={true}/>
+            <Button onClick={exportToExcel} className="bg-sky-500 hover:bg-sky-800">
+            <DownloadIcon className="mr-2 h-4 w-4" /> Export to Excel
+          </Button>
           </div>
+          
         </CardHeader>
         <CardContent>
           <DataTable

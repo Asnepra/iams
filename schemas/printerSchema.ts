@@ -114,6 +114,7 @@ export interface IAMS_CATRIDGE{
         updatedOn:string;
         updatedBy:string;
         assetBatchId:string;
+        updatedByName:string;
 }
 
 export interface DialogProps{
