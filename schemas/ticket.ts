@@ -14,3 +14,8 @@ export interface USER_ASSET{
     categoryName:string;
     subcategoryName:string;
 }
+
+export interface TICKET_STATUS_ID{
+    TICKET_STATUS_ID:number;
+    TICKET_STATUS_DESCRIPTION:string;
+}

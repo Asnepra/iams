@@ -25,6 +25,8 @@ export const POST = async (req: NextRequest) => {
                 { status: 400 }
             );
         }
+        let user = null;
+        let isAdmin = false; // Assuming isAdmin is a boolean
 
         // Verify JWT token
         let decoded: JwtPayload;
@@ -41,8 +43,8 @@ export const POST = async (req: NextRequest) => {
         await mssqlconnect();
 
         // Prepare ticket data
-        const userId = decoded.userId;
-        const personalNo = decoded.personalNo; // Assuming personalNo is in the token payload
+        user = decoded.userId;
+        //const personalNo = decoded.personalNo; // Assuming personalNo is in the token payload
         const ticketRaisedOn = new Date();
 
         // Handle image upload if assetImage is provided
@@ -54,7 +56,7 @@ export const POST = async (req: NextRequest) => {
             // Create directory if it doesn't exist
             await fs.mkdir(dir, { recursive: true });
 
-            imagePath = path.join(dir, `${Date.now()}_${personalNo}.png`); // Create a unique filename
+            imagePath = path.join(dir, `${Date.now()}_${user}.png`); // Create a unique filename
             await fs.writeFile(imagePath, buffer); // Save the image to the directory
         }
 
@@ -71,12 +73,12 @@ export const POST = async (req: NextRequest) => {
                 TICKET_IMAGE_LOCATION
             ) VALUES (
                 ${subCatId}, 
-                ${personalNo}, 
+                ${user}, 
                 ${mainCatId}, 
                 ${assetComplaintMessage}, 
                 1, -- Assuming 1 is the default status ID
                 ${ticketRaisedOn}, 
-                ${userId}, 
+                ${1}, 
                 ${imagePath ? imagePath : null}
             )
         `;

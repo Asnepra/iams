@@ -12,11 +12,11 @@ export const normalRoutes = [
       href: "/request",
       label: "Request Cartridge",
     },
-    // {
-    //   icon: Kanban,
-    //   href: "/complaint",
-    //   label: "Raise a complaint",
-    // },
+    {
+      icon: Kanban,
+      href: "/complaint",
+      label: "Raise a complaint",
+    },
   ];
   
   // HR Admin routes
@@ -25,7 +25,7 @@ export const normalRoutes = [
     {
       icon: BoxesIcon,
       href: "/reports",
-      label: "Reports",
+      label: "Cartridge Reports",
     },
     {
       icon: CheckCheck,

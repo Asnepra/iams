@@ -14,7 +14,7 @@ import toast from "react-hot-toast";
 import Cookies from 'js-cookie';
 import axios from "axios";
 import { ChatInput } from "@/components/chat-input";
-import FormError from "@/components/form-error"; // Import the FormError component
+import FormError from "@/components/form-error"; 
 import { TicketCatProps, USER_ASSET } from "@/schemas/ticket";
 
 const MAX_FILE_SIZE = 1000000; // 1 MB
@@ -29,6 +29,7 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
   const [mainCatId, setMainCatId] = useState<number>(-1);
   const [subCatId, setSubCatId] = useState<number>(-1);
   const [ticketId, setTicketId] = useState<number | null>(-1);
+  const [assetsId, setAssetsId] = useState<number>(-1);
   const [assetImage, setAssetImage] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -61,7 +62,11 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
     : [];
 
   const validateInputs = () => {
-    setErrorMessage(null); // Reset error message
+    setErrorMessage(null); 
+    if (assetsId < 1) {
+      setErrorMessage("Please select an asset.");
+      return false;
+    }
     if (mainCatId < 1) {
       setErrorMessage("Please select a complaint type.");
       return false;
@@ -89,24 +94,28 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
     formData.append("subCatId", subCatId.toString());
     formData.append("assetComplaintMessage", body);
     if (image) {
-      formData.append("assetImage", image); // Append the image if it exists
+      formData.append("assetImage", image);
     }
 
-    console.log("Form data:", Array.from(formData.entries())); // Log the form data for debugging
+    console.log("Form data:", Array.from(formData.entries()));
   
     try {
       await axios.post('/api/raiseTicket', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Set the content type for file upload
+          'Content-Type': 'multipart/form-data',
         },
       });
-      toast.success("Request raised successfully!");
+      toast.success("Request raised successfully!, reloading");
       
       // Reset form fields
       setMainCatId(-1);
       setSubCatId(-1);
       setTicketId(null);
-      setAssetImage(null); // Clear the image
+      setAssetImage(null);
+      setAssetsId(-1); // Reset asset ID
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       toast.error("Error submitting the complaint. Please try again.");
       console.error("Submission Error:", error);
@@ -120,17 +129,20 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
       <div className="space-y-2">
         <Label>Select Asset</Label>
         <Select onValueChange={(value) => {
-          setMainCatId(Number(value));
-          setSubCatId(-1); // Reset specific complaint
-          setTicketId(null); // Reset ticketID
+          const selectedAsset = assets.find(asset => asset.assetBatchId.toString() === value);
+          if (selectedAsset) {
+            setAssetsId(selectedAsset.assetBatchId);
+            setSubCatId(-1);
+            setTicketId(null);
+          }
         }}>
           <SelectTrigger aria-label="Select Asset">
             <SelectValue placeholder="Select an Asset..." />
           </SelectTrigger>
           <SelectContent>
-            {assets.map(complaint => (
-              <SelectItem key={complaint.assetBatchId} value={complaint.assetBatchId.toString()}>
-                {complaint.assetModel}
+            {assets.map(asset => (
+              <SelectItem key={asset.assetBatchId} value={asset.assetBatchId.toString()}>
+                {asset.assetModel}
               </SelectItem>
             ))}
           </SelectContent>
@@ -142,8 +154,8 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
           <Label>Complaint Type</Label>
           <Select onValueChange={(value) => {
             setMainCatId(Number(value));
-            setSubCatId(-1); // Reset specific complaint
-            setTicketId(null); // Reset ticketID
+            setSubCatId(-1);
+            setTicketId(null);
           }}>
             <SelectTrigger aria-label="Select Complaint Type">
               <SelectValue placeholder="Select a complaint type..." />
@@ -181,12 +193,12 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
         </div>
       </div>
       <div className="space-y-2 gap-4">
-      <FormError message={errorMessage || undefined} />
+        <FormError message={errorMessage || undefined} />
 
-      <ChatInput 
-        placeholder="Enter your message in detail, you can attach a maximum of 1 image" 
-        onSubmit={handleComplaint} 
-      />
+        <ChatInput 
+          placeholder="Enter your message in detail, you can attach a maximum of 1 image" 
+          onSubmit={handleComplaint} 
+        />
       </div>
     </div>
   );
