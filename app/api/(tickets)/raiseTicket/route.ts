@@ -11,12 +11,12 @@ export const POST = async (req: NextRequest) => {
         // Extract token and ticket data from request body
         const formData = await req.formData();
         const token = formData.get('token');
-        const mainCatId = Number(formData.get('mainCatId'));
-        const subCatId = Number(formData.get('subCatId'));
+        const asset_id=formData.get('asset_id');
+        const ticket_cat_id=formData.get('ticket_cat_id');
         const assetComplaintMessage = formData.get('assetComplaintMessage');
         const assetImage = formData.get('assetImage') as File | null; // Ensure type
 
-        console.log("data api", { token, mainCatId, subCatId, assetComplaintMessage, assetImage });
+        console.log("data api", { token, asset_id, ticket_cat_id, assetComplaintMessage, assetImage });
 
         // Check if token is missing
         if (!token) {
@@ -64,7 +64,6 @@ export const POST = async (req: NextRequest) => {
         await sql.query`
             INSERT INTO [IAMS].[dbo].[IAMS_X_TICKET] (
                 ASSET_ID, 
-                PERSONAL_NO, 
                 TICKET_CAT_ID, 
                 TICKET_DESC, 
                 TICKET_STATUS_ID, 
@@ -72,13 +71,13 @@ export const POST = async (req: NextRequest) => {
                 TICKET_RAISED_BY, 
                 TICKET_IMAGE_LOCATION
             ) VALUES (
-                ${subCatId}, 
-                ${user}, 
-                ${mainCatId}, 
+                ${asset_id}, 
+                 
+                ${ticket_cat_id}, 
                 ${assetComplaintMessage}, 
                 1, -- Assuming 1 is the default status ID
-                ${ticketRaisedOn}, 
-                ${1}, 
+                GETDATE(), 
+                ${user}, 
                 ${imagePath ? imagePath : null}
             )
         `;

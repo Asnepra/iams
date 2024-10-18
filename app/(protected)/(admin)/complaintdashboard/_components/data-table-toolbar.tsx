@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { DataTableViewOptions } from "@/components/table/data-table-view-options"
 
-import { statuses, departments } from "@/schemas/meta-data"
+import { ticketStatus, departments } from "@/schemas/meta-data"
 import { DataTableFacetedFilter } from "@/components/table/data-table-faceted-filter"
 
 interface DataTableToolbarProps<TData> {
@@ -17,7 +17,6 @@ interface DataTableToolbarProps<TData> {
     value: string
     icon?: React.ComponentType<{ className?: string }>
   }[]
-  
   filterKey:string,
   filterString?:string // Accept filterKey as a prop
 }
@@ -59,7 +58,7 @@ export function DataTableToolbar<TData>({
           <DataTableFacetedFilter
             column={table.getColumn("statusDescription")}
             title="Status"
-            options={statuses}
+            options={ticketStatus}
           />
         )}
         

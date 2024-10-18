@@ -226,3 +226,82 @@ export const priorities = [
     icon: ArrowUpIcon,
   },
 ]
+
+import { Bell, CheckCircle, XCircle, Archive, Edit, Clock, HelpCircle, Check, AlertTriangle, Info } from "lucide-react";
+
+export const ticketStatus = [
+  {
+    value: "Open",
+    label: "Open",
+    icon: Bell,
+    color: "bg-blue-200 text-blue-800", // Blue for open
+  },
+  {
+    value: "In Progress",
+    label: "In Progress",
+    icon: Edit,
+    color: "bg-indigo-200 text-indigo-800", // Indigo for in progress
+  },
+  {
+    value: "On Hold",
+    label: "On Hold",
+    icon: Clock,
+    color: "bg-yellow-200 text-yellow-800", // Yellow for on hold
+  },
+  {
+    value: "Resolved",
+    label: "Resolved",
+    icon: CheckCircle,
+    color: "bg-green-200 text-green-800", // Green for resolved
+  },
+  {
+    value: "Closed",
+    label: "Closed",
+    icon: Archive,
+    color: "bg-gray-200 text-gray-800", // Gray for closed
+  },
+  {
+    value: "Cancelled",
+    label: "Cancelled",
+    icon: XCircle,
+    color: "bg-red-200 text-red-800", // Red for cancelled
+  },
+  {
+    value: "Reopened",
+    label: "Reopened",
+    icon: HelpCircle,
+    color: "bg-yellow-300 text-yellow-900", // Lighter yellow for reopened
+  },
+  {
+    value: "Pending",
+    label: "Pending",
+    icon: Info,
+    color: "bg-orange-200 text-orange-800", // Orange for pending
+  },
+  {
+    value: "Escalated",
+    label: "Escalated",
+    icon: AlertTriangle,
+    color: "bg-red-300 text-red-900", // Darker red for escalated
+  },
+  {
+    value: "Under Review",
+    label: "Under Review",
+    icon: HelpCircle,
+    color: "bg-indigo-300 text-indigo-900", // Darker indigo for under review
+  },
+  {
+    value: "Duplicate",
+    label: "Duplicate",
+    icon: XCircle,
+    color: "bg-red-300 text-red-900", // Darker red for duplicate
+  },
+  {
+    value: "Not Applicable",
+    label: "Not Applicable",
+    icon: Info,
+    color: "bg-gray-300 text-gray-900", // Darker gray for not applicable
+  },
+];
+
+

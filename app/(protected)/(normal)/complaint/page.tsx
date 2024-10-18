@@ -17,10 +17,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import ComplaintForm from "@/components/complaintForm";
-import { TicketTimeline } from "../../(admin)/reports/_components/timeline";
+
 import { parseToken } from "@/lib/parseToken";
 import { UserData } from "@/schemas";
 import { TicketCatProps, USER_ASSET } from "@/schemas/ticket";
+import TicketTimeline from "./_components/data-timeline";
 
 export default function ComplaintPage() {
   const [error, setError] = useState<string>("");

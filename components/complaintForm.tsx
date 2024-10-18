@@ -29,6 +29,8 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
   const [mainCatId, setMainCatId] = useState<number>(-1);
   const [subCatId, setSubCatId] = useState<number>(-1);
   const [ticketId, setTicketId] = useState<number | null>(-1);
+  const [ticketCatId, setTicketCatId] = useState<number>(-1);
+
   const [assetsId, setAssetsId] = useState<number>(-1);
   const [assetImage, setAssetImage] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -81,17 +83,40 @@ const ComplaintForm: React.FC<ComplaintFormProps> = ({ assets, ticketCat }) => {
     }
     return true;
   };
-
+  const getTicketCatId = (mainCatId: number, subCatId: number) => {
+    //console.log("Function called with:", { mainCatId, subCatId });
+    
+    // Find the selected ticket category
+    const selectedTicketCat = ticketCat.find(item => {
+      const match = item.mainCatId === mainCatId && item.subCatId === subCatId;
+      //console.log("Checking item:", item, "Match:", match);
+      return match;
+    });
+  
+    if (selectedTicketCat) {
+      //console.log("Selected ticket category found:", selectedTicketCat, "ghbjmkl", selectedTicketCat.ticketCatId);
+      return selectedTicketCat.ticketCatId;
+    } else {
+      //console.log("No matching ticket category found.");
+      return -1; // Returning -1 if no match is found
+    }
+  };
+  
   const handleComplaint = async ({ body, image }: { body: string; image: File | null }) => {
     if (!validateInputs()) return;
+    const id=getTicketCatId(mainCatId,subCatId);
+    //console.log("ticket id", id)
+    setTicketCatId(id);
+
 
     setLoading(true);
     const token = Cookies.get('token');
   
     const formData = new FormData();
     formData.append("token", token ?? "");
-    formData.append("mainCatId", mainCatId.toString());
-    formData.append("subCatId", subCatId.toString());
+    formData.append("asset_id", assetsId.toString());
+    formData.append("ticket_cat_id", id.toString());
+
     formData.append("assetComplaintMessage", body);
     if (image) {
       formData.append("assetImage", image);
