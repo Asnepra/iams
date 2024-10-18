@@ -1,6 +1,6 @@
 // Normal user routes
 import { CheckCircledIcon, CrossCircledIcon, CubeIcon, QuestionMarkCircledIcon, StopwatchIcon } from "@radix-ui/react-icons";
-import { Box, CheckCheck, Home, Kanban, LineChart, Package, Printer, Settings, UploadCloudIcon, Users2, BoxesIcon, CircleIcon, Album } from "lucide-react";
+import { Box, CheckCheck, Home, Kanban, LineChart, Package, Printer, Settings, UploadCloudIcon, Users2, BoxesIcon, CircleIcon, Album, Ticket } from "lucide-react";
 export const normalRoutes = [
     {
       icon: Home,
@@ -17,6 +17,8 @@ export const normalRoutes = [
       href: "/complaint",
       label: "Raise a complaint",
     },
+
+    
   ];
   
   // HR Admin routes
@@ -32,11 +34,18 @@ export const normalRoutes = [
       href: "/approve",
       label: "Approve Cartridge",
     },
+    
+    
   ];
   
   // IT Admin routes
   export const itAdminRoutes = [
     ...normalRoutes,
+    {
+      icon:Ticket,
+      label:"Complaint Dashboard",
+     href:"/complaintdashboard"
+    },
     {
       icon: BoxesIcon,
       href: "/addstock",
@@ -50,8 +59,10 @@ export const normalRoutes = [
     {
       icon: Album,
       href: "/reports",
-      label: "Reports",
+      label: "Cartridge Reports",
     },
+    
+    
     // {
     //   icon: Package,
     //   href: "/assets",
