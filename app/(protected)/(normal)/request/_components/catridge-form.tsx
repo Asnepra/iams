@@ -15,19 +15,21 @@ import FormError from "@/components/form-error";
 
 const CartridgeFormSchema = z.object({
   printerId: z.number().min(1, "Select a printer"),
+  cartridgeId: z.string().min(1, "Select at least one cartridge"),
   assetPrinterCartridgeMessage: z.string().min(1, "Please enter a message"),
 });
 
 interface CartridgeFormProps {
   printers: PrinterDataProps[];
-  hasReturned?:boolean;
+  hasReturned?: boolean;
 }
 
 const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) => {
-  const { control, handleSubmit, setValue, watch } = useForm<z.infer<typeof CartridgeFormSchema>>({
+  const { control, handleSubmit, setValue, watch, setError, formState: { errors } } = useForm<z.infer<typeof CartridgeFormSchema>>({
     resolver: zodResolver(CartridgeFormSchema),
     defaultValues: {
       printerId: -1,
+      cartridgeId: "",
       assetPrinterCartridgeMessage: "",
     },
   });
@@ -51,111 +53,137 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
 
   // Handle checkbox state change
   const handleCheckboxChange = useCallback((cartridgeId: number, checked: boolean) => {
-    setCartridgesState(prevState => ({
-      ...prevState,
-      [cartridgeId]: checked,
-    }));
-  }, []);
+    setCartridgesState(prevState => {
+      const newState = {
+        ...prevState,
+        [cartridgeId]: checked,
+      };
+
+      // Update the cartridgeId field in the form
+      const selectedCartridgeIds = Object.entries(newState)
+        .filter(([_, isChecked]) => isChecked)
+        .map(([cartridgeId]) => cartridgeId.toString());
+
+      setValue("cartridgeId", selectedCartridgeIds.join(',')); // Join selected IDs into a string
+      return newState;
+    });
+  }, [setValue]);
 
   // Form submit handler
   const onSubmit = async (values: z.infer<typeof CartridgeFormSchema>) => {
     const token = Cookies.get('token');
+    
+    // Check if at least one cartridge is selected
+    const selectedCartridges = Object.entries(cartridgesState).filter(([_, isChecked]) => isChecked);
+    
+    if (selectedCartridges.length === 0) {
+      // Set an error if no cartridges are selected
+      setError("cartridgeId", {
+        type: "manual",
+        message: "Please select at least one cartridge",
+      });
+      return; // Prevent further execution
+    }
+
     const data = {
       token,
       printerId: values.printerId,
-      cartridges: Object.entries(cartridgesState)
-        .filter(([_, isChecked]) => isChecked)
-        .map(([cartridgeId]) => ({ cartridgeId })),
+      cartridges: selectedCartridges.map(([cartridgeId]) => ({ cartridgeId })),
       assetPrinterCartridgeMessage: values.assetPrinterCartridgeMessage,
     };
+    
+    //console.log("cartridge data", data);
 
+    // Make the API request
     try {
       const response = await axios.post('/api/requestedCatridges', data);
       toast.success("Request raised Successfully!");
       setTimeout(() => window.location.reload(), 2000);
     } catch (error) {
-      toast.error("Some issue please try again");
+      toast.error("Some issue, please try again");
       setTimeout(() => window.location.reload(), 2000);
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      { !hasReturned ?
-      (<FormError message="You have not returned old cartridges , Please return Old first"/>) :
-      (<><Controller
-        name="printerId"
-        control={control}
-        render={({ field }) => (
-          <div>
-            <Label>Select A Printer</Label>
-            <Select
-              onValueChange={(value) => {
-                const valueAsNumber = Number(value);
-                field.onChange(valueAsNumber);
-                setValue("printerId", valueAsNumber);
-              }}
-              value={field.value.toString()}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a printer..." />
-              </SelectTrigger>
-              <SelectContent>
-                {printers.map(printer => (
-                  <SelectItem
-                    key={printer.assetBatchId}
-                    value={printer.assetBatchId.toString()}
-                  >
-                    {printer.assetModel}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        )}
-      />
-
-      {selectedPrinterId !== -1 && (
+      { !hasReturned ? (
+        <FormError message="You have not returned old cartridges, please return old first" />
+      ) : (
         <>
-          <div className="grid grid-cols-2 gap-6">
-            {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
-              <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
-                <Checkbox
-                  checked={cartridgesState[cartridge.cartridgeId] || false}
-                  onCheckedChange={(value) => handleCheckboxChange(cartridge.cartridgeId, value === true)}
-                  disabled={cartridge.display === false || cartridge.stock===0}  // Disable checkbox if display is false
-                />
-                <div className="flex-1 space-x-2">
-                  <Label>{cartridge.cartridgeDescription}</Label>
-                  <span>({cartridge.stock})</span>
-                  {!cartridge.display && <span className="text-rose-500"> ({"Previous request is pending"})</span>}
-                </div>
+          {errors.cartridgeId && <FormError message={errors.cartridgeId.message} />}
+          
+          <Controller
+            name="printerId"
+            control={control}
+            render={({ field }) => (
+              <div>
+                <Label>Select A Printer</Label>
+                <Select
+                  onValueChange={(value) => {
+                    const valueAsNumber = Number(value);
+                    field.onChange(valueAsNumber);
+                    setValue("printerId", valueAsNumber);
+                  }}
+                  value={field.value.toString()}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a printer..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {printers.map(printer => (
+                      <SelectItem
+                        key={printer.assetBatchId}
+                        value={printer.assetBatchId.toString()}
+                      >
+                        {printer.assetModel}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            ))}
-          </div>
+            )}
+          />
 
-          <div>
-            <Controller
-              name="assetPrinterCartridgeMessage"
-              control={control}
-              render={({ field }) => (
-                <div>
-                  <Label className="pb-2">Reason for Request</Label>
-                  <Textarea
-                    placeholder="Request for a new cartridge"
-                    {...field}
-                  />
-                </div>
-              )}
-            />
-          </div>
+          {selectedPrinterId !== -1 && (
+            <>
+              <div className="grid grid-cols-2 gap-6">
+                {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
+                  <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
+                    <Checkbox
+                      checked={cartridgesState[cartridge.cartridgeId] || false}
+                      onCheckedChange={(value) => handleCheckboxChange(cartridge.cartridgeId, value === true)}
+                      disabled={cartridge.display === false || cartridge.stock === 0} // Disable checkbox if display is false
+                    />
+                    <div className="flex-1 space-x-2">
+                      <Label>{cartridge.cartridgeDescription}</Label>
+                      {!cartridge.display && <span className="text-rose-500"> ({"Previous request is pending"})</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div>
+                <Controller
+                  name="assetPrinterCartridgeMessage"
+                  control={control}
+                  render={({ field }) => (
+                    <div>
+                      <Label className="pb-2">Reason for Request</Label>
+                      <Textarea
+                        placeholder="Request for a new cartridge"
+                        {...field}
+                      />
+                    </div>
+                  )}
+                />
+              </div>
+            </>
+          )}
+
+          <Button type="submit">Request Cartridge</Button>
         </>
       )}
-      
-
-      <Button type="submit">Request Cartridge</Button>
-      </>
-    )}
     </form>
   );
 };
