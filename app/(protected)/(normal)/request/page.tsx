@@ -69,6 +69,7 @@ export default function Home() {
       console.log("Asset response:", assetResponse); // Log full asset response
       if (assetResponse.data.message === 'Success') {
         setAssetData(assetResponse.data.data);
+        //console.log("cartriodghe", assetResponse.data);
       } else {
         //console.error(`Error ${assetResponse.status}:`, assetResponse.data.message || 'No asset data'); // Log error response
         setError(`Error ${assetResponse.status}: ${assetResponse.data.message || 'No asset data'}`);

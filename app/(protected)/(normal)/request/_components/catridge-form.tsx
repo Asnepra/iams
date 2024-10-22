@@ -16,7 +16,7 @@ import FormError from "@/components/form-error";
 const CartridgeFormSchema = z.object({
   printerId: z.number().min(1, "Select a printer"),
   cartridgeId: z.string().min(1, "Select at least one cartridge"),
-  assetPrinterCartridgeMessage: z.string().min(1, "Please enter a message"),
+
 });
 
 interface CartridgeFormProps {
@@ -30,7 +30,7 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
     defaultValues: {
       printerId: -1,
       cartridgeId: "",
-      assetPrinterCartridgeMessage: "",
+
     },
   });
 
@@ -89,7 +89,6 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
       token,
       printerId: values.printerId,
       cartridges: selectedCartridges.map(([cartridgeId]) => ({ cartridgeId })),
-      assetPrinterCartridgeMessage: values.assetPrinterCartridgeMessage,
     };
     
     //console.log("cartridge data", data);
@@ -146,40 +145,32 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
           />
 
           {selectedPrinterId !== -1 && (
-            <>
-              <div className="grid grid-cols-2 gap-6">
-                {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
-                  <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
-                    <Checkbox
-                      checked={cartridgesState[cartridge.cartridgeId] || false}
-                      onCheckedChange={(value) => handleCheckboxChange(cartridge.cartridgeId, value === true)}
-                      disabled={cartridge.display === false || cartridge.stock === 0} // Disable checkbox if display is false
-                    />
+            <div className="grid grid-cols-2 gap-6">
+              {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
+                <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
+                  {cartridge.stock > 0 ? (
+                    <>
+                      <Checkbox
+                        checked={cartridgesState[cartridge.cartridgeId] || false}
+                        onCheckedChange={(value) => handleCheckboxChange(cartridge.cartridgeId, value === true)}
+                        disabled={cartridge.display === false} // Disable checkbox if display is false
+                      />
+                      <div className="flex-1 space-x-2">
+                        <Label>{cartridge.cartridgeDescription}</Label>
+                        {!cartridge.display && <span className="text-rose-500"> ({"Previous request is pending"})</span>}
+                      </div>
+                    </>
+                  ) : (
                     <div className="flex-1 space-x-2">
                       <Label>{cartridge.cartridgeDescription}</Label>
-                      {!cartridge.display && <span className="text-rose-500"> ({"Previous request is pending"})</span>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div>
-                <Controller
-                  name="assetPrinterCartridgeMessage"
-                  control={control}
-                  render={({ field }) => (
-                    <div>
-                      <Label className="pb-2">Reason for Request</Label>
-                      <Textarea
-                        placeholder="Request for a new cartridge"
-                        {...field}
-                      />
+                      <span className="text-red-500"> (Out of stock)</span>
                     </div>
                   )}
-                />
-              </div>
-            </>
+                </div>
+              ))}
+            </div>
           )}
+
 
           <Button type="submit">Request Cartridge</Button>
         </>
