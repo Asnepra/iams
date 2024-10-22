@@ -6,7 +6,6 @@ import FallbackImage from "@/components/fallback-Image";
 import { getFullProfileUrl } from "@/lib/parseToken";
 import { Badge } from "@/components/ui/badge";
 import { COMPLAINTS_COLUMN } from "@/schemas/ticket";
-import { TicketDialogCloseButton } from "../addTicketDialog";
 
 export const columns: ColumnDef<COMPLAINTS_COLUMN>[] = [
   {

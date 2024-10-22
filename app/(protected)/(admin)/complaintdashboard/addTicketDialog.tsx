@@ -113,7 +113,7 @@ export function CreateTicketDialog() {
         <DialogHeader>
           <DialogTitle>Create Support Ticket</DialogTitle>
           <DialogDescription>
-            Enter the employee number to fetch details and create a ticket.
+            Enter the employee number to fetch details and create a ticket
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -141,7 +141,7 @@ export function CreateTicketDialog() {
                   
                     </div>
                   <FormDescription>
-                        Enter the employee number and click "Fetch Employee Details"
+                        Enter the employee number and click Fetch Employee Details
                     </FormDescription>
                     <FormMessage />
                 </FormItem>
@@ -154,7 +154,7 @@ export function CreateTicketDialog() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <UserCircle className="h-5 w-5" />
-                      <span className="font-semibold">Name:</span>
+                      <span className="font-semibold">Name</span>
                       <span>{employeeData.name}</span>
                     </div>
                     
@@ -162,7 +162,7 @@ export function CreateTicketDialog() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Mail className="h-5 w-5" />
-                      <span className="font-semibold">Email:</span>
+                      <span className="font-semibold">Email</span>
                       <span>{employeeData.email}</span>
                     </div>
                     
@@ -170,7 +170,7 @@ export function CreateTicketDialog() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Briefcase className="h-5 w-5" />
-                      <span className="font-semibold">Designation:</span>
+                      <span className="font-semibold">Designation</span>
                       <span>{employeeData.designation}</span>
                     </div>
                     
@@ -178,7 +178,7 @@ export function CreateTicketDialog() {
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Phone className="h-5 w-5" />
-                      <span className="font-semibold">Department:</span>
+                      <span className="font-semibold">Department</span>
                       <span>{employeeData.department}</span>
                     </div>
                     

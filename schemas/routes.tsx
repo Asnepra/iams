@@ -12,11 +12,11 @@ export const normalRoutes = [
       href: "/request",
       label: "Request Cartridge",
     },
-    {
-      icon: Kanban,
-      href: "/complaint",
-      label: "Raise a complaint",
-    },
+    // {
+    //   icon: Kanban,
+    //   href: "/complaint",
+    //   label: "Raise a complaint",
+    // },
 
     
   ];
@@ -41,11 +41,11 @@ export const normalRoutes = [
   // IT Admin routes
   export const itAdminRoutes = [
     ...normalRoutes,
-    {
-      icon:Ticket,
-      label:"Complaint Dashboard",
-     href:"/complaintdashboard"
-    },
+    // {
+    //   icon:Ticket,
+    //   label:"Complaint Dashboard",
+    //  href:"/complaintdashboard"
+    // },
     {
       icon: BoxesIcon,
       href: "/addstock",

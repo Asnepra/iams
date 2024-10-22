@@ -132,14 +132,14 @@ export default function CatridgeScreen() {
       if (response.status === 200) {
         toast.success("Status Changed successfully, Please reload");
         //getData(); // Refresh pending requests
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 3000);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       } else {
         toast.error("Failed to change Status, please reload");
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 3000);
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
     } catch (error) {
       toast.error("Error changing status, please reload");
