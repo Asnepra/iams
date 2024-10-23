@@ -145,32 +145,29 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
           />
 
           {selectedPrinterId !== -1 && (
-            <div className="grid grid-cols-2 gap-6">
-              {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
-                <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
-                  {cartridge.stock > 0 ? (
-                    <>
-                      <Checkbox
-                        checked={cartridgesState[cartridge.cartridgeId] || false}
-                        onCheckedChange={(value) => handleCheckboxChange(cartridge.cartridgeId, value === true)}
-                        disabled={cartridge.display === false} // Disable checkbox if display is false
-                      />
-                      <div className="flex-1 space-x-2">
-                        <Label>{cartridge.cartridgeDescription}</Label>
-                        {!cartridge.display && <span className="text-rose-500"> ({"Previous request is pending"})</span>}
-                      </div>
-                    </>
-                  ) : (
+            <>
+              <div className="grid grid-cols-2 gap-6">
+                {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
+                  <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
+                    <Checkbox
+                      checked={cartridgesState[cartridge.cartridgeId] || false}
+                      onCheckedChange={(value) => handleCheckboxChange(cartridge.cartridgeId, value === true)}
+                      disabled={ cartridge.stock === 0} // Disable checkbox if display is false
+                    />
                     <div className="flex-1 space-x-2">
                       <Label>{cartridge.cartridgeDescription}</Label>
-                      <span className="text-red-500"> (Out of stock)</span>
+                      {cartridge.stock ===0 &&<span className="text-red-500"> {"(Out of stock)"}</span>}
+                      {!cartridge.display && <span className="text-rose-500"> ({"Previous request is pending"})</span>}
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
+                    
+                     
+                  </div>
+                ))}
+              </div>
 
+              
+            </>
+          )}
 
           <Button type="submit">Request Cartridge</Button>
         </>

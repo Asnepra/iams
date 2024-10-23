@@ -1,5 +1,5 @@
 "use client"
-import AddAssetForm from "@/components/addAssetForrm";
+
 
 
 import { Button } from "@/components/ui/button";
@@ -103,8 +103,8 @@ export default function Home() {
         <div className="w-1/2 space-y-4">
             
             <div className="h-full p-2 space-y-2 max-w-3xl mx-auto">
-            <AddAssetForm categoryData={categoryData} subcategoryData={subcategoryData} assetData={assetData}
-            manufacturerData={manufacturerData} locationData={locationData} osData={osData} processorData={processorData} />
+            {/* <AddAssetForm categoryData={categoryData} subcategoryData={subcategoryData} assetData={assetData}
+            manufacturerData={manufacturerData} locationData={locationData} osData={osData} processorData={processorData} /> */}
             </div>
  
         </div>
