@@ -48,6 +48,7 @@ export default function ComplaintPage() {
     } catch (error) {
       console.error("Error fetching user assets:", error);
       setError("Error fetching user assets.");
+      toast.error("Error loading Assets, Kindly refresh the page")
     } finally {
       setIsLoading(false);
     }

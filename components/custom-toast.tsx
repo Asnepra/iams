@@ -51,6 +51,7 @@ const showCustomToast = (data: ToastData) => {
       </div>
     ), {
       position: "top-right",
+      duration:Infinity
     });
   }
   

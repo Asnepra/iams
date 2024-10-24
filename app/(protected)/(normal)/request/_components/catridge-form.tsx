@@ -4,7 +4,6 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import { PrinterDataProps } from "@/schemas/printerSchema";
 import { useState, useEffect, useCallback } from "react";
 import { Label } from "@/components/ui/label";
@@ -13,10 +12,11 @@ import Cookies from 'js-cookie';
 import axios from "axios";
 import FormError from "@/components/form-error";
 
+// Validation schema
 const CartridgeFormSchema = z.object({
   printerId: z.number().min(1, "Select a printer"),
   cartridgeId: z.string().min(1, "Select at least one cartridge"),
-
+  declaration: z.boolean().refine(val => val === true, { message: "You must accept the declaration" }),
 });
 
 interface CartridgeFormProps {
@@ -30,13 +30,13 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
     defaultValues: {
       printerId: -1,
       cartridgeId: "",
-
+      declaration: false,
     },
   });
 
   const selectedPrinterId = watch("printerId");
   const [cartridgesState, setCartridgesState] = useState<Record<number, boolean>>({});
-
+  
   // Update cartridges state when selected printer changes
   useEffect(() => {
     if (selectedPrinterId === -1) return;
@@ -77,12 +77,11 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
     const selectedCartridges = Object.entries(cartridgesState).filter(([_, isChecked]) => isChecked);
     
     if (selectedCartridges.length === 0) {
-      // Set an error if no cartridges are selected
       setError("cartridgeId", {
         type: "manual",
         message: "Please select at least one cartridge",
       });
-      return; // Prevent further execution
+      return;
     }
 
     const data = {
@@ -90,27 +89,25 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
       printerId: values.printerId,
       cartridges: selectedCartridges.map(([cartridgeId]) => ({ cartridgeId })),
     };
-    
-    //console.log("cartridge data", data);
 
-    // Make the API request
     try {
-      const response = await axios.post('/api/requestedCatridges', data);
-      toast.success("Request raised Successfully!");
+      await axios.post('/api/requestedCatridges', data);
+      toast.success("Request raised successfully!");
       setTimeout(() => window.location.reload(), 2000);
     } catch (error) {
-      toast.error("Some issue, please try again");
+      toast.error("An issue occurred, please try again.");
       setTimeout(() => window.location.reload(), 2000);
     }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      { !hasReturned ? (
+      {!hasReturned ? (
         <FormError message="You have not returned old cartridges, please return old first" />
       ) : (
         <>
           {errors.cartridgeId && <FormError message={errors.cartridgeId.message} />}
+          {errors.declaration && <FormError message={"Please select the declaration"} />}
           
           <Controller
             name="printerId"
@@ -145,29 +142,24 @@ const CartridgeForm: React.FC<CartridgeFormProps> = ({ printers, hasReturned }) 
           />
 
           {selectedPrinterId !== -1 && (
-            <>
-              <div className="grid grid-cols-2 gap-6">
-                {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
-                  <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
-                    <Checkbox
-                      checked={cartridgesState[cartridge.cartridgeId] || false}
-                      onCheckedChange={(value) => handleCheckboxChange(cartridge.cartridgeId, value === true)}
-                      disabled={ cartridge.stock === 0} // Disable checkbox if display is false
-                    />
-                    <div className="flex-1 space-x-2">
-                      <Label>{cartridge.cartridgeDescription}</Label>
-                      {cartridge.stock ===0 &&<span className="text-red-500"> {"(Out of stock)"}</span>}
-                      {!cartridge.display && <span className="text-rose-500"> ({"Previous request is pending"})</span>}
-                    </div>
-                    
-                     
+            <div className="grid grid-cols-2 gap-6">
+              {printers.find(printer => printer.assetBatchId === selectedPrinterId)?.cartridges.map(cartridge => (
+                <div key={cartridge.cartridgeId} className="flex items-center space-x-3">
+                  <Checkbox
+                    checked={cartridgesState[cartridge.cartridgeId] || false}
+                    onCheckedChange={(value) => handleCheckboxChange(cartridge.cartridgeId, value === true)}
+                     // Disable checkbox if stock is zero
+                  />
+                  <div className="flex-1 space-x-2">
+                    <Label>{cartridge.cartridgeDescription}</Label>
+                    {!cartridge.display && <span className="text-rose-500">{"(Previous request is pending)"}</span>}
                   </div>
-                ))}
-              </div>
-
-              
-            </>
+                </div>
+              ))}
+            </div>
           )}
+
+          
 
           <Button type="submit">Request Cartridge</Button>
         </>

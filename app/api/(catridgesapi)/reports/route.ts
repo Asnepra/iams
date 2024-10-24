@@ -1,18 +1,21 @@
 import mssqlconnect from "@/lib/mssqlconnect";
 import { NextRequest, NextResponse } from "next/server";
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { CartridgeDataReport } from "@/schemas/printerSchema";
+import { addDays } from "date-fns";
 const sql = require('mssql');
 
 export const POST = async (req: NextRequest) => {
   try {
     // Extract token and parameters from request body
     const body = await req.json();
-    const { token, month, year } = body;
+    const { token, startDate, endDate } = body;
+    console.log("date", startDate, endDate);
 
-    // Check if token, month, or year is missing
-    if (!token || !month || !year) {
+    // Check if token, startDate, or endDate is missing
+    if (!token || !startDate || !endDate) {
       return new NextResponse(
-        JSON.stringify({ message: 'Missing token, month, or year' }),
+        JSON.stringify({ message: 'Missing token, startDate, or endDate' }),
         { status: 400 }
       );
     }
@@ -61,55 +64,55 @@ export const POST = async (req: NextRequest) => {
       // Combined SQL query
       const combinedQuery = `
         SELECT 
-          c.[TRANS_ID],
-          c.[ASSET_ID],
-          c.[CARTRIDGE_ID],
-          c.[REQUESTED_QTY],
-          c.[APPROVED_QTY],
-          c.[STATUS_ID],
-          c.[REQUESTED_BY],
-          c.[REQUESTED_ON],
-          c.[APPROVED_BY],
-          c.[APPROVED_ON],
-          c.[APPROVING_REASON],
-          c.[CARTRIDGE_RETURNED],
-          u1.[EmployeeName] AS [employeeName],
-          u1.[EmpDepartment] AS [department],
-          u1.[UserRole] AS [userRole],
-          u1.[DESIGNATION] AS [designation],
-          u1.[DESIGNATION_NAME] AS [designationName],
-          m.[CARTRIDGE_DESC] AS [cartridgeDescription],
-          s.[STATUS_DESC] AS [statusDescription],
-          u2.[EmployeeName] AS [approvedByName],
-          u3.[EmployeeName] AS [requestedByName]
+            c.[TRANS_ID],
+            c.[ASSET_ID],
+            c.[CARTRIDGE_ID],
+            c.[REQUESTED_QTY],
+            c.[APPROVED_QTY],
+            c.[STATUS_ID],
+            c.[REQUESTED_BY],
+            c.[REQUESTED_ON],
+            c.[APPROVED_BY],
+            c.[APPROVED_ON],
+            c.[APPROVING_REASON],
+            c.[CARTRIDGE_RETURNED],
+            m.[CARTRIDGE_NO],
+            u1.[EmployeeName] AS [employeeName],
+            u1.[EmpDepartment] AS [department],
+            u1.[UserRole] AS [userRole],
+            u1.[DESIGNATION] AS [designation],
+            u1.[DESIGNATION_NAME] AS [designationName],
+            m.[CARTRIDGE_DESC] AS [cartridgeDescription],
+            s.[STATUS_DESC] AS [statusDescription],
+            u2.[EmployeeName] AS [approvedByName],
+            u3.[EmployeeName] AS [requestedByName]
         FROM 
-          [IAMS].[dbo].[IAMS_X_CARTRIDGE] c
+            [IAMS].[dbo].[IAMS_X_CARTRIDGE] c
         INNER JOIN 
-          [IAMS].[dbo].[UserMaster] u1 ON c.[REQUESTED_BY] = u1.[EmployeeNumber]
+            [IAMS].[dbo].[UserMaster] u1 ON c.[REQUESTED_BY] = u1.[EmployeeNumber]
         INNER JOIN 
-          [IAMS].[dbo].[IAMS_M_CARTRIDGE] m ON c.[CARTRIDGE_ID] = m.[CARTRIDGE_ID]
+            [IAMS].[dbo].[IAMS_M_CARTRIDGE] m ON c.[CARTRIDGE_ID] = m.[CARTRIDGE_ID]
         INNER JOIN 
-          [IAMS].[dbo].[IAMS_P_ASSET_STATUS] s ON c.[STATUS_ID] = s.[STATUS_ID]
+            [IAMS].[dbo].[IAMS_P_ASSET_STATUS] s ON c.[STATUS_ID] = s.[STATUS_ID]
         LEFT JOIN 
-          [IAMS].[dbo].[UserMaster] u2 ON c.[APPROVED_BY] = u2.[EmployeeNumber]
-          LEFT JOIN 
-          [IAMS].[dbo].[UserMaster] u3 ON c.[REQUESTED_BY] = u3.[EmployeeNumber]
+            [IAMS].[dbo].[UserMaster] u2 ON c.[APPROVED_BY] = u2.[EmployeeNumber]
+        LEFT JOIN 
+            [IAMS].[dbo].[UserMaster] u3 ON c.[REQUESTED_BY] = u3.[EmployeeNumber]
         WHERE 
-          DATEPART(MONTH, c.[REQUESTED_ON]) = @month
-          AND DATEPART(YEAR, c.[REQUESTED_ON]) = @year
+            c.[REQUESTED_ON] BETWEEN @startDate AND @endDate;
       `;
 
       // Execute the combined query
       const detailedResult = await transaction.request()
-        .input('month', sql.Int, parseInt(month))
-        .input('year', sql.Int, parseInt(year))
+        .input('startDate', sql.Date, new Date(addDays(startDate,1)))
+        .input('endDate', sql.Date, new Date(endDate))
         .query(combinedQuery);
 
       // Commit the transaction
       await transaction.commit();
 
       // Format the result as JSON
-      const detailedData = detailedResult.recordset.map((item: any) => ({
+      const detailedData: CartridgeDataReport = detailedResult.recordset.map((item: any) => ({
         transId: item.TRANS_ID,
         assetId: item.ASSET_ID,
         cartridgeId: item.CARTRIDGE_ID,
@@ -128,29 +131,25 @@ export const POST = async (req: NextRequest) => {
         designation: item.designation,
         designationName: item.designationName,
         cartridgeDescription: item.cartridgeDescription,
+        cartridgeNo: item.CARTRIDGE_NO,
         statusDescription: item.statusDescription,
-        approvedByName: item.approvedByName, // Added approvedByName
-        requestedByName:item.requestedByName
+        approvedByName: item.approvedByName,
+        requestedByName: item.requestedByName
       }));
-
-      
+      //console.log("api", detailedData);
 
       // Return successful response with data
       return new NextResponse(JSON.stringify({
         message: 'Query successful',
         detailedData,
-
       }), { status: 200 });
 
     } catch (error) {
-      // Rollback the transaction in case of error
-      //await transaction.rollback();
       console.error("Error querying database", error);
       return new NextResponse(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
     }
 
   } catch (error) {
-    // Handle errors and send an error response
     console.error("API Calling error", error);
     return new NextResponse(JSON.stringify({ message: "Internal Server Error" }), { status: 500 });
   }

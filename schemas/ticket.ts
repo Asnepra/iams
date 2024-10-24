@@ -46,3 +46,31 @@ export interface COMPLAINTS_COLUMN {
     TICKET_RESOLVED_BY_USER: string | null;  // User who resolved the ticket (null if not resolved)
     TICKET_RESOLVED_ON: string | null;       // Date and time when the ticket was resolved (null if not resolved)
 }
+
+
+// Interface for Asset
+export interface TICKET_FOR_USER {
+    employeeNumber: string;
+    employeeName: string;
+    empDepartment: string;
+    empMail: string;
+    userRole: string;
+    designation: string;
+    statusDescription: string;
+    assetMake: string;
+    assetModel: string;
+    categoryName: string;
+  }
+  
+  // Interface for User
+  export interface HELPDESK_USER {
+    employeeNumber: string;
+    employeeName: string;
+    empDepartment: string;
+    empMail: string;
+    empProfilePic: string;
+    userRole: string;
+    designation: string;
+    designationName: string;
+  }
+  

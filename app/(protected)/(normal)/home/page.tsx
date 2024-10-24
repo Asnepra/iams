@@ -21,12 +21,12 @@ import { Button } from "@/components/ui/button";
 import showCustomToast from "@/components/custom-toast";
 
 const showToastsWithDelay = async (data: any[]) => {
-  const delay = 2000; // Delay in milliseconds (2 seconds in this example)
+  //const delay = 2000; // Delay in milliseconds (2 seconds in this example)
 
   for (let i = 0; i < data.length; i++) {
-    setTimeout(() => {
+    
       showCustomToast(data[i]);
-    }, i * delay); // Delay each toast based on its index
+    // Delay each toast based on its index
   }
 };
 interface Asset {
@@ -104,7 +104,7 @@ export default function Dashboard() {
         }
       }).catch((error)=>{
         //console.log("error", error)
-        toast.error("Something did not go right, Please reload");
+        toast.error("Session expired, Please login again");
       })
       
       const response1 = await axios.post('/api/catridgeReturned', body)
@@ -113,6 +113,7 @@ export default function Dashboard() {
         //console.log("catridgeretunr toast", response.data);
         // Trigger the toast for each item
         showToastsWithDelay(response.data)
+        //console.log("delay", response.data)
       }).catch((error)=>{
         setError("Something did not go right, Please reload again!")
         toast.error("Something did not go right, Please reload");

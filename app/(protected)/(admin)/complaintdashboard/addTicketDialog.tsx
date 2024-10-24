@@ -30,81 +30,96 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { UserCircle, Briefcase, Mail, Phone, Laptop, Monitor, Armchair, Keyboard, Mouse, Headphones, Plus } from 'lucide-react'
+import { UserCircle, Briefcase, Mail, Phone, Laptop, Monitor, Headphones, Plus, Printer } from 'lucide-react'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+import axios from 'axios'
+import Cookies from 'js-cookie'
+import { HELPDESK_USER, TICKET_FOR_USER, TicketCatProps } from '@/schemas/ticket'
+import toast from 'react-hot-toast'
 
-// Mock function to simulate fetching employee data
-const fetchEmployeeData = async (employeeNumber: string) => {
-  // Simulating API call delay
-  await new Promise(resolve => setTimeout(resolve, 1000))
-  
-  // Mock data
-  return {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    designation: "Software Engineer",
-    department: "Info. Systems",
-    assets: ["Laptop", "Monitor", "Ergonomic Chair", "Keyboard", "Mouse", "Headset"]
-  }
+
+export interface DialogProps{
+  ticketCat:TicketCatProps[]
 }
-
+// Asset icons mapping with colors
 const assetIcons: { [key: string]: React.ReactNode } = {
-  "Laptop": <Laptop className="h-5 w-5" />,
-  "Monitor": <Monitor className="h-5 w-5" />,
-  "Ergonomic Chair": <Armchair className="h-5 w-5" />,
-  "Keyboard": <Keyboard className="h-5 w-5" />,
-  "Mouse": <Mouse className="h-5 w-5" />,
-  "Headset": <Headphones className="h-5 w-5" />,
-}
+  "LAPTP": <Laptop className="h-5 w-5 text-blue-500" />,
+  "MONITOR": <Monitor className="h-5 w-5 text-green-500" />,
+  "PRINTER": <Printer className="h-5 w-5 text-red-500" />,
+  "HEADPHONES": <Headphones className="h-5 w-5 text-purple-500" />,
+};
 
-const assignees = ["Alice Johnson", "Bob Smith", "Charlie Brown", "Diana Prince", "Ethan Hunt"]
-
+// Form schema
 const formSchema = z.object({
   employeeNumber: z.string().min(1, { message: "Employee number is required" }),
   asset: z.string().min(1, { message: "Asset selection is required" }),
+  mainCategory: z.string().min(1, { message: "Main category selection is required" }),
+  subCategory: z.string().min(1, { message: "Subcategory selection is required" }),
   complaint: z.string().min(10, { message: "Complaint must be at least 10 characters long" }),
   assignedTo: z.string().min(1, { message: "Assignee selection is required" }),
-})
+});
 
-export function CreateTicketDialog() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [employeeData, setEmployeeData] = useState<any>(null)
-  const [isLoading, setIsLoading] = useState(false)
+export function CreateTicketDialog({ ticketCat }: DialogProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [employeeData, setEmployeeData] = useState<any>(null);
+  const [assignees, setAssignees] = useState<HELPDESK_USER[]>([]);
+  const [assets, setAssets] = useState<TICKET_FOR_USER[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [subCategories, setSubCategories] = useState<TicketCatProps[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       employeeNumber: "",
       asset: "",
+      mainCategory: "",
+      subCategory: "",
       complaint: "",
       assignedTo: "",
     },
-  })
+  });
 
   const handleFetchEmployee = async (employeeNumber: string) => {
-    setIsLoading(true)
+    const token = Cookies.get("token");
+    setIsLoading(true);
     try {
-      const data = await fetchEmployeeData(employeeNumber)
-      setEmployeeData(data)
-    } catch (error) {
-      console.error("Error fetching employee data:", error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+      const response = await axios.post("/api/getUserDetails", {
+        token,
+        employeeNumber,
+      });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    // Here you would typically send the form data to your backend
-    setIsOpen(false)
-  }
+      setEmployeeData(response.data);
+      setAssignees(response.data.helpdeskUsers || []);
+      setAssets(response.data.assets || []);
+    } catch (error) {
+      toast.error("Something went wrong, kindly reload");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMainCategoryChange = (mainCategoryId: string) => {
+    const filteredSubCategories = ticketCat.filter(cat => cat.mainCatId.toString() === mainCategoryId);
+    setSubCategories(filteredSubCategories);
+    form.setValue("subCategory", ""); // Reset subcategory selection
+  };
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log("Form Values:", values);
+    // Submit the form values to your backend here
+    setIsOpen(false);
+  };
+
+    // Get unique main categories
+    const uniqueMainCategories = Array.from(new Set(ticketCat.map(cat => cat.mainCatId.toString())))
+    .map(id => ticketCat.find(cat => cat.mainCatId.toString() === id));
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-      <Button className="bg-green-500 hover:bg-green-600 text-white">
+        <Button className="bg-green-500 hover:bg-green-600 text-white">
           <Plus className="h-4 w-4 mr-2" />
           Add new ticket
         </Button>
@@ -123,27 +138,23 @@ export function CreateTicketDialog() {
               name="employeeNumber"
               render={({ field }) => (
                 <FormItem>
-                    <div className="flex flex-row items-center space-x-2">
-
-                        <FormLabel className='basis-1/4'>Employee Number</FormLabel>
-                        <FormControl className='basis-2/4'>
-                            <Input {...field} />
-                        </FormControl>
-
-                        <Button
-                            className='basis-1/4'
-                            onClick={() => handleFetchEmployee(form.getValues("employeeNumber"))}
-                            disabled={isLoading}
-                            >
-                            {isLoading ? "Fetching..." : "Fetch Employee Details"}
-                        </Button>
-                    
-                  
-                    </div>
+                  <div className="flex flex-row items-center space-x-2">
+                    <FormLabel className='basis-1/4'>Employee Number</FormLabel>
+                    <FormControl className='basis-2/4'>
+                      <Input {...field} />
+                    </FormControl>
+                    <Button
+                      className='basis-1/4'
+                      onClick={() => handleFetchEmployee(field.value)}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Fetching..." : "Fetch Employee Details"}
+                    </Button>
+                  </div>
                   <FormDescription>
-                        Enter the employee number and click Fetch Employee Details
-                    </FormDescription>
-                    <FormMessage />
+                    Enter the employee number and click Fetch Employee Details
+                  </FormDescription>
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -153,35 +164,31 @@ export function CreateTicketDialog() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <UserCircle className="h-5 w-5" />
+                      <UserCircle className="h-5 w-5 text-blue-600" />
                       <span className="font-semibold">Name</span>
-                      <span>{employeeData.name}</span>
+                      <span>{assets[0].employeeName}</span>
                     </div>
-                    
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Mail className="h-5 w-5" />
+                      <Mail className="h-5 w-5 text-red-600" />
                       <span className="font-semibold">Email</span>
-                      <span>{employeeData.email}</span>
+                      <span>{assets[0].empMail.toLowerCase()}</span>
                     </div>
-                    
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Briefcase className="h-5 w-5" />
+                      <Briefcase className="h-5 w-5 text-green-600" />
                       <span className="font-semibold">Designation</span>
-                      <span>{employeeData.designation}</span>
+                      <span>{assets[0].designation}</span>
                     </div>
-                    
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Phone className="h-5 w-5" />
+                      <Phone className="h-5 w-5 text-purple-600" />
                       <span className="font-semibold">Department</span>
-                      <span>{employeeData.department}</span>
+                      <span>{assets[0].empDepartment}</span>
                     </div>
-                    
                   </div>
                 </div>
                 <FormField
@@ -197,11 +204,11 @@ export function CreateTicketDialog() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {employeeData.assets.map((asset: string, index: number) => (
-                            <SelectItem key={index} value={asset}>
-                              <div className="flex items-center gap-2">
-                                {assetIcons[asset]}
-                                {asset}
+                          {assets.map((asset: TICKET_FOR_USER, index: number) => (
+                            <SelectItem key={index} value={asset.assetModel}>
+                              <div className="flex gap-2">
+                                {assetIcons[asset.categoryName] || <span>{asset.assetMake}</span>}
+                                {asset.assetModel}
                               </div>
                             </SelectItem>
                           ))}
@@ -211,6 +218,61 @@ export function CreateTicketDialog() {
                     </FormItem>
                   )}
                 />
+                <div className='grid grid-cols-2 gap-4'>
+                  <FormField
+                    control={form.control}
+                    name="mainCategory"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Main Category</FormLabel>
+                        <Select onValueChange={(value) => {
+                          field.onChange(value);
+                          handleMainCategoryChange(value);
+                        }}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a main category" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {uniqueMainCategories.map((cat, index) => (
+                              cat ? (
+                                <SelectItem key={index} value={cat.mainCatId.toString()}>
+                                  {cat.mainCatName}
+                                </SelectItem>
+                              ) : null
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="subCategory"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Subcategory</FormLabel>
+                        <Select onValueChange={field.onChange}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select a subcategory" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {subCategories.map((subCat, index) => (
+                              <SelectItem key={index} value={subCat.subCatName}>
+                                {subCat.subCatName}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
                   name="complaint"
@@ -241,9 +303,19 @@ export function CreateTicketDialog() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {assignees.map((assignee, index) => (
-                            <SelectItem key={index} value={assignee}>
-                              {assignee}
+                          {assignees.map((assignee: HELPDESK_USER, index: number) => (
+                            <SelectItem key={index} value={assignee.employeeName}>
+                              <div className='flex items-center'>
+                                <div
+                                  className="h-6 w-6 rounded-full mr-2 flex items-center justify-center text-white font-bold"
+                                  style={{
+                                    background: 'linear-gradient(to right, #ff7e5f, #feb47b)', // Customize your gradient here
+                                  }}
+                                >
+                                  <span>{assignee.employeeName ? assignee.employeeName.charAt(0).toUpperCase() : '?'}</span>
+                                </div>
+                                {assignee.employeeName}
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>

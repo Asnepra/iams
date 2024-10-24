@@ -146,6 +146,7 @@ export interface CartridgeDataReport {
   designationName: string;
   statusDescription: string;
   cartridgeDescription: string;
+  cartridgeNo:string;
   approvedByName:string;
   requestedByName:string;
 }

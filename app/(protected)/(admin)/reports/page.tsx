@@ -1,71 +1,73 @@
-
 "use client"
 import { useState, useEffect } from 'react';
 import {
-  PieChart, Pie, Cell, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, Tooltip
+  PieChart, Pie, Cell, ResponsiveContainer, Legend
 } from 'recharts';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DownloadIcon } from 'lucide-react';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import Papa from "papaparse"
+import Papa from "papaparse";
 
 import { formatDate } from '@/lib/utils';
-
 import { columns } from './_components/columns';
 import { CartridgeDataReport } from '@/schemas/printerSchema';
 import { DataTable } from './_components/data-table';
 import { statuses } from '@/schemas/meta-data';
+import { DatePickerWithRange } from '@/components/ui/DatePickerWithRange';
+import { DateRange } from 'react-day-picker';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 
-const COLORS: { [key: string]: string } = {
+const COLORS = {
   requested: "#8884d8",
   approved: "#82ca9d",
-  pending: "#ffc658",  // Add a color for pending
-  rejected: "#ff6f61"  // Add a color for rejected
+  pending: "#ffc658",
+  rejected: "#ff6f61"
 };
 
 const DEPARTMENT_COLORS = [
-  "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F9F", "#7AD0F5",
-  "#F7B500", "#1CC6B2", "#A178FF", "#FF6F61", "#87CEEB", "#FF7F50", "#008080", "#9B59B6"
+  "#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF", "#FF9F9F",
+  "#7AD0F5", "#F7B500", "#1CC6B2", "#A178FF", "#FF6F61", "#87CEEB",
+  "#FF7F50", "#008080", "#9B59B6"
 ];
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const years = ["2024", "2023", "2022"];
-
-const monthToNumber = (month: string) => {
-  const index = months.indexOf(month);
-  return index >= 0 ? index + 1 : 0; // Months are 1-based
-};
-
 const startYear = 2020;
 const yearList = Array.from({ length: 101 }, (_, i) => (startYear + i).toString());
 
-// In your component
-
-
-
-
 export default function ComprehensiveCartridgeReports() {
   const currentDate = new Date();
-const currentMonth = months[currentDate.getMonth()]; // Get current month
-const currentYear = currentDate.getFullYear().toString(); // Get current year
+  const currentMonth = months[currentDate.getMonth()];
+  const currentYear = currentDate.getFullYear().toString();
 
   const [data, setData] = useState<CartridgeDataReport[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
-  
-  const [selectedYear, setSelectedYear] = useState<string>(currentYear); // Set default to 2024
-
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: new Date(Number(currentYear), currentDate.getMonth(), 1),
+    to: new Date(Number(currentYear), currentDate.getMonth() + 1, 0)
+  });
 
+  // Update dateRange whenever selectedMonth or selectedYear changes
   useEffect(() => {
+    const monthIndex = months.indexOf(selectedMonth);
+    const year = Number(selectedYear);
+    if (monthIndex !== -1) {
+      setDateRange({
+        from: new Date(year, monthIndex, 1),
+        to: new Date(year, monthIndex + 1, 0)
+      });
+    }
+  }, [selectedMonth, selectedYear]);
+
+  const fetchData = async () => {
     const token = Cookies.get('token');
     if (!token) {
       toast.error("Token Error");
@@ -73,64 +75,54 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
       return;
     }
 
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.post(`/api/reports`, {
-          token,
-          month: monthToNumber(selectedMonth),
-          year: selectedYear
-        });
-        console.log("data", response.data);
-        setData(response.data.detailedData); // Assuming the API returns { data: CartridgeData[] }
-      } catch (error) {
-        toast.error("Error fetching data, Please reload");
-      } finally {
-        setLoading(false);
-      }
-    };
+    setLoading(true);
+    try {
+      const response = await axios.post(`/api/reports`, {
+        token,
+        startDate: dateRange?.from ? dateRange.from.toISOString().split('T')[0] : null,
+        endDate: dateRange?.to ? dateRange.to.toISOString().split('T')[0] : null
+      });
+      setData(response.data.detailedData);
+    } catch (error) {
+      toast.error("Error fetching data, Please reload");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
-  }, [selectedMonth, selectedYear, router]);
+  }, [dateRange, router]);
 
-  // Filter data by status codes
   const filterDataByStatus = (status: string) => data.filter(item => item.statusDescription === status);
-
-  const requestedData = filterDataByStatus("Pending");  // Pending
-  const approvedData = filterDataByStatus("Issued");  // Approved
-  const rejectedData = filterDataByStatus("Rejected");  // Rejected
-
-  const totalPending = requestedData.length;
-  const totalApproved = approvedData.length;
-  const totalRejected = rejectedData.length;  // Count of rejected items
-  
+  const requestedData = filterDataByStatus("Pending");
+  const approvedData = filterDataByStatus("Issued");
+  const rejectedData = filterDataByStatus("Rejected");
 
   const pieData = [
-    {name:"Pending", value:totalPending},
-    { name: "Approved", value: totalApproved },
-    { name: "Rejected", value: totalRejected }
+    { name: "Pending", value: requestedData.length },
+    { name: "Approved", value: approvedData.length },
+    { name: "Rejected", value: rejectedData.length }
   ];
-  console.log("re", pieData);
 
   const departmentData = data.reduce((acc: { name: string; value: number }[], item) => {
-    const existingDept = acc.find(d => d.name === item.department); // Change to Department
+    const existingDept = acc.find(d => d.name === item.department);
     if (existingDept) {
       existingDept.value += item.requestedQty;
     } else {
-      acc.push({ name: item.department, value: item.requestedQty }); // Change to Department
+      acc.push({ name: item.department, value: item.requestedQty });
     }
     return acc;
   }, []);
 
-
   const exportToExcel = () => {
     const csvData = data.map(item => ({
       TransactionID: item.transId ?? 'N/A',
-      CartridgeID: item.cartridgeId ?? 'N/A',
+      CartridgeNo: item.cartridgeNo ?? 'N/A',
       RequestedBy: item.requestedByName ?? 'N/A',
       Department: item.department ?? 'N/A',
       RequestedOn: item.requestedOn ? formatDate(item.requestedOn) : 'N/A',
-      StatusID: statuses.find(label => label.label === item.statusDescription)?.label??'N/A',
+      StatusID: statuses.find(label => label.label === item.statusDescription)?.label ?? 'N/A',
       ActionBy: item.approvedByName ?? 'N/A',
       ActionOn: item.approvedOn ? formatDate(item.approvedOn) : 'N/A',
       ActionReason: item.approvingReason ?? 'N/A',
@@ -138,7 +130,7 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
       UserRole: item.userRole ?? 'N/A',
       CartridgeName: item.cartridgeDescription ?? 'N/A',
     }));
-  
+
     const csv = Papa.unparse(csvData);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
@@ -151,8 +143,6 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
     link.click();
     document.body.removeChild(link);
   };
-  
-  
 
   if (loading) {
     return <div className='container mx-auto p-1'>Loading...</div>;
@@ -187,6 +177,10 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
               ))}
             </SelectContent>
           </Select>
+          <DatePickerWithRange
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
+          />
           <Button onClick={exportToExcel}>
             <DownloadIcon className="mr-2 h-4 w-4" /> Export to Excel
           </Button>
@@ -211,10 +205,9 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
                   label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                 >
                   {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[entry.name.toLowerCase()] || "#000000"} />
+                    <Cell key={`cell-${index}`} fill={COLORS[entry.name.toLowerCase() as keyof typeof COLORS] || "#000000"} />
                   ))}
                 </Pie>
-                <Tooltip />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -241,7 +234,6 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
                     <Cell key={`cell-${index}`} fill={DEPARTMENT_COLORS[index % DEPARTMENT_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip />
                 <Legend />
               </PieChart>
             </ResponsiveContainer>
@@ -249,60 +241,12 @@ const currentYear = currentDate.getFullYear().toString(); // Get current year
         </Card>
       </div>
 
-     
-
       <Card>
         <CardHeader>
           <CardTitle>Detailed Cartridge Request Data</CardTitle>
         </CardHeader>
         <CardContent>
-          {/* <Table>
-            <TableHead>
-              <TableRow>
-                <TableHead>Transaction ID</TableHead>
-                <TableHead>Asset ID</TableHead>
-                <TableHead>Cartridge ID</TableHead>
-                <TableHead>Requested Qty</TableHead>
-                <TableHead>Approved Qty</TableHead>
-                <TableHead>Status ID</TableHead>
-                <TableHead>Requested By</TableHead>
-                <TableHead>Requested On</TableHead>
-                <TableHead>Approved By</TableHead>
-                <TableHead>Approved On</TableHead>
-                <TableHead>Approving Reason</TableHead>
-                <TableHead>Cartridge Returned</TableHead>
-                <TableHead>Employee Name</TableHead>
-                <TableHead>Department</TableHead>
-                <TableHead>User Role</TableHead>
-                <TableHead>Designation</TableHead>
-                <TableHead>Designation Name</TableHead>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((item) => (
-                <TableRow key={item.TRANS_ID}>
-                  <TableCell>{item.TRANS_ID}</TableCell>
-                  <TableCell>{item.ASSET_ID}</TableCell>
-                  <TableCell>{item.CARTRIDGE_ID}</TableCell>
-                  <TableCell>{item.REQUESTED_QTY}</TableCell>
-                  <TableCell>{item.APPROVED_QTY}</TableCell>
-                  <TableCell>{item.STATUS_ID}</TableCell>
-                  <TableCell>{item.REQUESTED_BY}</TableCell>
-                  <TableCell>{formatDate(item.REQUESTED_ON)}</TableCell>
-                  <TableCell>{item.APPROVED_BY}</TableCell>
-                  <TableCell>{item.APPROVED_ON ? formatDate(item.APPROVED_ON) : '-'}</TableCell>
-                  <TableCell>{item.APPROVING_REASON}</TableCell>
-                  <TableCell>{item.CARTRIDGE_RETURNED ? 'Yes' : 'No'}</TableCell>
-                  <TableCell>{item.EmployeeName}</TableCell>
-                  <TableCell>{item.Department}</TableCell>
-                  <TableCell>{item.UserRole}</TableCell>
-                  <TableCell>{item.DESIGNATION}</TableCell>
-                  <TableCell>{item.DESIGNATION_NAME}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table> */}
-          <DataTable data={data} columns={columns} filterKey='employeeName' filterString='Name'/>
+          <DataTable data={data} columns={columns} filterKey='employeeName' filterString='Name' />
         </CardContent>
       </Card>
     </div>
